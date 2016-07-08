@@ -1,0 +1,33 @@
+{
+  "name": "rg-Uploader",
+  "version": "0.0.1",
+  "description": "File upload component",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RedgooseDev/rg-Uploader.git"
+  },
+  "keywords": [
+    "uploader",
+    "upload",
+    "component"
+  ],
+  "author": "redgoose <http://redgoose.me>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/RedgooseDev/rg-Uploader/issues"
+  },
+  "homepage": "https://github.com/RedgooseDev/rg-Uploader#readme",
+  "devDependencies": {
+    "babel-loader": "^6.2.4",
+    "babel-preset-es2015": "^6.9.0",
+    "gulp": "^3.9.1",
+    "gulp-concat": "^2.6.0",
+    "gulp-rename": "^1.2.2",
+    "gulp-sass": "^2.3.2",
+    "gulp-sourcemaps": "^1.6.0",
+    "gulp-uglify": "^1.5.4",
+    "redux": "^3.5.2",
+    "redux-devtools": "^3.3.1",
+    "webpack-stream": "^3.2.0"
+  }
+}
