@@ -1,4 +1,7 @@
-var redux = require('Redux');
+var Redux = require('Redux');
 
-console.log(redux);
 
+
+window.RGUploader = function(options) {
+	log(options);
+};

@@ -1,0 +1,33 @@
+
+// color
+$color-key: #4A90E2;
+$color-error: #CE3E3E;
+
+
+// font
+$font-eng-helvetica: "Helvetica Neue", Helvetica, Arial, sans-serif;
+$font-eng-basic: Arial, sans-serif;
+
+
+// size
+$queue-height: 150px;
+$border-radius: 4px;
+$preview-width: $queue-height;
+$mobile-max-width: 640px;
+
+
+
+// mixin
+
+// flex
+@mixin d-flex($middle) {
+	display: -webkit-flex; display: flex;
+	@if ($middle) {
+		-webkit-align-items: center; align-items: center;
+	}
+}
+
+@mixin flex($val:inherit) {
+	-webkit-flex: $val;
+	flex: $val;
+}

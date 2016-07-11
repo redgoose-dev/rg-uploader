@@ -44,7 +44,7 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	eval("'use strict';\n\nvar redux = __webpack_require__(1);\n\nconsole.log(redux);\n\n/*****************\n ** WEBPACK FOOTER\n ** ./src/js/rg-Uploader.js\n ** module id = 0\n ** module chunks = 0\n **/\n//# sourceURL=webpack:///./src/js/rg-Uploader.js?");
+	eval("'use strict';\n\nvar Redux = __webpack_require__(1);\n\nwindow.RGUploader = function (options) {\n\tlog(options);\n};\n\n/*****************\n ** WEBPACK FOOTER\n ** ./src/js/rg-Uploader.js\n ** module id = 0\n ** module chunks = 0\n **/\n//# sourceURL=webpack:///./src/js/rg-Uploader.js?");
 
 /***/ },
 /* 1 */

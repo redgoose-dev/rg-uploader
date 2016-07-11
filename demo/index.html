@@ -6,13 +6,175 @@
 <meta name="viewport" content="user-scalable=yes, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
 <meta name="author" content="redgoose.me">
 <meta name="description" content="admin service for goose">
+<link rel="stylesheet" href="../dist/css/rg-uploader.min.css">
+<link rel="stylesheet" href="./demo.css">
 </head>
 <body>
 <main>
-<h1>Hello rg-uploader</h1>
+	<header class="demo-header">
+		<h1>redgoose uploader demo</h1>
+		<p>파일을 업로드하고 올린 파일들을 관리하는 컴포넌트입니다.</p>
+	</header>
+
+	<div class="container">
+		<article class="rg-uploader">
+			<!-- header -->
+			<header>
+				<h1>File upload</h1>
+				<p>아래 업로드 버튼을 눌러서 파일을 추가하거나 이 영역에 파일을 드래그하여 추가합니다.</p>
+				<nav>
+					<button type="button" class="style-list on" title="list style"><i class="material-icons">menu</i></button>
+					<button type="button" class="style-web" title="web style"><i class="material-icons">view_list</i></button>
+					<button type="button" class="style-thumbnail" title="thumbnail style">
+						<i class="material-icons">view_module</i>
+					</button>
+				</nav>
+			</header>
+			<!-- // header -->
+
+			<!-- body -->
+			<div class="body" data-comp="queue">
+				<!-- plugin - preview -->
+				<!--<div class="col preview">-->
+					<!--<figure class="not-image" style="background-image: url('https://images.unsplash.com/photo-1467348733814-f93fc480bec6?dpr=2&auto=compress,format&crop=entropy&fit=crop&w=300&q=80');">filename.jpg</figure>-->
+				<!--</div>-->
+				<!-- // plugin - preview -->
+				<!-- queue -->
+				<div class="col queue" data-element="queue"></div>
+				<div class="col queue" data-element="template">
+					<ul class="style-list">
+						<li class="selected">
+							<p class="col">
+								<span class="bracket large" data-text="file-type">image/jpg</span>
+								<span data-text="filename">filename.jpg</span>
+								-
+								<span data-text="state">uploaded</span>
+								<span class="bracket" data-text="filesize">123.43kb</span>
+							</p>
+							<nav class="col">
+								<button type="button"><i class="material-icons">launch</i></button>
+								<button type="button" class="on"><i class="material-icons">apps</i></button>
+								<button type="button"><i class="material-icons">filter_center_focus</i></button>
+								<button type="button"><i class="material-icons">close</i></button>
+							</nav>
+						</li>
+						<li class="error">
+							<p class="col">
+								<span data-text="state">upload fail</span>
+							</p>
+						</li>
+						<li class="loading">
+							<p class="col" data-element="progress" style="width: 43%;">
+								<span><em>43</em>%</span>
+							</p>
+						</li>
+					</ul>
+					<ul class="style-web">
+						<li class="selected">
+							<figure class="col" data-element="previewImage" data-text="filename" style="background-image: url('https://images.unsplash.com/photo-1464655646192-3cb2ace7a67e?dpr=2&auto=compress,format&crop=entropy&fit=crop&w=376&h=250&q=80')"></figure>
+							<div class="col">
+								<p>
+									<span class="bracket large" data-text="file-type">image/jpg</span>
+									<span data-text="filename">filename.jpg</span>
+									-
+									<span data-text="state">uploaded</span>
+									<span class="bracket" data-text="filesize">123.43kb</span>
+								</p>
+								<nav>
+									<button type="button"><i class="material-icons">launch</i></button>
+									<button type="button" class="on"><i class="material-icons">apps</i></button>
+									<button type="button"><i class="material-icons">filter_center_focus</i></button>
+									<button type="button"><i class="material-icons">close</i></button>
+								</nav>
+							</div>
+						</li>
+						<li class="error">
+							<figure class="col not-image"></figure>
+							<div class="col">
+								<p data-text="state">upload fail</p>
+							</div>
+						</li>
+						<li class="loading">
+							<figure class="col not-image"></figure>
+							<div class="col">
+								<p data-element="progress" style="width: 43%;">
+									<span><em>43</em>%</span>
+								</p>
+							</div>
+						</li>
+					</ul>
+					<ul class="style-album">
+						<li class="selected">
+							<div class="wrap">
+								<figure data-element="previewImage" data-text="filename" style="background-image: url('https://images.unsplash.com/photo-1464655646192-3cb2ace7a67e?dpr=2&auto=compress,format&crop=entropy&fit=crop&w=376&h=250&q=80')"></figure>
+								<div class="bd">
+									<p class="filename" data-text="filename">filename.jpg</p>
+									<p class="state" data-text="state">uploaded(125.3kb)</p>
+								</div>
+								<nav>
+									<button type="button"><i class="material-icons">launch</i></button>
+									<button type="button" class="on"><i class="material-icons">apps</i></button>
+									<button type="button"><i class="material-icons">filter_center_focus</i></button>
+									<button type="button"><i class="material-icons">close</i></button>
+								</nav>
+							</div>
+						</li>
+						<li class="error">
+							<div class="wrap">
+								<figure></figure>
+								<div class="bd">
+									<p class="filename" data-text="filename">filename.jpg</p>
+									<p class="state" data-text="state">upload fail</p>
+								</div>
+							</div>
+						</li>
+						<li class="loading">
+							<div class="wrap">
+								<figure>
+									<p data-element="progress" style="width: 43%;">
+										<span><em>43</em>%</span>
+									</p>
+								</figure>
+								<div class="bd">
+									<p class="filename" data-text="filename">filename.jpg</p>
+									<p class="state">uploading..</p>
+								</div>
+							</div>
+						</li>
+					</ul>
+				</div>
+				<!-- // queue -->
+			</div>
+			<!-- // body -->
+
+			<!-- footer -->
+			<footer>
+				<nav>
+					<label class="add-file">
+						<input type="file" data-action="upload">
+						<i class="material-icons">add_circle_outline</i>
+						<span>Add files</span>
+					</label>
+					<p class="start-upload">
+						<i class="material-icons">play_circle_outline</i>
+						<span>Start upload</span>
+					</p>
+				</nav>
+				<p>Total : <em data-text="total-size">1.23MB</em></p>
+			</footer>
+			<!-- // footer -->
+		</article>
+	</div>
 </main>
+<script>function log(o) {console.log(o);}</script>
 <script src="../vendor/jquery/jquery-3.0.0.min.js"></script>
 <script src="../dist/js/vendor.min.js"></script>
 <script src="../dist/js/rg-uploader.pkgd.js"></script>
+<script>
+var uploader = new RGUploader({
+	$container : $('.rg-uploader'),
+	foo : 'bar'
+});
+</script>
 </body>
 </html>
