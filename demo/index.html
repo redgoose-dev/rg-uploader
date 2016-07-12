@@ -16,6 +16,8 @@
 		<p>파일을 업로드하고 올린 파일들을 관리하는 컴포넌트입니다.</p>
 	</header>
 
+	<p><input type="file" id="extUpload" multiple> <button type="button">start upload</button></p>
+
 	<div class="container">
 		<article class="rg-uploader">
 			<!-- header -->
@@ -151,7 +153,7 @@
 			<footer>
 				<nav>
 					<label class="add-file">
-						<input type="file" data-action="upload">
+						<input type="file" data-element="addfiles" multiple>
 						<i class="material-icons">add_circle_outline</i>
 						<span>Add files</span>
 					</label>
@@ -171,10 +173,36 @@
 <script src="../dist/js/vendor.min.js"></script>
 <script src="../dist/js/rg-uploader.pkgd.js"></script>
 <script>
+// make uploader instance
 var uploader = new RGUploader({
+	uploadScript : './upload.php',
+	autoUpload : true,
 	$container : $('.rg-uploader'),
-	foo : 'bar'
+	$externalFileForm : $('#extUpload'),
+	allowFiles : ['jpg', 'png', 'gif'],
+	limitSize : 1000000,
+	limitSizeTotal : 5000000,
+	queue : {
+		height : 150,
+		limit : 5,
+		buttons : [
+			{
+				name : '',
+				iconName : '',
+				action : function() {
+
+				}
+			}
+		]
+	},
+	plugin : [
+		{}
+	],
+	uploadProgress : function() {},
+	uploadComplete : function() {},
+	uploadFail : function() {}
 });
+uploader.init();
 </script>
 </body>
 </html>
