@@ -24,12 +24,12 @@ window.RGUploader = function(options) {
 	const plugin = require('./Plugins.js');
 	//plugin.init(this);
 
-	// set options
-	this.options = $.extend({}, this.defaultOptions, options);
-
 	// set api
 	this.api = require('./API.js');
 	//this.api.init(this);
+
+	// set options
+	this.options = $.extend({}, this.defaultOptions, options);
 
 
 	/**

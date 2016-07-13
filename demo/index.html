@@ -162,7 +162,7 @@
 						<span>Start upload</span>
 					</p>
 				</nav>
-				<p>Total : <em data-text="total-size">1.23MB</em></p>
+				<p>Size : <em data-text="totalSize">1.23MB</em>/<em data-text="limitSize"></em></p>
 			</footer>
 			<!-- // footer -->
 		</article>
@@ -179,7 +179,7 @@ var uploader = new RGUploader({
 	autoUpload : true,
 	$container : $('.rg-uploader'),
 	$externalFileForm : $('#extUpload'),
-	allowFiles : ['jpg', 'png', 'gif'],
+	allowFileTypes : ['jpeg', 'png', 'gif'],
 	limitSize : 1000000,
 	limitSizeTotal : 5000000,
 	queue : {

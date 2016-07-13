@@ -1,7 +1,9 @@
 /**
  * Uploader component
- *
  */
+
+const fileUpload = require('FileUpload.js');
+
 
 /**
  * reset input[type=file]
@@ -33,6 +35,16 @@ module.exports = {
 	$uploadElement : null,
 
 	/**
+	 * @var {Array} ready upload items
+	 */
+	readyItems : [],
+
+	/**
+	 * @var {Boolean} for check uploading
+	 */
+	uploading : false,
+
+	/**
 	 * init
 	 *
 	 * @param {RGUploader} parent
@@ -42,19 +54,107 @@ module.exports = {
 		this.parent = parent;
 	},
 
-	upload()
+	/**
+	 * push ready upload files
+	 *
+	 * @param {Object} el [type=file] element
+	 */
+	pushReadyUploadFiles(el)
 	{
-		log(this.files);
-		log('run upload');
+		let files = el.files;
+		let options = this.parent.options;
+		let limitCount = options.queue.limit;
 
-		// TODO : 몇개까지 올릴 수 있는지 검사 (올라와져있는 큐의 갯수와 합쳐야함)
-		// TODO : 허용용량 체크
-		// TODO : 허용하는 파일 확장자 체크
+		// check file count
+		if (files.length > limitCount)
+		{
+			alert('파일은 총 ' + options.queue.limit + '개까지 업로드할 수 있습니다.');
+			return false;
+		}
 
-		// reset form
-		// TODO : autoUpload 옵션값을 만들어서 선택하면 바로 올릴지 버튼을 눌러서 올릴지 분기가 나뉜다.
-		// TODO : 이때 reset을 하는 타이밍이 변한다. 아니면 upload complete,fail 타이밍에 리셋을 하는것이 더 깔끔해 보인다.
-		resetForm($(this));
+		// Add items ready for upload
+		for (let i=0; i<files.length; i++)
+		{
+			if (!files[i].type) continue;
+
+			// check file size
+			if (files[i].size > options.limitSize) continue;
+
+			// check file extension
+			if (options.allowFileTypes.indexOf(files[i].type.split('/')[1]) < 0) continue;
+
+			// push upload item
+			this.readyItems.push(files[i]);
+		}
+	},
+
+	/**
+	 * play upload
+	 *
+	 */
+	playUpload()
+	{
+		if (!this.readyItems.length) return false;
+
+		// TODO : 빈 queue를 우선 등록해야함. (progress)
+
+		if (this.parent.options.uploadScript)
+		{
+			fileUpload(
+				this.parent.options.uploadScript,
+				this.readyItems[0],
+				(type, response, file) => {
+					switch(type) {
+						case 'progress':
+							this.uploadProgress(response, file);
+							break;
+						case 'complete':
+							this.uploadComplete(response, file);
+							break;
+					}
+				}
+			);
+		}
+		else
+		{
+			// TODO : make local upload
+		}
+
+		// remove complete item
+		this.readyItems.splice(0, 1);
+	},
+
+	/**
+	 * upload progress event
+	 *
+	 * @Param {Object} res
+	 * @Param {File} file
+	 */
+	uploadProgress(res, file)
+	{
+		// TODO : render 실행
+		log(res);
+	},
+
+	/**
+	 * upload complete event
+	 *
+	 * @Param {Object} res
+	 * @Param {File} file
+	 */
+	uploadComplete(res, file)
+	{
+		switch(res.state) {
+			case 'success':
+				log(res.result);
+				break;
+			case 'error':
+				log(res.message);
+				break;
+		}
+
+		// start upload
+		this.playUpload();
 	},
 
 	/**
@@ -79,6 +179,22 @@ module.exports = {
 		}
 
 		// init change event
-		this.$uploadElement.on('change', self.upload);
+		this.$uploadElement.on('change', function(){
+			// check auto upload
+			if (self.parent.options.autoUpload)
+			{
+				// push upload items
+				self.pushReadyUploadFiles(this);
+
+				// reset form
+				resetForm($(this));
+
+				// start upload
+				if (!self.uploading)
+				{
+					self.playUpload();
+				}
+			}
+		});
 	}
 };
