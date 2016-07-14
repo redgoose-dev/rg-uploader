@@ -1,5 +1,7 @@
 // load modules
-const Redux = require('Redux');
+const util = require('./Util.js');
+const Queue = require('./Queue.js');
+const Uploader = require('./Uploader.js');
 
 
 /**
@@ -12,76 +14,47 @@ window.RGUploader = function(options) {
 	// set self
 	const self = this;
 
-	// set uploader component
-	const uploader = require('./Uploader.js');
-	uploader.init(this);
-
-	// set queue component
-	const queue = require('./Queue.js');
-	queue.init(this);
-
-	// set plugin component
-	const plugin = require('./Plugins.js');
-	//plugin.init(this);
-
-	// set api
-	this.api = require('./API.js');
-	//this.api.init(this);
-
 	// set options
 	this.options = $.extend({}, this.defaultOptions, options);
 
-
 	/**
-	 * init event
-	 *
+	 * @var {int} cuttentSize
 	 */
-	const initEvent = () => {
-
-		// init upload event
-		uploader.initEvent();
-	};
+	this.currentSize = 0;
 
 
 	/**
-	 * appState(redux)
+	 * update size
 	 *
-	 * @param {Object} state
-	 * @param {Object} action
-	 * @return {Object}
+	 * @Param {int} current
 	 */
-	this.appState = (state, action) => {
-		if (typeof state === 'undefined') return this.defaultState;
+	this.updateSize = (size) => {
 
-		switch(action.type) {
-			case 'UPLOAD':
-				log('ACT UPLOAD');
-				log(state);
-				break;
-		}
+		let $con = this.$container;
 
-		return state;
-	};
+		this.currentSize += size;
 
-	/**
-	 * render component
-	 * 상태가 변경되면 적용하는 오더를 내린다.
-	 *
-	 */
-	this.render = () => {
-		const state = this.store.getState();
+		let current = util.bytesToSize(this.currentSize);
+		let total = util.bytesToSize(this.options.limitSizeTotal);
 
+		util.findText($con, 'currentSize').text(current);
+		util.findText($con, 'totalSize').text(total);
 	};
 
 
-	// action
+	// ACTION
 	if (this.options.$container.length)
 	{
 		// set container element
-		this.$container = this.options.$container;
+		this.$container = this.options.$container.eq(0);
 
-		// run initEvent()
-		initEvent();
+		// init sub modules
+		this.queue = new Queue(this);
+		this.uploader = new Uploader(this);
+
+		// update size
+		// TODO : queue가 있으면 임포트하고나서 업데이트하기
+		this.updateSize(0);
 	}
 };
 
@@ -93,38 +66,33 @@ window.RGUploader = function(options) {
 
 /**
  * default options
- *
  */
 RGUploader.prototype.defaultOptions = {
-	uploadScript : null,
+	uploadScript : './upload.php',
+	autoUpload : true,
 	$container : $('.rg-uploader'),
-	$externalFileForm : null
-};
-
-/**
- * default state
- *
- */
-RGUploader.prototype.defaultState = {
+	$externalFileForm : $('#extUpload'),
+	allowFileTypes : ['jpeg', 'png', 'gif'],
+	limitSize : 1000000,
+	limitSizeTotal : 3000000,
 	queue : {
-		items : []
-	}
-};
+		height : 150,
+		limit : 5,
+		style : 'web',
+		buttons : [
+			{
+				name : '',
+				iconName : '',
+				action : function() {
 
-/**
- * init
- *
- */
-RGUploader.prototype.init = function() {
-
-	if (!this.options.$container.length) return false;
-
-	// set store
-	this.store = Redux.createStore(this.appState);
-
-	// act render
-	this.render();
-
-	// subscribe store
-	this.store.subscribe(this.render);
+				}
+			}
+		]
+	},
+	plugin : [
+		{}
+	],
+	uploadProgress : function() {},
+	uploadComplete : function() {},
+	uploadFail : function() {}
 };

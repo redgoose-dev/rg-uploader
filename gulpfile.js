@@ -33,16 +33,6 @@ gulp.task('scss:watch', function(){
 });
 
 
-// build vendor files
-gulp.task('vendor', function(){
-	gulp.src(['./node_modules/redux/dist/redux.min.js'])
-		.pipe(sourcemaps.init({ loadMaps: true }))
-		.pipe(concat('vendor.min.js', { newLine: '\n\n' }))
-		.pipe(sourcemaps.write(maps))
-		.pipe(gulp.dest(dist + '/js'));
-});
-
-
 // build app
 gulp.task('js', function() {
 	return gulp.src(src + '/js/rg-Uploader.js')

@@ -9,8 +9,7 @@ module.exports = {
 		filename: 'rg-uploader.pkgd.js'
 	},
 	externals: {
-		'jquery': '$',
-		'Redux': 'Redux'
+		'jquery': '$'
 	},
 	module: {
 		loaders: [

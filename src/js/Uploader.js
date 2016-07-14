@@ -3,6 +3,7 @@
  */
 
 const fileUpload = require('FileUpload.js');
+const util = require('./Util.js');
 
 
 /**
@@ -17,53 +18,73 @@ function resetForm($el)
 
 
 // export
-module.exports = {
+module.exports = function Uploader(parent) {
 
 	/**
 	 * @var {String} component name
 	 */
-	name : 'Uploader',
+	this.name = 'Uploader';
 
 	/**
-	 * @var {RGUploader} parent
+	 * @var {Queue} queue
 	 */
-	parent : null,
+	this.queue = parent.queue;
 
 	/**
 	 * @var {Object} upload elements
 	 */
-	$uploadElement : null,
+	this.$uploadElement = null;
 
 	/**
-	 * @var {Array} ready upload items
+	 * @var {Array} readyItems
 	 */
-	readyItems : [],
+	this.readyItems = [];
 
 	/**
-	 * @var {Boolean} for check uploading
+	 * @var {Boolean} uploading
 	 */
-	uploading : false,
+	this.uploading = false;
+
 
 	/**
-	 * init
+	 * get total ready items size
 	 *
-	 * @param {RGUploader} parent
+	 * @Param {Array} items
+	 * @Return {int}
 	 */
-	init(parent)
-	{
-		this.parent = parent;
-	},
+	var getTotalReadySize = (items) => {
+		var size = 0;
+		for (let i=0; i<items.length; i++)
+		{
+			size += items[i].size;
+		}
+		return size;
+	};
+
 
 	/**
 	 * push ready upload files
 	 *
-	 * @param {Object} el [type=file] element
+	 * @Param {Object} el [type=file] element
 	 */
-	pushReadyUploadFiles(el)
-	{
+	this.pushReadyUploadFiles = (el) => {
 		let files = el.files;
-		let options = this.parent.options;
+		let options = parent.options;
 		let limitCount = options.queue.limit;
+		let error = {
+			type : false,
+			extension : false,
+			filesize : false
+		};
+
+		function actError(type, message)
+		{
+			if (error[type] == false)
+			{
+				alert(message);
+				error[type] = true;
+			}
+		}
 
 		// check file count
 		if (files.length > limitCount)
@@ -72,38 +93,60 @@ module.exports = {
 			return false;
 		}
 
-		// Add items ready for upload
+		if (options.limitSizeTotal < (getTotalReadySize(this.readyItems) + getTotalReadySize(files)))
+		{
+			alert('업로드할 수 있는 용량이 초과되었습니다.');
+			return false;
+		}
+
+		// check items and add items ready for upload
 		for (let i=0; i<files.length; i++)
 		{
-			if (!files[i].type) continue;
-
-			// check file size
-			if (files[i].size > options.limitSize) continue;
+			if (!files[i].type)
+			{
+				actError('type', '잘못된 형식의 파일입니다.');
+				continue;
+			};
 
 			// check file extension
-			if (options.allowFileTypes.indexOf(files[i].type.split('/')[1]) < 0) continue;
+			if (options.allowFileTypes.indexOf(files[i].type.split('/')[1]) < 0)
+			{
+				actError('extension', '허용되지 않는 파일은 제외됩니다.');
+				continue;
+			}
+
+			// check file size
+			if (files[i].size > options.limitSize)
+			{
+				actError('filesize', '허용하는 용량을 초과한 파일은 제외됩니다.');
+				continue;
+			}
 
 			// push upload item
 			this.readyItems.push(files[i]);
 		}
-	},
+
+		parent.queue.addProgress(this.readyItems);
+	};
 
 	/**
 	 * play upload
 	 *
 	 */
-	playUpload()
-	{
+	this.playUpload = () => {
 		if (!this.readyItems.length) return false;
+
+		this.uploading = true;
 
 		// TODO : 빈 queue를 우선 등록해야함. (progress)
 
-		if (this.parent.options.uploadScript)
+		if (parent.options.uploadScript)
 		{
 			fileUpload(
-				this.parent.options.uploadScript,
+				parent.options.uploadScript,
 				this.readyItems[0],
 				(type, response, file) => {
+					// remove complete item
 					switch(type) {
 						case 'progress':
 							this.uploadProgress(response, file);
@@ -119,10 +162,7 @@ module.exports = {
 		{
 			// TODO : make local upload
 		}
-
-		// remove complete item
-		this.readyItems.splice(0, 1);
-	},
+	};
 
 	/**
 	 * upload progress event
@@ -130,11 +170,12 @@ module.exports = {
 	 * @Param {Object} res
 	 * @Param {File} file
 	 */
-	uploadProgress(res, file)
-	{
-		// TODO : render 실행
-		log(res);
-	},
+	this.uploadProgress = (res, file) => {
+		parent.queue.updateProgress({
+			id : file.lastModified,
+			data : res
+		});
+	};
 
 	/**
 	 * upload complete event
@@ -142,30 +183,44 @@ module.exports = {
 	 * @Param {Object} res
 	 * @Param {File} file
 	 */
-	uploadComplete(res, file)
-	{
+	this.uploadComplete = (res, file) => {
 		switch(res.state) {
 			case 'success':
-				log(res.result);
+				parent.queue.changeProgressToComplete(file);
+				parent.updateSize(file.size);
 				break;
 			case 'error':
 				log(res.message);
 				break;
 		}
 
-		// start upload
-		this.playUpload();
-	},
+		this.readyItems.splice(0, 1);
+
+		// play callback
+		if (parent.options.uploadComplete)
+		{
+			parent.options.uploadComplete(file);
+		}
+
+		// next upload
+		if (this.readyItems.length)
+		{
+			this.playUpload();
+		}
+		else
+		{
+			this.uploading = false;
+		}
+	};
 
 	/**
 	 * init event
 	 *
 	 */
-	initEvent()
-	{
+	this.initEvent = () => {
 		var self = this;
-		let $el = this.parent.$container.find('[data-element=addfiles]');
-		let $extEl = this.parent.options.$externalFileForm;
+		let $el = parent.$container.find('[data-element=addfiles]');
+		let $extEl = parent.options.$externalFileForm;
 
 		// check upload element in container
 		if (!$el.length) return;
@@ -179,22 +234,25 @@ module.exports = {
 		}
 
 		// init change event
-		this.$uploadElement.on('change', function(){
+		this.$uploadElement.on('change', (e) => {
 			// check auto upload
-			if (self.parent.options.autoUpload)
+
+			if (parent.options.autoUpload)
 			{
 				// push upload items
-				self.pushReadyUploadFiles(this);
+				self.pushReadyUploadFiles(e.currentTarget);
 
 				// reset form
-				resetForm($(this));
+				resetForm($(e.currentTarget));
 
 				// start upload
-				if (!self.uploading)
+				if (!this.uploading)
 				{
 					self.playUpload();
 				}
 			}
 		});
-	}
+	};
+
+	this.initEvent();
 };
