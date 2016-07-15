@@ -122,6 +122,9 @@ module.exports = function Uploader(parent) {
 				continue;
 			}
 
+			// set unique id
+			files[i].id = util.getUniqueNumber();
+
 			// push upload item
 			this.readyItems.push(files[i]);
 		}
@@ -137,8 +140,6 @@ module.exports = function Uploader(parent) {
 		if (!this.readyItems.length) return false;
 
 		this.uploading = true;
-
-		// TODO : 빈 queue를 우선 등록해야함. (progress)
 
 		if (parent.options.uploadScript)
 		{
@@ -172,7 +173,7 @@ module.exports = function Uploader(parent) {
 	 */
 	this.uploadProgress = (res, file) => {
 		parent.queue.updateProgress({
-			id : file.lastModified,
+			id : file.id,
 			data : res
 		});
 	};
@@ -186,11 +187,12 @@ module.exports = function Uploader(parent) {
 	this.uploadComplete = (res, file) => {
 		switch(res.state) {
 			case 'success':
+				file.src = res.response.src;
 				parent.queue.changeProgressToComplete(file);
 				parent.updateSize(file.size);
 				break;
 			case 'error':
-				log(res.message);
+				parent.queue.changeProgressToError(res.response.message, file);
 				break;
 		}
 

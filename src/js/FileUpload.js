@@ -37,7 +37,9 @@ var FileUpload = function(action, file, callback)
 		{
 			callback('complete', {
 				state : 'error',
-				message : 'not support browser'
+				response : {
+					message : 'not support browser'
+				}
 			});
 		}
 	}
@@ -71,34 +73,40 @@ var uploadSuccess = (e, file) => {
 		switch (e.status)
 		{
 			case 200:
+				let response = e.responseText;
 				try {
-					return {
-						state : 'success',
-						result : JSON.parse(e.responseText)
-					};
+					return JSON.parse(decodeURIComponent((response+'').replace(/\+/g, '%20')));
 				} catch(e) {
 					return {
 						state : 'error',
-						message : e.responseText
+						response : {
+							message : response
+						}
 					};
 				}
 				break;
 			case 404:
 				return {
 					state : 'error',
-					message : '404 - File not found'
+					response : {
+						message : '404 - File not found'
+					}
 				};
 				break;
 			case 403:
 				return {
 					state : 'error',
-					message : '403 - Forbidden file type'
+					response : {
+						message : '403 - Forbidden file type'
+					}
 				};
 				break;
 			default:
 				return {
 					state : 'error',
-					message : 'Unknown Error'
+					response : {
+						message : 'Unknown Error'
+					}
 				};
 				break;
 		}
@@ -106,7 +114,9 @@ var uploadSuccess = (e, file) => {
 
 	return {
 		state : 'error',
-		message : 'Unknown Error'
+		response : {
+			message : 'Unknown Error'
+		}
 	};
 };
 

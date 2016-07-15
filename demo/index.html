@@ -19,7 +19,7 @@
 	<p><input type="file" id="extUpload" multiple> <button type="button">start upload</button></p>
 
 	<div class="container">
-		<article class="rg-uploader" id="aaa">
+		<article class="rg-uploader" id="uploadComponent">
 			<!-- header -->
 			<header>
 				<h1>File upload</h1>
@@ -72,6 +72,7 @@
 							<div class="wrap">
 								<figure class="col not-image"></figure>
 								<div class="col bd">
+									<span class="filetype bracket large" data-text="filetype">image/jpg</span>
 									<span class="name" data-text="filename">filenamefilenamefilenamefilenamefilenamefilenamefilename.jpg</span>
 									<hr>
 									<span class="state" data-text="state">upload fail</span>
@@ -123,16 +124,19 @@
 	</div>
 </main>
 <script>function log(o) {console.log(o);}</script>
-<script src="../vendor/jquery/jquery-3.0.0.min.js"></script>
+<script src="../vendor/jquery/jquery-3.1.0.slim.min.js"></script>
 <script src="../dist/js/rg-uploader.pkgd.js"></script>
 <script>
 // make uploader instance
 var uploader = new RGUploader({
-	$container : $('#aaa'),
+	uploadScript : './script/upload.php',
+	$container : $('#uploadComponent'),
 	queue : {
-		height : 150,
-		limit : 5,
+		height : 400,
+		limit : 20,
 		style : 'list',
+		limitSize : 5000000,
+		limitSizeTotal : 10000000,
 		buttons : [
 			{
 				name : '',

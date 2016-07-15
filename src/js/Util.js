@@ -18,13 +18,45 @@ module.exports = {
 		return Math.round(bytes / Math.pow(1024, i), 2) + '' + sizes[i];
 	},
 
-	findElement($con, name)
+	/**
+	 * find DOM
+	 *
+	 * @Param {Object} $con
+	 * @Param {String} key
+	 * @Param {String} name
+	 * @Return {Object}
+	 */
+	findDOM($con, key, name)
 	{
-		return $con.find('[data-element=' + name + ']');
+		return $con.find('[data-' + key + '=' + name + ']');
 	},
 
-	findText($con, name)
+	/**
+	 * get unique number
+	 *
+	 * @Param {int} length
+	 * @Return {int}
+	 */
+	getUniqueNumber(length)
 	{
-		return $con.find('[data-text=' + name + ']');
+		length = length || 10;
+		var timestamp = +new Date;
+
+		var _getRandomInt = function( min, max ) {
+			return Math.floor( Math.random() * ( max - min + 1 ) ) + min;
+		};
+
+		var ts = timestamp.toString();
+		var parts = ts.split( "" ).reverse();
+		var id = "";
+
+		for( var i = 0; i < length; ++i ) {
+			var index = _getRandomInt( 0, parts.length - 1 );
+			id += parts[index];
+		}
+
+		return parseInt(id);
 	}
+
+	// TODO : detect touch 메서드 만들기
 };

@@ -37,8 +37,8 @@ window.RGUploader = function(options) {
 		let current = util.bytesToSize(this.currentSize);
 		let total = util.bytesToSize(this.options.limitSizeTotal);
 
-		util.findText($con, 'currentSize').text(current);
-		util.findText($con, 'totalSize').text(total);
+		util.findDOM($con, 'text', 'currentSize').text(current);
+		util.findDOM($con, 'text', 'totalSize').text(total);
 	};
 
 
@@ -68,7 +68,7 @@ window.RGUploader = function(options) {
  * default options
  */
 RGUploader.prototype.defaultOptions = {
-	uploadScript : './upload.php',
+	uploadScript : '',
 	autoUpload : true,
 	$container : $('.rg-uploader'),
 	$externalFileForm : $('#extUpload'),
