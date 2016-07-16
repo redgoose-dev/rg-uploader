@@ -74,7 +74,8 @@ RGUploader.prototype.defaultOptions = {
 	$externalFileForm : $('#extUpload'),
 	allowFileTypes : ['jpeg', 'png', 'gif'],
 	limitSize : 1000000,
-	limitSizeTotal : 3000000,
+	limitSizeTotal : 5000000,
+	eventPrefixName : 'RG-',
 	queue : {
 		height : 150,
 		limit : 5,

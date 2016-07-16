@@ -1,5 +1,6 @@
 // load modules
 const util = require('./Util.js');
+const KeyboardEvent = require('./KeyboardEvent.js');
 
 
 module.exports = function Queue(parent) {
@@ -34,6 +35,16 @@ module.exports = function Queue(parent) {
 	 */
 	this.$templete = util.findDOM(parent.$container, 'element', 'template');
 
+	/**
+	 * @var {Object} keyboardEvent
+	 */
+	var keyboardEvent = new KeyboardEvent(
+		parent.options.eventPrefixName,
+		[
+			{ key : 'ctrl', code : 17 },
+			{ key : 'cmd', code : 91 }
+		]
+	);
 
 	/**
 	 * init event
@@ -155,21 +166,46 @@ module.exports = function Queue(parent) {
 		// set queue id
 		$el.attr('data-id', id);
 
+		// insert queue data
 		let $previewImages = util.findDOM($el, 'element', 'previewImage');
 		let $customButtons = util.findDOM($el, 'element', 'customButtons');
 		let $fileType = util.findDOM($el, 'text', 'filetype');
 		let $fileName = util.findDOM($el, 'text', 'filename');
 		let $state = util.findDOM($el, 'text', 'state');
 		let $fileSize = util.findDOM($el, 'text', 'filesize');
-
 		$fileType.text(file.type);
-		$fileName.text(file.name);
+		$fileName.text(file.filename);
 		$state.text('uploaded');
 		$fileSize.text(util.bytesToSize(file.size));
 
-		$previewImages.css('background-image', 'url(' + file.src + ')');
+		// check image and assign preview background
+		if (file.type.split('/')[0] == 'image')
+		{
+			$previewImages.css('background-image', 'url(' + file.src + ')');
+		}
 
-		// TODO : 선택 이벤트 등록 (터치도 고려필요함)
+		// toggle select event
+		let handler = 'click';
+		let selectedClassName = 'selected';
+		$el.on(handler, (e) => {
+			let $this = $(e.currentTarget);
+			if (keyboardEvent.isPressKeyCode)
+			{
+				$this.toggleClass(selectedClassName);
+			}
+			else
+			{
+				let isSelected = $this.hasClass(selectedClassName);
+				this.$queue.children().removeClass(selectedClassName);
+				if (!isSelected)
+				{
+					$this.addClass(selectedClassName);
+				}
+			}
+		});
+
+		// TODO : 큐 버튼 만들기 (옵션값을 가져와서 출력하기)
+		// TODO : 선택 이벤트랑 충돌나기 때문에 nav속에 있는 버튼에서 이벤트 걸때 `e.stopPropagation();` 실행해줘야함.
 
 		// append complete queue and remove progress queue
 		$targetEl.after($el).remove();

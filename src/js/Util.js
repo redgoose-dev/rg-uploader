@@ -56,7 +56,16 @@ module.exports = {
 		}
 
 		return parseInt(id);
+	},
+
+	/**
+	 * detect touch event
+	 *
+	 * @Return {Boolean}
+	 */
+	detectTouchEvent()
+	{
+		return 'ontouchstart' in document.documentElement;
 	}
 
-	// TODO : detect touch 메서드 만들기
 };

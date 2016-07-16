@@ -188,6 +188,7 @@ module.exports = function Uploader(parent) {
 		switch(res.state) {
 			case 'success':
 				file.src = res.response.src;
+				file.filename = (file.name) ? res.response.filename : file.name;
 				parent.queue.changeProgressToComplete(file);
 				parent.updateSize(file.size);
 				break;
@@ -254,6 +255,8 @@ module.exports = function Uploader(parent) {
 				}
 			}
 		});
+
+		// TODO : dropzone 이벤트 만들기
 	};
 
 	this.initEvent();

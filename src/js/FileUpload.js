@@ -75,7 +75,7 @@ var uploadSuccess = (e, file) => {
 			case 200:
 				let response = e.responseText;
 				try {
-					return JSON.parse(decodeURIComponent((response+'').replace(/\+/g, '%20')));
+					return JSON.parse((response+''));
 				} catch(e) {
 					return {
 						state : 'error',
