@@ -128,25 +128,55 @@
 <script src="../dist/js/rg-uploader.pkgd.js"></script>
 <script>
 // make uploader instance
-var uploader = new RGUploader({
+var rgUploader = new RGUploader({
 	uploadScript : './script/upload.php',
+	autoUpload : false,
 	$container : $('#uploadComponent'),
 	limitSize : 5000000,
 	limitSizeTotal : 10000000,
 	queue : {
 		height : 300,
-		limit : 20,
+		limit : 10,
 		style : 'list',
 		buttons : [
 			{
-				name : '',
-				iconName : '',
-				action : function() {
-
+				name : 'open file',
+				iconName : 'open_in_new',
+				action : function(app, file) {
+					console.log('action : open file');
+				}
+			},
+			{
+				name : 'make thumbnail image',
+				iconName : 'apps',
+				show : function(file) {
+					return (file.type.split('/')[0] == 'image');
+				},
+				action : function(app, file) {
+					console.log('action : make thumnail');
+				}
+			},
+			{
+				name : 'insert editor',
+				iconName : 'center_focus_strong',
+				action : function(app, file) {
+					console.log('action : insert editor');
+				}
+			},
+			{
+				name : 'remove queue',
+				iconName : 'close',
+				action : function(app, file) {
+					console.log('action : remove queue');
+					app.queue.remove(file.id);
 				}
 			}
 		]
 	}
+});
+
+$('.start-upload').on('click', function(){
+	rgUploader.uploader.play();
 });
 </script>
 </body>

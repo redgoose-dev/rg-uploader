@@ -65,6 +65,61 @@ module.exports = function Queue(parent) {
 	};
 
 	/**
+	 * init select queue event
+	 *
+	 * @Param {Object} $el
+	 */
+	var initSelectQueueEvent = ($el) => {
+		let handler = 'click';
+		let selectedClassName = 'selected';
+		$el.on(handler, (e) => {
+			let $this = $(e.currentTarget);
+			if (keyboardEvent.isPressKeyCode)
+			{
+				$this.toggleClass(selectedClassName);
+			}
+			else
+			{
+				let isSelected = $this.hasClass(selectedClassName);
+				this.$queue.children().removeClass(selectedClassName);
+				if (!isSelected)
+				{
+					$this.addClass(selectedClassName);
+				}
+			}
+		});
+	};
+
+	/**
+	 * create navigation buttons
+	 *
+	 * @Param {Object} options
+	 * @Param {Object} file
+	 */
+	var createNavigationButtons = (options, file) => {
+		if (!options.length) return false;
+
+		var $buttons = [];
+		options.forEach((item) => {
+
+			if (!item.name || !item.iconName || !item.action) return;
+			if (item.show && item.show(file) == false) return;
+
+			let $item = $('<button type="button" title="' + item.name + '">' +
+				'<i class="material-icons">' + item.iconName + '</i>' +
+				'</button>');
+			$item.on('click', (e) => {
+				item.action(parent, file);
+				e.stopPropagation();
+			});
+
+			$buttons.push($item);
+		});
+
+		return $buttons;
+	};
+
+	/**
 	 * change style
 	 *
 	 * @Param {String} styleName
@@ -92,7 +147,7 @@ module.exports = function Queue(parent) {
 	 *
 	 */
 	this.remove = (id) => {
-
+		log('act remove queue : ' + id);
 	};
 
 	/**
@@ -104,7 +159,6 @@ module.exports = function Queue(parent) {
 	this.findItem = (idName) => {
 		return this.items.ids.indexOf(idName);
 	}
-
 
 	/**
 	 * select queue element
@@ -155,7 +209,7 @@ module.exports = function Queue(parent) {
 	/**
 	 * change progress to complete queue
 	 *
-	 * @Param {Object} res
+	 * @Param {Object} file
 	 */
 	this.changeProgressToComplete = (file) => {
 		let id = file.id;
@@ -166,17 +220,20 @@ module.exports = function Queue(parent) {
 		// set queue id
 		$el.attr('data-id', id);
 
-		// insert queue data
+		// set elements in queue
 		let $previewImages = util.findDOM($el, 'element', 'previewImage');
 		let $customButtons = util.findDOM($el, 'element', 'customButtons');
 		let $fileType = util.findDOM($el, 'text', 'filetype');
 		let $fileName = util.findDOM($el, 'text', 'filename');
 		let $state = util.findDOM($el, 'text', 'state');
 		let $fileSize = util.findDOM($el, 'text', 'filesize');
+
+		// insert queue data
 		$fileType.text(file.type);
 		$fileName.text(file.filename);
 		$state.text('uploaded');
 		$fileSize.text(util.bytesToSize(file.size));
+		$customButtons.html('');
 
 		// check image and assign preview background
 		if (file.type.split('/')[0] == 'image')
@@ -184,28 +241,15 @@ module.exports = function Queue(parent) {
 			$previewImages.css('background-image', 'url(' + file.src + ')');
 		}
 
-		// toggle select event
-		let handler = 'click';
-		let selectedClassName = 'selected';
-		$el.on(handler, (e) => {
-			let $this = $(e.currentTarget);
-			if (keyboardEvent.isPressKeyCode)
-			{
-				$this.toggleClass(selectedClassName);
-			}
-			else
-			{
-				let isSelected = $this.hasClass(selectedClassName);
-				this.$queue.children().removeClass(selectedClassName);
-				if (!isSelected)
-				{
-					$this.addClass(selectedClassName);
-				}
-			}
-		});
+		// set toggle select event
+		initSelectQueueEvent($el);
 
-		// TODO : 큐 버튼 만들기 (옵션값을 가져와서 출력하기)
-		// TODO : 선택 이벤트랑 충돌나기 때문에 nav속에 있는 버튼에서 이벤트 걸때 `e.stopPropagation();` 실행해줘야함.
+		// create queue navigation buttons
+		let $buttons = createNavigationButtons(this.options.buttons, file);
+		if ($buttons.length)
+		{
+			$customButtons.append($buttons);
+		}
 
 		// append complete queue and remove progress queue
 		$targetEl.after($el).remove();
@@ -240,11 +284,6 @@ module.exports = function Queue(parent) {
 		setTimeout(() => {
 			$el.remove();
 		}, 3000);
-	};
-
-
-	this.import = (res) => {
-		// TODO : 외부에서 가져온 데이터로 큐 등록하기
 	};
 
 

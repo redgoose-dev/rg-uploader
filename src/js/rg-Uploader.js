@@ -69,10 +69,10 @@ window.RGUploader = function(options) {
  */
 RGUploader.prototype.defaultOptions = {
 	uploadScript : '',
-	autoUpload : true,
+	autoUpload : false,
 	$container : $('.rg-uploader'),
 	$externalFileForm : $('#extUpload'),
-	allowFileTypes : ['jpeg', 'png', 'gif'],
+	allowFileTypes : ['jpeg', 'png', 'gif', 'json'],
 	limitSize : 1000000,
 	limitSizeTotal : 5000000,
 	eventPrefixName : 'RG-',

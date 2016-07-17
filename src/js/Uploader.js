@@ -4,6 +4,7 @@
 
 const fileUpload = require('FileUpload.js');
 const util = require('./Util.js');
+const lang = require('./Language.js');
 
 
 /**
@@ -13,7 +14,9 @@ const util = require('./Util.js');
  */
 function resetForm($el)
 {
-	$el.replaceWith( $el.clone( true ) );
+	$el.each((k, o) => {
+		$(o).replaceWith( $(o).clone( true ) );
+	});
 }
 
 
@@ -61,14 +64,30 @@ module.exports = function Uploader(parent) {
 		return size;
 	};
 
+	/**
+	 * merge file list
+	 *
+	 * @Param {Object} $el
+	 * @Return {Array}
+	 */
+	var mergeFileList = ($el) => {
+		var files = [];
+		$el.each((k, o) => {
+			for (let i=0; i<o.files.length; i++)
+			{
+				files.push(o.files[i]);
+			}
+		});
+		return files;
+	};
+
 
 	/**
 	 * push ready upload files
 	 *
 	 * @Param {Object} el [type=file] element
 	 */
-	this.pushReadyUploadFiles = (el) => {
-		let files = el.files;
+	this.pushReadyUploadFiles = (files) => {
 		let options = parent.options;
 		let limitCount = options.queue.limit;
 		let error = {
@@ -89,13 +108,13 @@ module.exports = function Uploader(parent) {
 		// check file count
 		if (files.length > limitCount)
 		{
-			alert('파일은 총 ' + options.queue.limit + '개까지 업로드할 수 있습니다.');
+			alert(lang('error_upload_limit', [options.queue.limit]));
 			return false;
 		}
 
 		if (options.limitSizeTotal < (getTotalReadySize(this.readyItems) + getTotalReadySize(files)))
 		{
-			alert('업로드할 수 있는 용량이 초과되었습니다.');
+			alert(lang('error_limit_size'));
 			return false;
 		}
 
@@ -104,21 +123,21 @@ module.exports = function Uploader(parent) {
 		{
 			if (!files[i].type)
 			{
-				actError('type', '잘못된 형식의 파일입니다.');
+				actError('type', lang('error_file_type'));
 				continue;
 			};
 
 			// check file extension
 			if (options.allowFileTypes.indexOf(files[i].type.split('/')[1]) < 0)
 			{
-				actError('extension', '허용되지 않는 파일은 제외됩니다.');
+				actError('extension', lang('error_check_file'));
 				continue;
 			}
 
 			// check file size
 			if (files[i].size > options.limitSize)
 			{
-				actError('filesize', '허용하는 용량을 초과한 파일은 제외됩니다.');
+				actError('filesize', lang('error_limit_size2'));
 				continue;
 			}
 
@@ -136,7 +155,7 @@ module.exports = function Uploader(parent) {
 	 * play upload
 	 *
 	 */
-	this.playUpload = () => {
+	var upload = () => {
 		if (!this.readyItems.length) return false;
 
 		this.uploading = true;
@@ -208,7 +227,7 @@ module.exports = function Uploader(parent) {
 		// next upload
 		if (this.readyItems.length)
 		{
-			this.playUpload();
+			upload();
 		}
 		else
 		{
@@ -222,7 +241,7 @@ module.exports = function Uploader(parent) {
 	 */
 	this.initEvent = () => {
 		var self = this;
-		let $el = parent.$container.find('[data-element=addfiles]');
+		let $el = util.findDOM(parent.$container, 'element', 'addfiles');
 		let $extEl = parent.options.$externalFileForm;
 
 		// check upload element in container
@@ -242,22 +261,45 @@ module.exports = function Uploader(parent) {
 
 			if (parent.options.autoUpload)
 			{
-				// push upload items
-				self.pushReadyUploadFiles(e.currentTarget);
-
-				// reset form
-				resetForm($(e.currentTarget));
-
-				// start upload
-				if (!this.uploading)
+				if (this.uploading)
 				{
-					self.playUpload();
+					alert(lang('error_add_upload'));
+					resetForm(this.$uploadElement);
+					return false;
 				}
+
+				// play upload
+				this.play();
 			}
 		});
 
 		// TODO : dropzone 이벤트 만들기
 	};
 
+	/**
+	 * play upload
+	 *
+	 */
+	this.play = () => {
+		var files = mergeFileList(this.$uploadElement);
+
+		if (!files.length)
+		{
+			alert(lang('error_not_upload_file'));
+			return false;
+		}
+
+		// push upload items
+		this.pushReadyUploadFiles(files);
+
+		// reset form
+		resetForm(this.$uploadElement);
+
+		// start upload
+		upload();
+	}
+
+
+	// ACTION
 	this.initEvent();
 };
