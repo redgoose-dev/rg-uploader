@@ -130,8 +130,11 @@
 // make uploader instance
 var rgUploader = new RGUploader({
 	uploadScript : './script/upload.php',
-	autoUpload : false,
+	autoUpload : true,
 	$container : $('#uploadComponent'),
+	$externalFileForm : $('#extUpload'),
+	allowFileTypes : ['jpeg', 'png', 'gif', 'json'],
+	eventPrefixName : 'RG-',
 	limitSize : 5000000,
 	limitSizeTotal : 10000000,
 	queue : {
@@ -171,7 +174,43 @@ var rgUploader = new RGUploader({
 					app.queue.remove(file.id);
 				}
 			}
+		],
+		datas : [
+			{
+				id : 8742867877,
+				name : 'aaa.jpg',
+				filename : 'aaa.jpg',
+				size : 863489,
+				src : './upload/aaa.jpg',
+				type : 'image/jpeg'
+			},
+			{
+				id : 6860860674,
+				name : 'aaaa.jpg',
+				filename : 'aaaa.jpg',
+				size : 506647,
+				src : './upload/aaaa.jpg',
+				type : 'image/jpeg'
+			}
 		]
+	},
+	plugin : [
+		{}
+	],
+	uploadProgress : function(response, file) {
+		//log('upload progress');
+		//log(file);
+	},
+	uploadComplete : function(file) {
+		//log('upload complete')
+		//log(file);
+	},
+	uploadFail : function(file) {
+		//log('upload fail');
+		//log(file)
+	},
+	init : function() {
+		//log('app init');
 	}
 });
 

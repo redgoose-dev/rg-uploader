@@ -47,6 +47,16 @@ module.exports = function Queue(parent) {
 	);
 
 	/**
+	 * find item
+	 *
+	 * @Param {int} id
+	 * @Return {int}
+	 */
+	this.findItem = (id) => {
+		return this.items.ids.indexOf(id);
+	}
+
+	/**
 	 * init event
 	 *
 	 */
@@ -134,6 +144,27 @@ module.exports = function Queue(parent) {
 	};
 
 	/**
+	 * import
+	 *
+	 * @Param {Array} items
+	 */
+	this.import = (items) => {
+		items.forEach((item) => {
+			this.addComplete(item);
+		});
+	};
+
+	/**
+	 * select queue element
+	 *
+	 * @Param {String} id
+	 * @Return {Object}
+	 */
+	this.selectQueueElement = (id) => {
+		return this.$queue.children('li[data-id=' + id + ']');
+	};
+
+	/**
 	 * add queue
 	 *
 	 */
@@ -147,78 +178,44 @@ module.exports = function Queue(parent) {
 	 *
 	 */
 	this.remove = (id) => {
-		log('act remove queue : ' + id);
-	};
-
-	/**
-	 * find item
-	 *
-	 * @Param {int} idName
-	 * @Return {int}
-	 */
-	this.findItem = (idName) => {
-		return this.items.ids.indexOf(idName);
-	}
-
-	/**
-	 * select queue element
-	 *
-	 * @Param {String} id
-	 * @Return {Object}
-	 */
-	this.selectQueueElement = (id) => {
-		return this.$queue.children('li[data-id=' + id + ']');
+		let n = this.findItem(id);
+		this.items.ids.splice(n, 1);
+		this.items.files.splice(n, 1);
 	};
 
 	/**
 	 * add progress queue
 	 *
-	 * @Param {Object} res
-	 */
-	this.addProgress = (items) => {
-		items.forEach((item) => {
-			this.add(item);
-
-			let $tmpEl = this.$templete.children();
-			let $item = $tmpEl.children('.loading').clone();
-
-			// input meta
-			$item.attr('data-id', item.id);
-			util.findDOM($item, 'text', 'filename').text(item.name);
-
-			// reset percentage
-			util.findDOM($item, 'element', 'progress').width('0%').find('em').text('0');
-
-			// append element
-			this.$queue.append($item);
-		});
-	};
-
-	/**
-	 * updare queue
-	 *
-	 * @Param {Object} res
-	 */
-	this.updateProgress = (res) => {
-		let $el = this.$queue.children('li[data-id=' + res.id + ']');
-		let $progress = util.findDOM($el, 'element', 'progress');
-		let percent = parseInt((res.data.loaded / res.data.total) * 100);
-		$progress.width(percent + '%').find('em').text(percent);
-	};
-
-	/**
-	 * change progress to complete queue
-	 *
 	 * @Param {Object} file
 	 */
-	this.changeProgressToComplete = (file) => {
+	this.addProgress = (file) => {
+		let $tmpEl = this.$templete.children();
+		let $item = $tmpEl.children('.loading').clone();
+
+		// add item in queue index
+		this.add(file);
+
+		// input meta
+		$item.attr('data-id', file.id);
+		util.findDOM($item, 'text', 'filename').text(file.name);
+
+		// reset percentage
+		util.findDOM($item, 'element', 'progress').width('0%').find('em').text('0');
+
+		// append element
+		this.$queue.append($item);
+	};
+
+	/**
+	 * add complete queue
+	 *
+	 * @Param {Object} file
+	 * @Param {Object} $beforeElement
+	 */
+	this.addComplete = (file, $beforeElement) => {
 		let id = file.id;
-		let $targetEl = this.selectQueueElement(id);
 		let $el = this.$templete.children().children('.complete').clone();
 		let item = this.items.files[this.findItem(id)];
-
-		// set queue id
-		$el.attr('data-id', id);
 
 		// set elements in queue
 		let $previewImages = util.findDOM($el, 'element', 'previewImage');
@@ -227,6 +224,12 @@ module.exports = function Queue(parent) {
 		let $fileName = util.findDOM($el, 'text', 'filename');
 		let $state = util.findDOM($el, 'text', 'state');
 		let $fileSize = util.findDOM($el, 'text', 'filesize');
+
+		// add queue index
+		this.add(file);
+
+		// set queue id
+		$el.attr('data-id', id);
 
 		// insert queue data
 		$fileType.text(file.type);
@@ -251,39 +254,121 @@ module.exports = function Queue(parent) {
 			$customButtons.append($buttons);
 		}
 
-		// append complete queue and remove progress queue
-		$targetEl.after($el).remove();
+		// append queue
+		if ($beforeElement && $beforeElement.length)
+		{
+			$beforeElement.after($el);
+		}
+		else
+		{
+			this.$queue.append($el);
+		}
 	};
 
 	/**
-	 * change progress to error queue
+	 * add error queue
 	 *
-	 * @Param {String} message
 	 * @Param {Object} file
+	 * @Param {Object} $beforeElement
 	 */
-	this.changeProgressToError = (message, file) => {
-		let id = file.id;
-		let $targetEl = this.selectQueueElement(id);
+	this.addError = (file, $beforeElement) => {
+		var id = file.id;
 		let $el = this.$templete.children().children('.error').clone();
-		let item = this.items.files[this.findItem(id)];
-
-		// set queue id
-		$el.attr('data-id', id);
 
 		let $fileType = util.findDOM($el, 'text', 'filetype');
 		let $fileName = util.findDOM($el, 'text', 'filename');
 		let $state = util.findDOM($el, 'text', 'state');
 
+		// add queue index
+		this.add(file);
+
+		// set queue id
+		$el.attr('data-id', id);
+
 		$fileType.text(file.type);
 		$fileName.text(file.name);
-		$state.text(message);
+		$state.text(file.message);
 
-		// append error queue and remove progress queue
-		$targetEl.after($el).remove();
+		// append error queue
+		if ($beforeElement && $beforeElement.length)
+		{
+			$beforeElement.after($el);
+		}
+		else
+		{
+			this.$queue.append($el);
+		}
 
 		setTimeout(() => {
-			$el.remove();
+			this.removeQueue(id);
 		}, 3000);
+	};
+
+	/**
+	 * remove queue
+	 *
+	 * @Param {int} id
+	 * @Param {Boolean} isLoadingQueue
+	 */
+	this.removeQueue = (id, isLoadingQueue) => {
+		if (isLoadingQueue)
+		{
+			this.selectQueueElement(id).filter('.loading').remove();
+		}
+		else
+		{
+			this.selectQueueElement(id).remove();
+			this.remove(id);
+		}
+	};
+
+	/**
+	 * updare queue
+	 *
+	 * @Param {Object} res
+	 */
+	this.updateProgress = (res) => {
+		let $el = this.$queue.children('li[data-id=' + res.id + ']');
+		let $progress = util.findDOM($el, 'element', 'progress');
+		let percent = parseInt((res.data.loaded / res.data.total) * 100);
+		$progress.width(percent + '%').find('em').text(percent);
+	};
+
+	/**
+	 * change progress to complete queue
+	 *
+	 * @Param {Object} file
+	 */
+	this.changeProgressToComplete = (file) => {
+		let $loading = this.selectQueueElement(file.id);
+		this.remove(file.id);
+		this.addComplete(file, $loading);
+		this.removeQueue(file.id, true);
+	};
+
+	/**
+	 * change progress to error queue
+	 *
+	 * @Param {Object} file
+	 */
+	this.changeProgressToError = (file) => {
+		let $loading = this.selectQueueElement(file.id);
+		this.remove(file.id);
+		this.addError(file, $loading);
+		this.removeQueue(file.id, true);
+	};
+
+	/**
+	 * get files size (total)
+	 *
+	 * @Param {int}
+	 */
+	this.getSize = () => {
+		var size = 0;
+		this.items.files.forEach((item) => {
+			size += item.size;
+		});
+		return size;
 	};
 
 

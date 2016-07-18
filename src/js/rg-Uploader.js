@@ -52,9 +52,19 @@ window.RGUploader = function(options) {
 		this.queue = new Queue(this);
 		this.uploader = new Uploader(this);
 
+		// import queue datas
+		if (this.options.queue.datas.length)
+		{
+			this.queue.import(this.options.queue.datas);
+		}
+
 		// update size
-		// TODO : queue가 있으면 임포트하고나서 업데이트하기
-		this.updateSize(0);
+		this.updateSize(this.queue.getSize());
+
+		if (this.options.init)
+		{
+			this.options.init(this);
+		}
 	}
 };
 
@@ -68,32 +78,5 @@ window.RGUploader = function(options) {
  * default options
  */
 RGUploader.prototype.defaultOptions = {
-	uploadScript : '',
-	autoUpload : false,
-	$container : $('.rg-uploader'),
-	$externalFileForm : $('#extUpload'),
-	allowFileTypes : ['jpeg', 'png', 'gif', 'json'],
-	limitSize : 1000000,
-	limitSizeTotal : 5000000,
-	eventPrefixName : 'RG-',
-	queue : {
-		height : 150,
-		limit : 5,
-		style : 'web',
-		buttons : [
-			{
-				name : '',
-				iconName : '',
-				action : function() {
 
-				}
-			}
-		]
-	},
-	plugin : [
-		{}
-	],
-	uploadProgress : function() {},
-	uploadComplete : function() {},
-	uploadFail : function() {}
 };

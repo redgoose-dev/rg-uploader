@@ -335,12 +335,11 @@
 				li {
 					&.complete {
 						.wrap {
-							position: relative;
-							display: block;
-							padding-left: $size + 10;
+							position: relative; display: block;
+							padding-left: $size;
 						}
 						figure.col {position: absolute; left: 0; top: 0; bottom: 0; height: auto;}
-						p.col {padding: 8px 5px 8px 0;}
+						.bd {padding: 8px 5px 8px 10px;}
 						nav.col {
 							text-align: center;
 							@include d-flex(true);

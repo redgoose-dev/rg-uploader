@@ -73,7 +73,7 @@ module.exports = function(eventPrefix, keyList) {
 		$(window)
 			.off('keyup.' + EVENT_PREFIX)
 			.on('keydown.' + EVENT_PREFIX, keyDown);
-	}
+	};
 
 	// init event
 	$(window).on('keydown.' + EVENT_PREFIX, keyDown);

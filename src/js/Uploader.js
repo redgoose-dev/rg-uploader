@@ -7,19 +7,6 @@ const util = require('./Util.js');
 const lang = require('./Language.js');
 
 
-/**
- * reset input[type=file]
- *
- * @param {Object} $el
- */
-function resetForm($el)
-{
-	$el.each((k, o) => {
-		$(o).replaceWith( $(o).clone( true ) );
-	});
-}
-
-
 // export
 module.exports = function Uploader(parent) {
 
@@ -148,7 +135,9 @@ module.exports = function Uploader(parent) {
 			this.readyItems.push(files[i]);
 		}
 
-		parent.queue.addProgress(this.readyItems);
+		this.readyItems.forEach((item) => {
+			parent.queue.addProgress(item);
+		});
 	};
 
 	/**
@@ -166,7 +155,6 @@ module.exports = function Uploader(parent) {
 				parent.options.uploadScript,
 				this.readyItems[0],
 				(type, response, file) => {
-					// remove complete item
 					switch(type) {
 						case 'progress':
 							this.uploadProgress(response, file);
@@ -195,6 +183,10 @@ module.exports = function Uploader(parent) {
 			id : file.id,
 			data : res
 		});
+		if (parent.options.uploadProgress)
+		{
+			parent.options.uploadProgress(res, file);
+		}
 	};
 
 	/**
@@ -210,19 +202,26 @@ module.exports = function Uploader(parent) {
 				file.filename = (file.name) ? res.response.filename : file.name;
 				parent.queue.changeProgressToComplete(file);
 				parent.updateSize(file.size);
+
+				// callback
+				if (parent.options.uploadComplete)
+				{
+					parent.options.uploadComplete(file);
+				}
 				break;
 			case 'error':
-				parent.queue.changeProgressToError(res.response.message, file);
+				file.message = res.response.message;
+				parent.queue.changeProgressToError(file);
+
+				// callback
+				if (parent.options.uploadFail)
+				{
+					parent.options.uploadFail(file);
+				}
 				break;
 		}
 
 		this.readyItems.splice(0, 1);
-
-		// play callback
-		if (parent.options.uploadComplete)
-		{
-			parent.options.uploadComplete(file);
-		}
 
 		// next upload
 		if (this.readyItems.length)
@@ -240,7 +239,6 @@ module.exports = function Uploader(parent) {
 	 *
 	 */
 	this.initEvent = () => {
-		var self = this;
 		let $el = util.findDOM(parent.$container, 'element', 'addfiles');
 		let $extEl = parent.options.$externalFileForm;
 
@@ -264,7 +262,8 @@ module.exports = function Uploader(parent) {
 				if (this.uploading)
 				{
 					alert(lang('error_add_upload'));
-					resetForm(this.$uploadElement);
+					this.resetEvent();
+
 					return false;
 				}
 
@@ -275,6 +274,23 @@ module.exports = function Uploader(parent) {
 
 		// TODO : dropzone 이벤트 만들기
 	};
+
+	/**
+	 * remove event
+	 */
+	this.removeEvent = () => {
+		this.$uploadElement.off('change').each((k, o) => {
+			$(o).replaceWith( $(o).clone( true ) );
+		});
+	}
+
+	/**
+	 * reset event
+	 */
+	this.resetEvent = () => {
+		this.removeEvent();
+		this.initEvent();
+	}
 
 	/**
 	 * play upload
@@ -293,7 +309,7 @@ module.exports = function Uploader(parent) {
 		this.pushReadyUploadFiles(files);
 
 		// reset form
-		resetForm(this.$uploadElement);
+		this.resetEvent();
 
 		// start upload
 		upload();
