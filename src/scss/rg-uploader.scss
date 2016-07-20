@@ -94,12 +94,14 @@
 				input[type=file] {position: absolute; visibility: hidden;}
 			}
 		}
-		> p {
-			width: 140px;
-			margin: 0; padding: 0 10px 0 0;
-			font-family: $font-eng-basic;
-			text-align: right; font-size: 12px; color: #222;
-			em {font-style: normal;}
+		> div {
+			width: 140px; padding: 0 10px 0 0;
+			> p {
+				margin: 0;
+				font-family: $font-eng-basic;
+				text-align: right; font-size: 12px; color: #222;
+				em {font-style: normal;}
+			}
 		}
 
 		@media (max-width: $mobile-max-width) {
@@ -448,6 +450,7 @@
 	.body > .preview {-webkit-flex: inherit; flex: inherit;}
 	.preview {
 		width: $preview-width; height: 100%; overflow: hidden;
+		&.hide {display: none;}
 		figure {
 			height: 100%; margin: 0;
 			background: no-repeat 50% 50%; background-size: cover;
@@ -462,5 +465,8 @@
 				font-family: $font-eng-basic; color: #ccc; font-size: 11px; text-align: center;
 			}
 		}
+	}
+	@media (max-width: $mobile-max-width) {
+		.preview {display: none;}
 	}
 }

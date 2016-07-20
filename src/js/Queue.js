@@ -47,31 +47,27 @@ module.exports = function Queue(parent) {
 	);
 
 	/**
-	 * find item
-	 *
-	 * @Param {int} id
-	 * @Return {int}
+	 * init
 	 */
-	this.findItem = (id) => {
-		return this.items.ids.indexOf(id);
-	}
-
-	/**
-	 * init event
-	 *
-	 */
-	var initEvent = () => {
-		var self = this;
+	var init = () => {
+		// set queue height
+		util.findDOM(parent.$container, 'comp', 'queue').height(this.options.height);
 
 		// change queue style
 		let $selectQueueStyle = util.findDOM(parent.$container, 'element', 'selectQueueStyle');
 		if ($selectQueueStyle.length)
 		{
-			$selectQueueStyle.children('button').on('click', function(){
-				if ($(this).hasClass('on')) return false;
-				self.changeStyle($(this).data('style'));
+			$selectQueueStyle.children('button').on('click', (e) => {
+				if ($(e.currentTarget).hasClass('on')) return false;
+				this.changeStyle($(e.currentTarget).data('style'));
 			});
 		}
+
+		// set style
+		this.changeStyle(this.options.style);
+
+		// import queue datas
+		this.import(this.options.datas);
 	};
 
 	/**
@@ -81,7 +77,8 @@ module.exports = function Queue(parent) {
 	 */
 	var initSelectQueueEvent = ($el) => {
 		let handler = 'click';
-		let selectedClassName = 'selected';
+		var selectedClassName = 'selected';
+
 		$el.on(handler, (e) => {
 			let $this = $(e.currentTarget);
 			if (keyboardEvent.isPressKeyCode)
@@ -97,6 +94,9 @@ module.exports = function Queue(parent) {
 					$this.addClass(selectedClassName);
 				}
 			}
+
+			// send event to plugin
+			parent.eventReceiver('queue.selectQueue', { $selectElement : $el });
 		});
 	};
 
@@ -129,6 +129,17 @@ module.exports = function Queue(parent) {
 		return $buttons;
 	};
 
+
+	/**
+	 * find item
+	 *
+	 * @Param {int} id
+	 * @Return {int}
+	 */
+	this.findItem = (id) => {
+		return this.items.ids.indexOf(id);
+	};
+
 	/**
 	 * change style
 	 *
@@ -141,17 +152,43 @@ module.exports = function Queue(parent) {
 
 		this.style = styleName;
 		this.$queue.removeClass().addClass('style-' + styleName);
+
+		// send event to plugin
+		parent.eventReceiver('queue.changeStyle', { style : styleName });
 	};
 
 	/**
 	 * import
 	 *
-	 * @Param {Array} items
+	 * @Param {Array|String} src
 	 */
-	this.import = (items) => {
-		items.forEach((item) => {
-			this.addComplete(item);
-		});
+	this.import = (src) => {
+		if (!src) return false;
+
+		let items = [];
+
+		if (typeof src === 'string')
+		{
+			$.get(src, (res) => {
+				if (typeof res === 'string')
+				{
+					try {
+						res = JSON.parse(res);
+					} catch(e) {
+						res = [];
+					}
+				}
+				res.forEach((item) => {
+					this.addComplete(item);
+				});
+			});
+		}
+		else if (src instanceof Array)
+		{
+			src.forEach((item) => {
+				this.addComplete(item);
+			});
+		}
 	};
 
 	/**
@@ -204,6 +241,9 @@ module.exports = function Queue(parent) {
 
 		// append element
 		this.$queue.append($item);
+
+		// send event to plugin
+		parent.eventReceiver('queue.addProgress', { $el: $item, file: file });
 	};
 
 	/**
@@ -233,7 +273,7 @@ module.exports = function Queue(parent) {
 
 		// insert queue data
 		$fileType.text(file.type);
-		$fileName.text(file.filename);
+		$fileName.text(file.name);
 		$state.text('uploaded');
 		$fileSize.text(util.bytesToSize(file.size));
 		$customButtons.html('');
@@ -263,6 +303,13 @@ module.exports = function Queue(parent) {
 		{
 			this.$queue.append($el);
 		}
+
+		// send event to plugin
+		parent.eventReceiver('queue.uploadComplete', {
+			$selectElement : $el,
+			id : id,
+			file : file
+		});
 	};
 
 	/**
@@ -300,7 +347,7 @@ module.exports = function Queue(parent) {
 		}
 
 		setTimeout(() => {
-			this.removeQueue(id);
+			this.removeQueue(id, false, false);
 		}, 3000);
 	};
 
@@ -309,16 +356,47 @@ module.exports = function Queue(parent) {
 	 *
 	 * @Param {int} id
 	 * @Param {Boolean} isLoadingQueue
+	 * @Param {Boolean} useScript
 	 */
-	this.removeQueue = (id, isLoadingQueue) => {
+	this.removeQueue = (id, isLoadingQueue, useScript) => {
 		if (isLoadingQueue)
 		{
 			this.selectQueueElement(id).filter('.loading').remove();
+
+			// send event to plugin
+			parent.eventReceiver('queue.removeQueue', {});
 		}
 		else
 		{
-			this.selectQueueElement(id).remove();
-			this.remove(id);
+			if (useScript && parent.options.removeScript)
+			{
+				let file = this.items.files[this.findItem(id)];
+				// play remove file script
+				$.post(parent.options.removeScript, file, (res, state) => {
+					if (typeof res === 'string')
+					{
+						try {
+							res = JSON.parse(res);
+						} catch(e) {
+							res = { state : 'error', response : res };
+						}
+					}
+					if (res && res.state && res.state == 'success')
+					{
+						this.selectQueueElement(id).remove();
+						this.remove(id);
+
+						parent.eventReceiver('queue.removeQueue', {});
+					}
+				});
+			}
+			else
+			{
+				this.selectQueueElement(id).remove();
+				this.remove(id);
+
+				parent.eventReceiver('queue.removeQueue', {});
+			}
 		}
 	};
 
@@ -332,29 +410,33 @@ module.exports = function Queue(parent) {
 		let $progress = util.findDOM($el, 'element', 'progress');
 		let percent = parseInt((res.data.loaded / res.data.total) * 100);
 		$progress.width(percent + '%').find('em').text(percent);
+
+		parent.eventReceiver('queue.updateProgress', {
+			$selectElement : $el,
+			id: res.id,
+			loaded : res.data.loaded,
+			total : res.data.total
+		});
 	};
 
 	/**
-	 * change progress to complete queue
+	 * upload result
 	 *
+	 * @Param {String} state (success|error)
 	 * @Param {Object} file
 	 */
-	this.changeProgressToComplete = (file) => {
+	this.uploadResult = (state, file) => {
+		if (!state) return false;
 		let $loading = this.selectQueueElement(file.id);
 		this.remove(file.id);
-		this.addComplete(file, $loading);
-		this.removeQueue(file.id, true);
-	};
-
-	/**
-	 * change progress to error queue
-	 *
-	 * @Param {Object} file
-	 */
-	this.changeProgressToError = (file) => {
-		let $loading = this.selectQueueElement(file.id);
-		this.remove(file.id);
-		this.addError(file, $loading);
+		switch(state) {
+			case 'success':
+				this.addComplete(file, $loading);
+				break;
+			case 'error':
+				this.addError(file, $loading);
+				break;
+		}
 		this.removeQueue(file.id, true);
 	};
 
@@ -372,12 +454,6 @@ module.exports = function Queue(parent) {
 	};
 
 
-	// set queue height
-	util.findDOM(parent.$container, 'comp', 'queue').height(this.options.height);
-
 	// init event
-	initEvent();
-
-	// set style
-	this.changeStyle(this.options.style);
+	init();
 };

@@ -40,11 +40,6 @@
 
 			<!-- body -->
 			<div class="body" data-comp="queue">
-				<!-- plugin - preview -->
-				<!--<div class="col preview">-->
-					<!--<figure class="not-image" style="background-image: url('https://images.unsplash.com/photo-1467348733814-f93fc480bec6?dpr=2&auto=compress,format&crop=entropy&fit=crop&w=300&q=80');">filename.jpg</figure>-->
-				<!--</div>-->
-				<!-- // plugin - preview -->
 				<!-- queue -->
 				<div class="col queue" data-element="queue"><ul></ul></div>
 				<div class="col queue" data-element="template">
@@ -117,28 +112,31 @@
 						<span>Start upload</span>
 					</p>
 				</nav>
-				<p>Size : <em data-text="currentSize"></em>/<em data-text="totalSize"></em></p>
+				<div class="size-info"></div>
 			</footer>
 			<!-- // footer -->
 		</article>
 	</div>
 </main>
 <script>function log(o) {console.log(o);}</script>
-<script src="../vendor/jquery/jquery-3.1.0.slim.min.js"></script>
+<script src="../vendor/jquery/jquery-3.1.0.min.js"></script>
 <script src="../dist/js/rg-uploader.pkgd.js"></script>
+<script src="../plugins/preview.plugin.js"></script>
+<script src="../plugins/sizeinfo.plugin.js"></script>
 <script>
 // make uploader instance
 var rgUploader = new RGUploader({
-	uploadScript : './script/upload.php',
+	//uploadScript : './script/upload.php',
+	removeScript : './script/remove.php',
 	autoUpload : true,
 	$container : $('#uploadComponent'),
 	$externalFileForm : $('#extUpload'),
 	allowFileTypes : ['jpeg', 'png', 'gif', 'json'],
 	eventPrefixName : 'RG-',
-	limitSize : 5000000,
-	limitSizeTotal : 10000000,
+	limitSize : 3000000,
+	limitSizeTotal : 5120000,
 	queue : {
-		height : 300,
+		height : 150,
 		limit : 10,
 		style : 'list',
 		buttons : [
@@ -170,33 +168,14 @@ var rgUploader = new RGUploader({
 				name : 'remove queue',
 				iconName : 'close',
 				action : function(app, file) {
-					console.log('action : remove queue');
-					app.queue.remove(file.id);
+					app.queue.removeQueue(file.id, false, true);
 				}
 			}
 		],
-		datas : [
-			{
-				id : 8742867877,
-				name : 'aaa.jpg',
-				filename : 'aaa.jpg',
-				size : 863489,
-				src : './upload/aaa.jpg',
-				type : 'image/jpeg'
-			},
-			{
-				id : 6860860674,
-				name : 'aaaa.jpg',
-				filename : 'aaaa.jpg',
-				size : 506647,
-				src : './upload/aaaa.jpg',
-				type : 'image/jpeg'
-			}
-		]
+		// TODO : 타입이 string이면 json데이터 url로 인식하고 array라면 배열객체 데이터로 보고 바로 가져오기
+		datas : './script/data.php'
 	},
-	plugin : [
-		{}
-	],
+	plugin : [ 'preview', 'sizeinfo' ],
 	uploadProgress : function(response, file) {
 		//log('upload progress');
 		//log(file);
@@ -217,6 +196,23 @@ var rgUploader = new RGUploader({
 $('.start-upload').on('click', function(){
 	rgUploader.uploader.play();
 });
+
+//[
+//	{
+//		id : 8742867877,
+//		name : 'aaa.jpg',
+//		size : 863489,
+//		src : './upload/aaa.jpg',
+//		type : 'image/jpeg'
+//	},
+//	{
+//		id : 6860860674,
+//		name : 'aaaa.jpg',
+//		size : 506647,
+//		src : './upload/aaaa.jpg',
+//		type : 'image/jpeg'
+//	}
+//]
 </script>
 </body>
 </html>

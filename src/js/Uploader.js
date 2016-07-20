@@ -99,7 +99,9 @@ module.exports = function Uploader(parent) {
 			return false;
 		}
 
-		if (options.limitSizeTotal < (getTotalReadySize(this.readyItems) + getTotalReadySize(files)))
+		// check total upload size
+		let size = parent.queue.getSize() + getTotalReadySize(this.readyItems) + getTotalReadySize(files);
+		if (options.limitSizeTotal < size)
 		{
 			alert(lang('error_limit_size'));
 			return false;
@@ -168,6 +170,8 @@ module.exports = function Uploader(parent) {
 		}
 		else
 		{
+			log('local upload');
+			log(this.readyItems);
 			// TODO : make local upload
 		}
 	};
@@ -198,10 +202,9 @@ module.exports = function Uploader(parent) {
 	this.uploadComplete = (res, file) => {
 		switch(res.state) {
 			case 'success':
-				file.src = res.response.src;
-				file.filename = (file.name) ? res.response.filename : file.name;
-				parent.queue.changeProgressToComplete(file);
-				parent.updateSize(file.size);
+				file = $.extend({}, file, res.response);
+				delete file.slice;
+				parent.queue.uploadResult('success', file);
 
 				// callback
 				if (parent.options.uploadComplete)
@@ -211,7 +214,8 @@ module.exports = function Uploader(parent) {
 				break;
 			case 'error':
 				file.message = res.response.message;
-				parent.queue.changeProgressToError(file);
+				parent.queue.uploadResult('error', file);
+				console.log(file.message);
 
 				// callback
 				if (parent.options.uploadFail)
@@ -236,7 +240,6 @@ module.exports = function Uploader(parent) {
 
 	/**
 	 * init event
-	 *
 	 */
 	this.initEvent = () => {
 		let $el = util.findDOM(parent.$container, 'element', 'addfiles');
@@ -294,7 +297,6 @@ module.exports = function Uploader(parent) {
 
 	/**
 	 * play upload
-	 *
 	 */
 	this.play = () => {
 		var files = mergeFileList(this.$uploadElement);

@@ -1,8 +1,7 @@
 <?php
-
 ini_set("display_errors", 1);
 error_reporting(E_ALL);
-header("Content-Type: text/plain");
+header("Content-Type: text/json");
 
 
 // set directory
@@ -93,6 +92,7 @@ if (!move_uploaded_file($file['tmp_name'], $pwd.'/'.$filename))
 
 // goal
 result('success', [
+	'db_id' => rand(10000,99999),
 	'src' => $dir.'/'.$filename,
-	'filename' => $filename
+	'name' => $filename
 ]);
