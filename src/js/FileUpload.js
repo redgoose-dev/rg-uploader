@@ -1,54 +1,74 @@
 /**
- * File upload class
+ * file upload class
  *
  * @author : redgoose
  * @param {String} action 파일처리 백엔드 url
  * @param {File} file
- * @param {Function} callback
- * @return void
+ * @return {Object}
  */
-var FileUpload = function(action, file, callback)
+var fileUpload = function(action, file)
 {
-	var xhr = new XMLHttpRequest();
+	var defer = $.Deferred();
 
-	if (typeof FormData === 'function' || typeof FormData === 'object')
+	if (action)
 	{
-		var formData = new FormData();
-		formData.append('file', file);
+		// server upload
+		var xhr = new XMLHttpRequest();
 
-		xhr.open('post', action, true);
-		xhr.upload.addEventListener('progress', function(e){
-			if (callback)
-			{
-				callback('progress', uploadProgress(e), file);
-			}
-		}, false);
-		xhr.addEventListener('load', function(e){
-			if (callback)
-			{
-				callback('complete', uploadSuccess(e.target), file);
-			}
-		});
-		xhr.send(formData);
+		if (typeof FormData === 'function' || typeof FormData === 'object')
+		{
+			var formData = new FormData();
+			formData.append('file', file);
+
+			xhr.open('post', action, true);
+			xhr.upload.addEventListener('progress', function (e) {
+				defer.notify(uploadProgress(e), file);
+			}, false);
+			xhr.addEventListener('load', function (e) {
+				let src = uploadSuccess(e.target);
+				switch(src.state) {
+					case 'success':
+						defer.resolve(src.response, file);
+						break;
+					case 'error':
+						defer.reject(src.response.message, file);
+						break;
+				}
+			});
+			xhr.send(formData);
+		}
+		else
+		{
+			defer.reject('not support browser', file);
+		}
 	}
 	else
 	{
-		if (callback)
+		// local upload
+		if (FileReader)
 		{
-			callback('complete', {
-				state : 'error',
-				response : {
-					message : 'not support browser'
-				}
-			});
+			let reader = new FileReader();
+			reader.onload = (e) => {
+				defer.resolve({
+					src : e.target.result,
+					isLocalFile : true
+				}, file);
+			};
+			reader.readAsDataURL(file);
+		}
+		else
+		{
+			defer.reject('not support browser', file);
 		}
 	}
+
+	return defer.promise();
 };
 
 
 /**
  * upload progress
- * 
+ *
  * @Param {XMLHttpRequestProgressEvent} e
  * @Return {object}
  */
@@ -56,7 +76,7 @@ var uploadProgress = (e) => {
 	if (e.lengthComputable)
 	{
 		return { loaded : e.loaded, total : e.total };
-	}	
+	}
 };
 
 
@@ -121,4 +141,4 @@ var uploadSuccess = (e, file) => {
 
 
 // export
-module.exports = FileUpload;
+module.exports = fileUpload;

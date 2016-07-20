@@ -17,6 +17,9 @@
 	</header>
 
 	<p><input type="file" id="extUpload" multiple> <button type="button">start upload</button></p>
+	<p>
+		<span class="rg-external-dropzone">external dropzone</span>
+	</p>
 
 	<div class="container">
 		<article class="rg-uploader" id="uploadComponent">
@@ -119,14 +122,15 @@
 	</div>
 </main>
 <script>function log(o) {console.log(o);}</script>
-<script src="../vendor/jquery/jquery-3.1.0.min.js"></script>
+<script src="../vendor/jquery/jquery-3.1.0.js"></script>
 <script src="../dist/js/rg-uploader.pkgd.js"></script>
 <script src="../plugins/preview.plugin.js"></script>
 <script src="../plugins/sizeinfo.plugin.js"></script>
+<script src="../plugins/dnd.plugin.js"></script>
 <script>
 // make uploader instance
 var rgUploader = new RGUploader({
-	//uploadScript : './script/upload.php',
+	uploadScript : './script/upload.php',
 	removeScript : './script/remove.php',
 	autoUpload : true,
 	$container : $('#uploadComponent'),
@@ -134,7 +138,7 @@ var rgUploader = new RGUploader({
 	allowFileTypes : ['jpeg', 'png', 'gif', 'json'],
 	eventPrefixName : 'RG-',
 	limitSize : 3000000,
-	limitSizeTotal : 5120000,
+	limitSizeTotal : 10120000,
 	queue : {
 		height : 150,
 		limit : 10,
@@ -171,11 +175,10 @@ var rgUploader = new RGUploader({
 					app.queue.removeQueue(file.id, false, true);
 				}
 			}
-		],
-		// TODO : 타입이 string이면 json데이터 url로 인식하고 array라면 배열객체 데이터로 보고 바로 가져오기
-		datas : './script/data.php'
+		]
+		//,datas : './script/data.php'
 	},
-	plugin : [ 'preview', 'sizeinfo' ],
+	plugin : [ 'preview', 'sizeinfo', 'dnd' ],
 	uploadProgress : function(response, file) {
 		//log('upload progress');
 		//log(file);
@@ -196,23 +199,6 @@ var rgUploader = new RGUploader({
 $('.start-upload').on('click', function(){
 	rgUploader.uploader.play();
 });
-
-//[
-//	{
-//		id : 8742867877,
-//		name : 'aaa.jpg',
-//		size : 863489,
-//		src : './upload/aaa.jpg',
-//		type : 'image/jpeg'
-//	},
-//	{
-//		id : 6860860674,
-//		name : 'aaaa.jpg',
-//		size : 506647,
-//		src : './upload/aaaa.jpg',
-//		type : 'image/jpeg'
-//	}
-//]
 </script>
 </body>
 </html>

@@ -1,6 +1,7 @@
 // load modules
 const util = require('./Util.js');
 const KeyboardEvent = require('./KeyboardEvent.js');
+const lang = require('./Language.js');
 
 
 module.exports = function Queue(parent) {
@@ -368,9 +369,10 @@ module.exports = function Queue(parent) {
 		}
 		else
 		{
-			if (useScript && parent.options.removeScript)
+			let file = this.items.files[this.findItem(id)];
+
+			if (useScript && parent.options.removeScript && !file.isLocalFile)
 			{
-				let file = this.items.files[this.findItem(id)];
 				// play remove file script
 				$.post(parent.options.removeScript, file, (res, state) => {
 					if (typeof res === 'string')
@@ -387,6 +389,11 @@ module.exports = function Queue(parent) {
 						this.remove(id);
 
 						parent.eventReceiver('queue.removeQueue', {});
+					}
+					else if (res && res.state && res.state == 'error')
+					{
+						alert(lang('error_remove_error'));
+						return false;
 					}
 				});
 			}

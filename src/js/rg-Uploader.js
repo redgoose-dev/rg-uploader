@@ -3,6 +3,7 @@ const Util = require('./Util.js');
 const Queue = require('./Queue.js');
 const Uploader = require('./Uploader.js');
 const Plugin = require('./Plugin.js');
+const lang = require('./Language.js');
 
 
 /**
@@ -46,6 +47,7 @@ window.RGUploader = function(options) {
 
 	// init sub modules
 	this.util = Util;
+	this.lang = lang;
 	this.plugin = new Plugin(this);
 	this.queue = new Queue(this);
 	this.uploader = new Uploader(this);

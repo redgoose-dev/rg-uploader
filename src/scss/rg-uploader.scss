@@ -139,11 +139,13 @@
 		}
 
 		// drop zone style
-		&.drop-mode:after {
-			content: ''; position: absolute; display: block;
-			left: 0; right: 0; top: 0; bottom: 0;
-			border: 2px dashed $color-key;
-			pointer-events: none;
+		&.drop-mode {
+			&:after {
+				content: ''; position: absolute; display: block;
+				left: 0; right: 0; top: 0; bottom: 0;
+				border: 2px dashed $color-key;
+				pointer-events: none;
+			}
 		}
 
 		@media (max-width: $mobile-max-width) {

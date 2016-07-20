@@ -151,29 +151,19 @@ module.exports = function Uploader(parent) {
 
 		this.uploading = true;
 
-		if (parent.options.uploadScript)
-		{
-			fileUpload(
-				parent.options.uploadScript,
-				this.readyItems[0],
-				(type, response, file) => {
-					switch(type) {
-						case 'progress':
-							this.uploadProgress(response, file);
-							break;
-						case 'complete':
-							this.uploadComplete(response, file);
-							break;
-					}
-				}
-			);
-		}
-		else
-		{
-			log('local upload');
-			log(this.readyItems);
-			// TODO : make local upload
-		}
+		let script = parent.options.uploadScript || null;
+		let upload = fileUpload(script, this.readyItems[0]);
+
+		upload
+			.done((response, file) => {
+				this.uploadComplete('success', response, file);
+			})
+			.progress((response, file) => {
+				this.uploadProgress(response, file);
+			})
+			.fail((message, file) => {
+				this.uploadComplete('error', message, file);
+			});
 	};
 
 	/**
@@ -196,13 +186,14 @@ module.exports = function Uploader(parent) {
 	/**
 	 * upload complete event
 	 *
+	 * @Param {String} state (success|error)
 	 * @Param {Object} res
 	 * @Param {File} file
 	 */
-	this.uploadComplete = (res, file) => {
-		switch(res.state) {
+	this.uploadComplete = (state, res, file) => {
+		switch(state) {
 			case 'success':
-				file = $.extend({}, file, res.response);
+				file = $.extend({}, file, res);
 				delete file.slice;
 				parent.queue.uploadResult('success', file);
 
@@ -213,7 +204,7 @@ module.exports = function Uploader(parent) {
 				}
 				break;
 			case 'error':
-				file.message = res.response.message;
+				file.message = res;
 				parent.queue.uploadResult('error', file);
 				console.log(file.message);
 
@@ -266,7 +257,6 @@ module.exports = function Uploader(parent) {
 				{
 					alert(lang('error_add_upload'));
 					this.resetEvent();
-
 					return false;
 				}
 
@@ -274,8 +264,6 @@ module.exports = function Uploader(parent) {
 				this.play();
 			}
 		});
-
-		// TODO : dropzone 이벤트 만들기
 	};
 
 	/**
@@ -297,9 +285,12 @@ module.exports = function Uploader(parent) {
 
 	/**
 	 * play upload
+	 *
+	 * @Param {FileList|Array} files
 	 */
-	this.play = () => {
-		var files = mergeFileList(this.$uploadElement);
+	this.play = (files) => {
+
+		files = files || mergeFileList(this.$uploadElement);
 
 		if (!files.length)
 		{
