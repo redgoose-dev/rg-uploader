@@ -14,6 +14,7 @@ var webpack = require('webpack-stream');
 var src = './src';
 var dist = './dist';
 var maps = 'maps';
+var plugins = './plugins';
 
 
 // build scss
@@ -42,4 +43,18 @@ gulp.task('js', function() {
 			)
 		)
 		.pipe(gulp.dest(dist + '/js/'));
+});
+
+
+// merge plugin files
+gulp.task('js-plugin', function(){
+	gulp.src(plugins + '/*.plugin.js')
+		.pipe(sourcemaps.init())
+		.pipe(concat('plugin.pkgd.js'))
+		.pipe(uglify())
+		.pipe(sourcemaps.write(maps))
+		.pipe(gulp.dest(dist + '/js/'));
+});
+gulp.task('js-plugin:watch', function(){
+	gulp.watch(plugins + '/**/*.js', ['js-plugin']);
 });

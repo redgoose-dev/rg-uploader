@@ -93,7 +93,7 @@ module.exports = function Uploader(parent) {
 		}
 
 		// check file count
-		if (files.length > limitCount)
+		if ((parent.queue.items.ids.length + files.length) > limitCount)
 		{
 			alert(lang('error_upload_limit', [options.queue.limit]));
 			return false;
@@ -236,51 +236,60 @@ module.exports = function Uploader(parent) {
 		let $el = util.findDOM(parent.$container, 'element', 'addfiles');
 		let $extEl = parent.options.$externalFileForm;
 
-		// check upload element in container
-		if (!$el.length) return;
-
-		this.$uploadElement = $el;
-
-		// assign external upload element
-		if ($extEl.length)
+		if ($el.length)
 		{
-			this.$uploadElement = this.$uploadElement.add($extEl);
+			this.$uploadElement = $el;
+			if ($extEl && $extEl.length)
+			{
+				this.$uploadElement = this.$uploadElement.add($extEl);
+			}
+		}
+		else if ($extEl && $extEl.length)
+		{
+			this.$uploadElement = $extEl;
+		}
+		else
+		{
+			return false;
 		}
 
 		// init change event
-		this.$uploadElement.on('change', (e) => {
-			// check auto upload
-
-			if (parent.options.autoUpload)
-			{
-				if (this.uploading)
+		this.$uploadElement.each((k, o) => {
+			$(o).on('change', (e) => {
+				// check auto upload
+				if (parent.options.autoUpload)
 				{
-					alert(lang('error_add_upload'));
-					this.resetEvent();
-					return false;
+					if (this.uploading)
+					{
+						alert(lang('error_add_upload'));
+						this.resetEvent();
+						return false;
+					}
+
+					// play upload
+					this.play();
 				}
+			});
+		});
 
-				// play upload
+		// init start upload button
+		$el = util.findDOM(parent.$container, 'element', 'startUpload');
+		if ($el.length)
+		{
+			$el.on('click', (e) => {
 				this.play();
-			}
-		});
+				return false;
+			});
+		}
 	};
-
-	/**
-	 * remove event
-	 */
-	this.removeEvent = () => {
-		this.$uploadElement.off('change').each((k, o) => {
-			$(o).replaceWith( $(o).clone( true ) );
-		});
-	}
 
 	/**
 	 * reset event
 	 */
 	this.resetEvent = () => {
-		this.removeEvent();
-		this.initEvent();
+		this.$uploadElement.each((k, o) => {
+			util.inputFileReset(o);
+		});
 	}
 
 	/**

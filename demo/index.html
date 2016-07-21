@@ -16,7 +16,8 @@
 		<p>파일을 업로드하고 올린 파일들을 관리하는 컴포넌트입니다.</p>
 	</header>
 
-	<p><input type="file" id="extUpload" multiple> <button type="button">start upload</button></p>
+	<p><input type="file" id="extUpload" multiple></p>
+	<p><button type="button" id="startUpload">start upload</button></p>
 	<p>
 		<span class="rg-external-dropzone">external dropzone</span>
 	</p>
@@ -27,17 +28,6 @@
 			<header>
 				<h1>File upload</h1>
 				<p>아래 업로드 버튼을 눌러서 파일을 추가하거나 이 영역에 파일을 드래그하여 추가합니다.</p>
-				<nav data-element="selectQueueStyle">
-					<button type="button" class="style-list" title="list style" data-style="list">
-						<i class="material-icons">menu</i>
-					</button>
-					<button type="button" class="style-web" title="web style" data-style="web">
-						<i class="material-icons">view_list</i>
-					</button>
-					<button type="button" class="style-album" title="album style" data-style="album">
-						<i class="material-icons">view_module</i>
-					</button>
-				</nav>
 			</header>
 			<!-- // header -->
 
@@ -110,10 +100,10 @@
 						<i class="material-icons">add_circle_outline</i>
 						<span>Add files</span>
 					</label>
-					<p class="start-upload">
+					<a href="#" data-element="startUpload" class="start-upload">
 						<i class="material-icons">play_circle_outline</i>
 						<span>Start upload</span>
-					</p>
+					</a>
 				</nav>
 				<div class="size-info"></div>
 			</footer>
@@ -124,9 +114,7 @@
 <script>function log(o) {console.log(o);}</script>
 <script src="../vendor/jquery/jquery-3.1.0.js"></script>
 <script src="../dist/js/rg-uploader.pkgd.js"></script>
-<script src="../plugins/preview.plugin.js"></script>
-<script src="../plugins/sizeinfo.plugin.js"></script>
-<script src="../plugins/dnd.plugin.js"></script>
+<script src="../dist/js/plugin.pkgd.js"></script>
 <script>
 // make uploader instance
 var rgUploader = new RGUploader({
@@ -149,6 +137,7 @@ var rgUploader = new RGUploader({
 				iconName : 'open_in_new',
 				action : function(app, file) {
 					console.log('action : open file');
+					window.open(file.src);
 				}
 			},
 			{
@@ -178,7 +167,7 @@ var rgUploader = new RGUploader({
 		]
 		//,datas : './script/data.php'
 	},
-	plugin : [ 'preview', 'sizeinfo', 'dnd' ],
+	plugin : [ 'preview', 'sizeinfo', 'dnd', 'changeQueueStyle', 'thumbnail' ],
 	uploadProgress : function(response, file) {
 		//log('upload progress');
 		//log(file);
@@ -196,7 +185,7 @@ var rgUploader = new RGUploader({
 	}
 });
 
-$('.start-upload').on('click', function(){
+$('#startUpload').on('click', function(){
 	rgUploader.uploader.play();
 });
 </script>

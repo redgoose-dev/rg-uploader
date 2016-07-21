@@ -66,6 +66,35 @@ module.exports = {
 	detectTouchEvent()
 	{
 		return 'ontouchstart' in document.documentElement;
-	}
+	},
 
+	/**
+	 * reset input[type=file]
+	 */
+	inputFileReset(input)
+	{
+		if (navigator.appVersion.indexOf("MSIE 10") !== -1)
+		{
+			// is IE10
+			input.type = 'radio';
+			input.type = 'file';
+		}
+		else if (navigator.appVersion.indexOf("MSIE ") !== -1)
+		{
+			// is IE
+			var orgParent = input.parentNode;
+			var orgNext = input.nextSibling;
+
+			var tmp = document.createElement('form');
+			tmp.appendChild(input);
+			tmp.reset();
+
+			orgParent.insertBefore(input, orgNext);
+		}
+		else
+		{
+			// etc
+			input.value = '';
+		}
+	}
 };

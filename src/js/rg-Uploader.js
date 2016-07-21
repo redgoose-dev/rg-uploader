@@ -46,7 +46,6 @@ window.RGUploader = function(options) {
 	this.$container = this.options.$container.eq(0);
 
 	// init sub modules
-	this.util = Util;
 	this.lang = lang;
 	this.plugin = new Plugin(this);
 	this.queue = new Queue(this);
@@ -69,3 +68,13 @@ window.RGUploader = function(options) {
 RGUploader.prototype.defaultOptions = {
 
 };
+
+/**
+ * util
+ */
+RGUploader.prototype.util = Util;
+
+/**
+ * plugin container
+ */
+RGUploader.prototype.plugins = {};

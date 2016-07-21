@@ -54,21 +54,14 @@ module.exports = function Queue(parent) {
 		// set queue height
 		util.findDOM(parent.$container, 'comp', 'queue').height(this.options.height);
 
-		// change queue style
-		let $selectQueueStyle = util.findDOM(parent.$container, 'element', 'selectQueueStyle');
-		if ($selectQueueStyle.length)
-		{
-			$selectQueueStyle.children('button').on('click', (e) => {
-				if ($(e.currentTarget).hasClass('on')) return false;
-				this.changeStyle($(e.currentTarget).data('style'));
-			});
-		}
-
 		// set style
 		this.changeStyle(this.options.style);
 
 		// import queue datas
-		this.import(this.options.datas);
+		if (this.options.datas)
+		{
+			this.import(this.options.datas);
+		}
 	};
 
 	/**
@@ -147,10 +140,6 @@ module.exports = function Queue(parent) {
 	 * @Param {String} styleName
 	 */
 	this.changeStyle = (styleName) => {
-		// change style
-		let $selectQueueStyle = util.findDOM(parent.$container, 'element', 'selectQueueStyle');
-		$selectQueueStyle.children('button').removeClass('on').filter('.style-' + styleName).addClass('on');
-
 		this.style = styleName;
 		this.$queue.removeClass().addClass('style-' + styleName);
 
@@ -360,6 +349,16 @@ module.exports = function Queue(parent) {
 	 * @Param {Boolean} useScript
 	 */
 	this.removeQueue = (id, isLoadingQueue, useScript) => {
+
+		var self = this;
+		var removeElement = (id) => {
+			this.selectQueueElement(id).fadeOut(400, function() {
+				$(this).remove();
+				self.remove(id);
+				parent.eventReceiver('queue.removeQueue', {});
+			});
+		}
+
 		if (isLoadingQueue)
 		{
 			this.selectQueueElement(id).filter('.loading').remove();
@@ -385,12 +384,9 @@ module.exports = function Queue(parent) {
 					}
 					if (res && res.state && res.state == 'success')
 					{
-						this.selectQueueElement(id).remove();
-						this.remove(id);
-
-						parent.eventReceiver('queue.removeQueue', {});
+						removeElement(id);
 					}
-					else if (res && res.state && res.state == 'error')
+					else
 					{
 						alert(lang('error_remove_error'));
 						return false;
@@ -399,10 +395,7 @@ module.exports = function Queue(parent) {
 			}
 			else
 			{
-				this.selectQueueElement(id).remove();
-				this.remove(id);
-
-				parent.eventReceiver('queue.removeQueue', {});
+				removeElement(id);
 			}
 		}
 	};

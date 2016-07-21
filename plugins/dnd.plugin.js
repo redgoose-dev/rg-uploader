@@ -1,5 +1,5 @@
 ;(function() {
-	RGUploader.prototype.dnd = function ()
+	RGUploader.prototype.plugins.dnd = function ()
 	{
 		var name = 'Drag and Drop upload';
 		var app = null;
@@ -26,7 +26,8 @@
 			 *
 			 * @Param {Object} e
 			 */
-			var overHandler = (e) => {
+			var overHandler = function(e)
+			{
 				e.stopPropagation();
 				e.preventDefault();
 
@@ -50,13 +51,14 @@
 			 *
 			 * @Param {Object} e
 			 */
-			var dropHandler = (e) => {
+			var dropHandler = function(e)
+			{
 				e.stopPropagation();
 				e.preventDefault();
 
 				overHandler(e);
 
-				let files = e.dataTransfer.files;
+				var files = (e.dataTransfer) ? e.dataTransfer.files : null;
 				if (files && files.length)
 				{
 					defer.notify(files);
@@ -82,7 +84,6 @@
 		 */
 		var done = function(files)
 		{
-			log('done');
 			if (app.uploader.uploading)
 			{
 				alert(app.lang('error_add_upload'));
@@ -93,7 +94,7 @@
 			app.uploader.play(files || []);
 		};
 
-
+		// return
 		return {
 			name : name,
 			init : function(parent)
@@ -109,7 +110,7 @@
 				// init event
 				if (areaElements.length)
 				{
-					let dnd = fileDragAndDrop(areaElements);
+					var dnd = fileDragAndDrop(areaElements);
 					if (dnd && dnd.progress)
 					{
 						dnd.progress(done);

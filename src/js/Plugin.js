@@ -68,7 +68,7 @@ function Plugin(parent) {
 		if (items && items.length)
 		{
 			items.forEach((item) => {
-				let obj = parent[item];
+				let obj = parent.plugins[item];
 				if (!checkMethod(obj) || !checkMethod(obj().init)) return;
 
 				this.names.push(item);

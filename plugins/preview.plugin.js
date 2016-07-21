@@ -1,5 +1,5 @@
 ;(function(){
-	RGUploader.prototype.preview = function()
+	RGUploader.prototype.plugins.preview = function()
 	{
 		var name = 'preview';
 		var app = null;
@@ -78,10 +78,10 @@
 				switch(type) {
 					// select queue
 					case 'queue.selectQueue':
-						let id = value.$selectElement.data('id');
-						let n = app.queue.findItem(id);
-						let file = app.queue.items.files[n];
-						let src = (value.$selectElement.hasClass('selected') && (file.type.split('/')[0] == 'image')) ? file.src : null;
+						var id = value.$selectElement.data('id');
+						var n = app.queue.findItem(id);
+						var file = app.queue.items.files[n];
+						var src = (value.$selectElement.hasClass('selected') && (file.type.split('/')[0] == 'image')) ? file.src : null;
 						updatePreview(src);
 						break;
 

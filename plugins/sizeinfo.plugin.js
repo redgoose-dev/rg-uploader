@@ -1,5 +1,5 @@
 ;(function(){
-	RGUploader.prototype.sizeinfo = function()
+	RGUploader.prototype.plugins.sizeinfo = function()
 	{
 		var name = 'sizeinfo';
 		var app = null;

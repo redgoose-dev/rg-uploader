@@ -34,36 +34,9 @@
 			margin: 3px 0 0;
 			font-size: 12px; color: #777;
 		}
-		nav {
-			position: absolute; top: 50%; right: 10px;
-			height: 28px; margin-top: -14px;
-			border: 1px solid $color-key; border-radius: 3px;
-			font-size: 0; overflow: hidden;
-			button {
-				display: inline-block; height: 100%; margin: 0; padding: 0 7px;
-				background: none; cursor: pointer;
-				border: none; border-left: 1px solid $color-key;
-				&:first-child {border-left: none;}
-				i {font-size: 20px; line-height: 22px; color: $color-key;}
-				&.on {
-					background: $color-key;
-					cursor: default; outline: 0;
-					i {color: #fff;}
-				}
-			}
-		}
 
 		@media (max-width: $mobile-max-width) {
 			padding: 10px;
-			nav {
-				position: static; margin: 8px 0 0; height: 34px;
-				display: -webkit-flex; display: flex;
-				button {
-					-webkit-flex: 1; flex: 1;
-					padding: 0;
-					i {font-size: 20px; line-height: 22px;}
-				}
-			}
 		}
 	}
 
@@ -91,16 +64,10 @@
 			}
 			i {margin: 0 3px 0 0; font-size: 16px; color: #222;}
 			.add-file {
-				input[type=file] {position: absolute; visibility: hidden;}
-			}
-		}
-		> div {
-			width: 140px; padding: 0 10px 0 0;
-			> p {
-				margin: 0;
-				font-family: $font-eng-basic;
-				text-align: right; font-size: 12px; color: #222;
-				em {font-style: normal;}
+				input[type=file] {
+					position: absolute;
+					visibility: hidden;
+				}
 			}
 		}
 
@@ -136,16 +103,6 @@
 				&.on i {color: $color-key;}
 			}
 			i {font-size: 16px; color: #57595B;}
-		}
-
-		// drop zone style
-		&.drop-mode {
-			&:after {
-				content: ''; position: absolute; display: block;
-				left: 0; right: 0; top: 0; bottom: 0;
-				border: 2px dashed $color-key;
-				pointer-events: none;
-			}
 		}
 
 		@media (max-width: $mobile-max-width) {
@@ -194,10 +151,17 @@
 				}
 				&.loading {
 					figure.col {display: none;}
-					.bd {display: none;}
+					.bd {
+						margin: 0; padding: 10px 8px 10px 10px;
+						font-size: 12px; color: #222; word-break: break-all;
+						hr {display: none;}
+						.state:before {content: ' - ';}
+					}
 					.bar {
+						position: absolute;
+						left: 0; right: 0; top: 0; bottom: 0;
 						> p {
-							margin: 0; position: relative; height: $height;
+							margin: 0; position: relative; height: 100%;
 							background: $color-key;
 							white-space: nowrap; overflow: hidden;
 						}
@@ -310,6 +274,8 @@
 				&.loading {
 					figure.col {display: none;}
 					.bar {
+						position: absolute;
+						left: 0; right: 0; top: 0; bottom: 0;
 						> p {
 							position: relative; margin: 0; height: $min-size;
 							background: $color-key;
@@ -321,7 +287,12 @@
 							font-size: 11px; color: #fff; line-height: normal;
 						}
 					}
-					.bd {display: none;}
+					.bd {
+						margin: 0; padding: 10px 8px 10px 10px;
+						font-size: 12px; color: #222; word-break: break-all;
+						hr {display: none;}
+						.state:before {content: ' - ';}
+					}
 				}
 				&.error {
 					padding: 10px; background: #CE3E3E;
@@ -409,7 +380,6 @@
 					@include flex(1);
 				}
 			}
-
 			.selected .wrap:after {
 				@extend %selected;
 			}
@@ -417,7 +387,6 @@
 			li.complete {
 				figure.col {text-indent: -9999px;}
 			}
-
 			li.loading {
 				figure.col {
 					background: #eee;
@@ -434,7 +403,6 @@
 				}
 				.bar {display: none;}
 			}
-
 			li.error {
 				figure.col {background: $color-error;}
 			}
@@ -471,4 +439,74 @@
 	@media (max-width: $mobile-max-width) {
 		.preview {display: none;}
 	}
+}
+
+
+// plugin - sizeinfo
+.rg-uploader {
+	> footer {
+		> div {
+			width: 140px; padding: 0 10px 0 0;
+			> p {
+				margin: 0;
+				font-family: $font-eng-basic;
+				text-align: right; font-size: 12px; color: #222;
+				em {font-style: normal;}
+			}
+		}
+	}
+}
+
+
+// plugin - changeQueueStyle
+.rg-uploader {
+	> header {
+		nav {
+			position: absolute; top: 50%; right: 10px;
+			height: 28px; margin-top: -14px;
+			border: 1px solid $color-key; border-radius: 3px;
+			font-size: 0; overflow: hidden;
+			button {
+				display: inline-block; height: 100%; margin: 0; padding: 0 7px;
+				background: none; cursor: pointer;
+				border: none; border-left: 1px solid $color-key;
+				&:first-child {border-left: none;}
+				i {font-size: 20px; line-height: 22px; color: $color-key;}
+				&.on {
+					background: $color-key;
+					cursor: default; outline: 0;
+					i {color: #fff;}
+				}
+			}
+
+			@media (max-width: $mobile-max-width) {
+				position: static; margin: 8px 0 0; height: 34px;
+				display: -webkit-flex; display: flex;
+				button {
+					-webkit-flex: 1; flex: 1;
+					padding: 0;
+					i {font-size: 20px; line-height: 22px;}
+				}
+			}
+		}
+	}
+}
+
+
+// plugin - drag and drop
+.rg-uploader {
+	.queue.drop-mode {
+		&:after {
+			content: ''; position: absolute; display: block;
+			left: 0; right: 0; top: 0; bottom: 0;
+			border: 2px dashed $color-key;
+			pointer-events: none;
+		}
+	}
+}
+
+
+// plugin - thumnail
+.rg-uploader {
+
 }
