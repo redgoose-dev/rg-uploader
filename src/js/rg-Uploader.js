@@ -9,25 +9,15 @@ const lang = require('./Language.js');
 /**
  * class RGUploader
  *
+ * @param {Object} $con container element
  * @param {Object} options
  */
-window.RGUploader = function(options) {
-
-	// set self
-	const self = this;
+window.RGUploader = function($con, options) {
 
 	/**
-	 * @var {Object} cuttentSize
+	 * @var {Object} this.options
 	 */
 	this.options = $.extend({}, this.defaultOptions, options);
-
-	// check $container element
-	if (!this.options.$container || !this.options.$container.length) return null;
-
-	/**
-	 * @var {int} cuttentSize
-	 */
-	this.currentSize = 0;
 
 	/**
 	 * event receiver
@@ -41,12 +31,13 @@ window.RGUploader = function(options) {
 		eventListener(type, value);
 	};
 
+	// check $container element
+	if (!$con || !$con.length) return null;
 
 	// set container element
-	this.$container = this.options.$container.eq(0);
+	this.$container = $con.eq(0);
 
 	// init sub modules
-	this.lang = lang;
 	this.plugin = new Plugin(this);
 	this.queue = new Queue(this);
 	this.uploader = new Uploader(this);
@@ -63,18 +54,55 @@ window.RGUploader = function(options) {
 
 
 /**
- * default options
+ * @Var {Object} RGUploader.defaultOptions
  */
 RGUploader.prototype.defaultOptions = {
-
+	uploadScript : null,
+	removeScript : null,
+	autoUpload : true,
+	$container : null,
+	$externalFileForm : null,
+	allowFileTypes : ['jpeg', 'png', 'gif'],
+	eventPrefixName : 'RG-',
+	limitSize : 1000000,
+	limitSizeTotal : 3000000,
+	queue : {
+		height : 150,
+		limit : 10,
+		style : 'list',
+		buttons : [
+			{
+				name : 'remove queue',
+				iconName : 'close',
+				action : function(app, file) {
+					app.queue.removeQueue(file.id, false, true);
+				}
+			}
+		]
+		,datas : null
+	},
+	plugin : ['sizeinfo', 'changeQueueStyle'],
+	// upload progress
+	uploadProgress : function(response, file) {},
+	// upload complete
+	uploadComplete : function(file) {},
+	// upload fail
+	uploadFail : function(file) {},
+	// app init
+	init : function(app) {}
 };
 
 /**
- * util
+ * @Var {Object} RGUploader.util
  */
 RGUploader.prototype.util = Util;
 
 /**
- * plugin container
+ * @Var {Function} RGUploader.lang
+ */
+RGUploader.prototype.lang = lang;
+
+/**
+ * @Var {Object} RGUploader.plugins
  */
 RGUploader.prototype.plugins = {};

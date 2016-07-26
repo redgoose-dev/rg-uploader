@@ -16,12 +16,6 @@
 		<p>파일을 업로드하고 올린 파일들을 관리하는 컴포넌트입니다.</p>
 	</header>
 
-	<p><input type="file" id="extUpload" multiple></p>
-	<p><button type="button" id="startUpload">start upload</button></p>
-	<p>
-		<span class="rg-external-dropzone">external dropzone</span>
-	</p>
-
 	<div class="container">
 		<article class="rg-uploader" id="uploadComponent">
 			<!-- header -->
@@ -110,18 +104,35 @@
 			<!-- // footer -->
 		</article>
 	</div>
+
+	<div>
+		<p><br></p>
+		<hr>
+		<p>
+			<label for="extUpload">extUpload</label><br>
+			<input type="file" id="extUpload" multiple>
+		</p>
+		<p>
+			<label for="customUpload">custom upload</label><br>
+			<input type="file" id="customUpload" multiple> <button type="button" id="btn_customUpload">start upload</button>
+		</p>
+		<p>
+			<span class="rg-external-dropzone">external dropzone</span>
+		</p>
+	</div>
 </main>
 <script>function log(o) {console.log(o);}</script>
 <script src="../vendor/jquery/jquery-3.1.0.js"></script>
 <script src="../dist/js/rg-uploader.pkgd.js"></script>
+<link rel="stylesheet" href="../vendor/croppie/croppie.css">
+<script src="../vendor/croppie/croppie.min.js"></script>
 <script src="../dist/js/plugin.pkgd.js"></script>
 <script>
 // make uploader instance
-var rgUploader = new RGUploader({
+var rgUploader = new RGUploader($('#uploadComponent'), {
 	uploadScript : './script/upload.php',
 	removeScript : './script/remove.php',
 	autoUpload : true,
-	$container : $('#uploadComponent'),
 	$externalFileForm : $('#extUpload'),
 	allowFileTypes : ['jpeg', 'png', 'gif', 'json'],
 	eventPrefixName : 'RG-',
@@ -147,7 +158,9 @@ var rgUploader = new RGUploader({
 					return (file.type.split('/')[0] == 'image');
 				},
 				action : function(app, file) {
-					console.log('action : make thumnail');
+					if (!app.plugin.child.thumbnail) return false;
+					var plug = app.plugin.child.thumbnail;
+					plug.open(file);
 				}
 			},
 			{
@@ -165,28 +178,13 @@ var rgUploader = new RGUploader({
 				}
 			}
 		]
-		//,datas : './script/data.php'
+		,datas : './script/data.php'
 	},
-	plugin : [ 'preview', 'sizeinfo', 'dnd', 'changeQueueStyle', 'thumbnail' ],
-	uploadProgress : function(response, file) {
-		//log('upload progress');
-		//log(file);
-	},
-	uploadComplete : function(file) {
-		//log('upload complete')
-		//log(file);
-	},
-	uploadFail : function(file) {
-		//log('upload fail');
-		//log(file)
-	},
-	init : function() {
-		//log('app init');
-	}
+	plugin : [ 'preview', 'sizeinfo', 'dnd', 'changeQueueStyle', 'thumbnail' ]
 });
 
-$('#startUpload').on('click', function(){
-	rgUploader.uploader.play();
+$('#btn_customUpload').on('click', function(){
+	rgUploader.uploader.play($('#customUpload'));
 });
 </script>
 </body>

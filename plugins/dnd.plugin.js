@@ -91,7 +91,7 @@
 			}
 
 			// play upload
-			app.uploader.play(files || []);
+			app.uploader.play(app.uploader.$uploadElement, (files || []));
 		};
 
 		// return

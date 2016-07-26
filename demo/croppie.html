@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="UTF-8">
+<title>Document</title>
+<link rel="Stylesheet" type="text/css" href="../vendor/croppie/croppie.css" />
+<script src="../vendor/jquery/jquery-3.1.0.js"></script>
+<script src="../vendor/croppie/croppie.js"></script>
+<style>
+	body {margin: 0; padding: 0;}
+</style>
+</head>
+<body>
+
+
+<div class="demo" id="demo"></div>
+
+<hr>
+<nav>
+	<p><button type="button" class="result-button">result</button></p>
+</nav>
+<div class="result">
+
+</div>
+
+<script>
+var $demo = $('.demo');
+var $result = $('.result');
+var $resultButton = $('.result-button');
+var options = {
+	boundary: { width: '100%', height: 400 },
+	viewport : {
+		width: 300, height: 300
+	},
+	url: '../vendor/croppie/demo/demo-2.jpg',
+	enableOrientation : true,
+	enableZoom : true,
+	showZoomer : true
+};
+
+$demo.croppie(options);
+
+
+var resizeInterval = null;
+$(window).on('resize', function(){
+	console.log('resize evt');
+	if (resizeInterval)
+	{
+		clearTimeout(resizeInterval);
+	}
+	resizeInterval = setTimeout(function(){
+		resizeInterval = null;
+		console.log('remake croppie');
+
+		var revalue = $demo.croppie('get');
+		options.points = revalue.points;
+		$demo.croppie('destroy').croppie(options);
+		$demo.croppie('setZoom', revalue.zoom);
+	}, 1000);
+});
+
+
+$resultButton.on('click', function(){
+	$demo.croppie('result', {
+		type : 'canvas',
+		size : { width: 300, height: 300 },
+		format : 'png'
+	}).then(function(html){
+		$result.html('<img src="' + html + '" alt="">');
+	});
+});
+</script>
+
+</body>
+</html>

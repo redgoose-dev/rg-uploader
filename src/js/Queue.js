@@ -265,7 +265,7 @@ module.exports = function Queue(parent) {
 		$fileType.text(file.type);
 		$fileName.text(file.name);
 		$state.text('uploaded');
-		$fileSize.text(util.bytesToSize(file.size));
+		$fileSize.text((file.size) ? util.bytesToSize(file.size) : 'none');
 		$customButtons.html('');
 
 		// check image and assign preview background
