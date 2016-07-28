@@ -1,15 +1,18 @@
 ;(function() {
-	RGUploader.prototype.plugins.changeQueueStyle = function ()
-	{
-		var name = 'Change queue style';
-		var app = null;
-		var $nav = null;
-		var $buttons = null;
-		var buttonsParams = [
+
+	function ChangeQueueStyle() {
+
+		this.name = 'Change queue style';
+		this.buttonsParams = [
 			{ name : 'list', title : 'list style', iconName : 'menu', default : true },
 			{ name : 'web', title : 'web style', iconName : 'view_list', default : false },
 			{ name : 'album', title : 'album style', iconName : 'view_module', default : false }
 		];
+		this.$nav = null;
+		this.$buttons = null;
+
+		var self = this;
+		var app = null;
 
 
 		/**
@@ -17,14 +20,14 @@
 		 */
 		var createButtons = function()
 		{
-			$.each(buttonsParams, function(k, o){
+			$.each(self.buttonsParams, function(k, o){
 				var $el = $('<button type="button" class="style-' + o.name + '" title="' + o.title + '" data-style="' + o.name + '">' +
 					'<i class="material-icons">' + o.iconName + '</i>' +
 					'</button>');
 				initButtonsEvent($el);
-				$nav.append($el);
+				self.$nav.append($el);
 			});
-			$buttons = $nav.children('button');
+			self.$buttons = self.$nav.children('button');
 		};
 
 		/**
@@ -46,37 +49,48 @@
 		var changeActiveButton = function(name)
 		{
 			// change style
-			$buttons.removeClass('on').filter('.style-' + name).addClass('on');
+			self.$buttons.removeClass('on').filter('.style-' + name).addClass('on');
 		};
 
 
-		// return
-		return {
-			name : name,
-			init : function(parent)
-			{
-				app = parent;
+		/**
+		 * init
+		 *
+		 * @Param {Object} parent
+		 */
+		this.init = function(parent)
+		{
+			app = parent;
 
-				// append comp
-				$nav = $('<nav data-element="selectQueueStyle"></nav>');
-				app.$container.children('header').append($nav);
+			// append comp
+			self.$nav = $('<nav data-element="selectQueueStyle"></nav>');
+			app.$container.children('header').append(self.$nav);
 
-				// create buttons
-				createButtons();
+			// create buttons
+			createButtons();
 
-				// set active button
-				changeActiveButton(app.queue.style);
+			// set active button
+			changeActiveButton(app.queue.style);
 
-			},
-			eventListener : function(type, value)
-			{
-				switch (type) {
-					// change style
-					case 'queue.changeStyle':
-						changeActiveButton(value.style);
-						break;
-				}
+		};
+
+		/**
+		 * event listener
+		 *
+		 * @Param {String} type
+		 * @Param {*} value
+		 */
+		this.eventListener = function(type, value)
+		{
+			switch (type) {
+				// change style
+				case 'queue.changeStyle':
+					changeActiveButton(value.style);
+					break;
 			}
 		}
 	}
+
+	RGUploader.prototype.plugins.changeQueueStyle = new ChangeQueueStyle();
+
 })();

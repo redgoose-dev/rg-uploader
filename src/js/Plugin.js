@@ -1,12 +1,12 @@
 /**
  * check method
  *
- * @Param {Function} func
+ * @Param {Function} obj
  * @Param {Boolean}
  */
-function checkMethod(func)
+function checkMethod(obj)
 {
-	return (func && (typeof func === 'function'));
+	return (obj && (typeof obj === 'object'));
 }
 
 /*
@@ -42,7 +42,7 @@ function Plugin(parent) {
 	this.eventListener = (type, value) => {
 		this.names.forEach((name) => {
 			let evt = this.child[name].eventListener;
-			if (!checkMethod(evt)) return;
+			if (!evt || !(typeof evt === 'function')) return;
 			evt(type, value);
 		});
 	};
@@ -69,10 +69,10 @@ function Plugin(parent) {
 		{
 			items.forEach((item) => {
 				let obj = parent.plugins[item];
-				if (!checkMethod(obj) || !checkMethod(obj().init)) return;
+				if (!(obj && (typeof obj === 'object')) || !(obj.init && (typeof obj.init === 'function'))) return;
 
 				this.names.push(item);
-				this.child[item] = obj();
+				this.child[item] = obj;
 
 				// play init()
 				this.child[item].init(parent);

@@ -1,11 +1,14 @@
 ;(function(){
-	RGUploader.prototype.plugins.preview = function()
-	{
-		var name = 'preview';
+	function Preview() {
+
+		this.name = 'Preview';
+		this.$preview = null;
+
+		var self = this;
 		var app = null;
-		var $preview = null;
 		var classNameNotImage = 'not-image';
 		var width = 150;
+
 
 		/**
 		 * create preview
@@ -13,13 +16,13 @@
 		var createPreview = function()
 		{
 			var str = '<div class="col preview"><figure></figure></div>';
-			$preview = $(str);
+			self.$preview = $(str);
 
 			// set width
-			$preview.width(width);
+			self.$preview.width(width);
 
 			// append element
-			app.$container.find('[data-comp=queue]').prepend($preview);
+			app.$container.find('[data-comp=queue]').prepend(self.$preview);
 
 			// update
 			updatePreview();
@@ -32,7 +35,7 @@
 		 */
 		var updatePreview = function(src)
 		{
-			var $figure = $preview.children('figure');
+			var $figure = self.$preview.children('figure');
 			if (src)
 			{
 				$figure
@@ -54,43 +57,55 @@
 		{
 			if (sw)
 			{
-				$preview.removeClass('hide');
+				self.$preview.removeClass('hide');
 			}
 			else
 			{
-				$preview.addClass('hide');
+				self.$preview.addClass('hide');
 			}
 		};
 
 
-		// return
-		return {
-			name : name,
-			init : function(parent)
-			{
-				app = parent;
-				width = parseInt(app.options.queue.height);
+		/**
+		 * init
+		 *
+		 * @Param {Object} parent
+		 */
+		this.init = function(parent)
+		{
+			app = parent;
+			width = parseInt(app.options.queue.height);
 
-				createPreview();
-			},
-			eventListener : function(type, value)
-			{
-				switch(type) {
-					// select queue
-					case 'queue.selectQueue':
-						var id = value.$selectElement.data('id');
-						var n = app.queue.findItem(id);
-						var file = app.queue.items.files[n];
-						var src = (value.$selectElement.hasClass('selected') && (file.type.split('/')[0] == 'image')) ? file.src : null;
-						updatePreview(src);
-						break;
+			createPreview();
+		};
 
-					// change queue style
-					case 'queue.changeStyle':
-						visiblePreview( (value.style == 'list') );
-						break;
-				}
+		/**
+		 * event listener
+		 *
+		 * @Param {String} type
+		 * @Param {*} value
+		 */
+		this.eventListener = function(type, value)
+		{
+			switch(type) {
+				// select queue
+				case 'queue.selectQueue':
+					var id = value.$selectElement.data('id');
+					var n = app.queue.findItem(id);
+					var file = app.queue.items.files[n];
+					var src = (value.$selectElement.hasClass('selected') && (file.type.split('/')[0] == 'image')) ? file.src : null;
+					updatePreview(src);
+					break;
+
+				// change queue style
+				case 'queue.changeStyle':
+					visiblePreview( (value.style == 'list') );
+					break;
 			}
 		}
-	};
+	}
+
+
+	RGUploader.prototype.plugins.preview = new Preview();
+
 })();

@@ -1,0 +1,85 @@
+body {margin: 30px; padding: 0;}
+main {margin: 0 auto; max-width: 1000px;}
+
+.blind {font-size: 0; width: 0; height: 0; overflow: hidden; position: absolute; visibility: hidden;}
+
+@media (max-width: 640px) {
+	body {margin: 30px 10px 15px;}
+}
+
+
+/* demo header */
+.demo-header {margin: 0 0 50px; padding: 0; text-align: center;}
+.demo-header h1 {
+	margin: 0;
+	font-family: "Helvetica Neue", Helvetica, sans-serif;
+	font-size: 36px; color: #4A90E2; font-weight: 200;
+}
+.demo-header nav {margin: 10px 0 0; font-size: 0;}
+.demo-header nav a {
+	display: inline-block; padding: 12px 3px 4px; margin: 0 5px;
+	font-size: 12px; color: #222;
+	text-decoration: none;
+	font-family: "Helvetica Neue", Helvetica, sans-serif;
+	border-bottom: 2px solid transparent;
+}
+.demo-header nav a.active {border-color: #222;}
+
+@media (max-width: 640px) {
+	.demo-header {}
+	.demo-header h1 {font-size: 24px;}
+	.demo-header nav {margin-top: 5px;}
+}
+
+
+/* container */
+.demo-container > h1 {margin: 0; font-size: 30px; font-weight: normal;}
+.demo-container > p {margin: 10px 0; font-size: 13px; color: #222;}
+.demo-container > section {margin-top: 80px;}
+.demo-container > section:first-child {margin-top: 0;}
+.demo-container > section > header {position: relative; padding-top: 8px; margin: 0 0 20px 0;}
+.demo-container > section > header:before {
+	content: ''; position: absolute; left: 0; top: 0;
+	width: 15px; height: 2px; background: #222;
+}
+.demo-container > section > header > h1 {margin: 0 0 3px; font-size: 20px; color: #222; font-weight: 600;}
+.demo-container > section > header > p {margin: 0; font-size: 12px; color: #666;}
+.demo-container .code {margin: 30px 0 0;}
+.demo-container .code h2 {margin: 15px 0 5px; font-size: 15px; font-weight: bold; color: #222;}
+.demo-container .code p {
+	margin: 10px 0;
+	font-size: 12px; color: #222;
+}
+.demo-container .code pre {margin: 0; font-size: 13px;}
+
+@media (max-width: 640px) {
+	.demo-container > h1 {font-size: 20px;}
+	.demo-container > section {margin-top: 60px;}
+	.demo-container > section > header > h1 {font-size: 18px;}
+	.demo-container .code pre {font-size: 10px;}
+}
+
+
+/* to editor */
+.to-editor {margin: 15px 0 30px;}
+.to-editor > p {margin: 10px 0 5px; font-size: 13px;}
+.to-editor textarea, .to-editor figure {
+	margin: 0; padding: 10px;
+	border: 1px solid #bbb;
+}
+.to-editor textarea {
+	width: 100%; height: 100px;
+	line-height: 16px;
+	-webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box;
+}
+.to-editor figure {margin: 0; min-height: 100px;}
+.to-editor figure img {vertical-align: top; width: 100px;}
+
+
+/* drop */
+.rg-external-dropzone {
+	position: relative; display: block; padding: 40px 0; margin: 15px 0;
+	background: #4A90E2;
+	text-align: center; color: #fff;
+}
+.rg-external-dropzone.drop-mode {background: #999; color: #fff;}

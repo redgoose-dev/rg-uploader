@@ -101,7 +101,7 @@ module.exports = function Queue(parent) {
 	 * @Param {Object} file
 	 */
 	var createNavigationButtons = (options, file) => {
-		if (!options.length) return false;
+		if (!options || !options.length) return false;
 
 		var $buttons = [];
 		options.forEach((item) => {

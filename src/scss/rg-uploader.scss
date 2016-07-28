@@ -12,6 +12,12 @@
 }
 
 
+// rg-popup
+.rg-popup {
+	&, body {overflow: hidden;}
+}
+
+
 // rg-uploader component
 .rg-uploader {
 
@@ -86,6 +92,7 @@
 
 		@media (max-width: $mobile-max-width) {
 			height: auto !important;
+			min-height: 100px;
 		}
 	}
 

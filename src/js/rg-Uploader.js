@@ -18,6 +18,11 @@ window.RGUploader = function($con, options) {
 	 * @var {Object} this.options
 	 */
 	this.options = $.extend({}, this.defaultOptions, options);
+	if (options && options.queue)
+	{
+		this.options.queue = $.extend({}, this.defaultOptions.queue, options.queue);
+	}
+
 
 	/**
 	 * event receiver
@@ -59,8 +64,7 @@ window.RGUploader = function($con, options) {
 RGUploader.prototype.defaultOptions = {
 	uploadScript : null,
 	removeScript : null,
-	autoUpload : true,
-	$container : null,
+	autoUpload : false,
 	$externalFileForm : null,
 	allowFileTypes : ['jpeg', 'png', 'gif'],
 	eventPrefixName : 'RG-',
@@ -81,7 +85,7 @@ RGUploader.prototype.defaultOptions = {
 		]
 		,datas : null
 	},
-	plugin : ['sizeinfo', 'changeQueueStyle'],
+	plugin : [],
 	// upload progress
 	uploadProgress : function(response, file) {},
 	// upload complete

@@ -1,11 +1,19 @@
 // croppie : http://foliotek.github.io/Croppie/
 
 ;(function() {
-	RGUploader.prototype.plugins.thumbnail = function ()
-	{
-		var name = 'Create thumnail image';
+	function Thumbnail() {
+
+		this.name = 'Create thumnail image';
+
+		var self = this;
 		var app = null;
-		var $el = {
+		var RESIZE_EVENT = 'resize.rgUploader';
+		var isMobile = false;
+		var resizeInterval = null;
+
+		this.file = null;
+		this.croppie = null;
+		this.$el = {
 			con : null,
 			wrap : null,
 			bg : null,
@@ -14,7 +22,7 @@
 			btn_close : null,
 			btn_done : null
 		};
-		var option = {
+		this.option = {
 			width : 640,
 			height : 480,
 			mobileSize : 640,
@@ -24,18 +32,13 @@
 				quality : .3,
 				format : 'jpeg',
 				size : { width : 150, height : 150 }
+			},
+			croppie : {
+				boundary : { width: 640, height: 480-60 },
+				viewport : { width: 150, height: 150, type: 'square' }
 			}
 		};
-		var RESIZE_EVENT = 'resize.rgUploader';
-		var isMobile = false;
-		var resizeInterval = null;
-		var croppie = null;
-		var file = null;
 
-		option.croppie = {
-			boundary : { width: option.width, height: option.height-60 },
-			viewport : { width: 150, height: 150, type: 'square' }
-		};
 
 		/**
 		 * load external vendor files
@@ -60,28 +63,28 @@
 		function createContainer()
 		{
 			// set elements
-			$el.con = $('<div class="rg-plugin-thumbnail">' +
+			self.$el.con = $('<div class="rg-plugin-thumbnail">' +
 				'<span class="bg"></span>' +
 				'<div class="wrap">' +
-					'<div class="img-wrap"><figure></figure></div>' +
-					'<div class="body">' +
-						'<div class="meta"><p>message</p></div>' +
-						'<nav>' +
-							'<button type="button" class="btn-done"><i class="material-icons">done</i></button>' +
-							'<button type="button" class="btn-close"><i class="material-icons">close</i></button>' +
-						'</nav>' +
-					'</div>' +
+				'<div class="img-wrap"><figure></figure></div>' +
+				'<div class="body">' +
+				'<div class="meta"><p>message</p></div>' +
+				'<nav>' +
+				'<button type="button" class="btn-done"><i class="material-icons">done</i></button>' +
+				'<button type="button" class="btn-close"><i class="material-icons">close</i></button>' +
+				'</nav>' +
+				'</div>' +
 				'</div>' +
 				'</div>');
-			$el.wrap = $el.con.children('.wrap');
-			$el.bg = $el.con.children('.bg');
-			$el.figure = $el.con.find('.img-wrap figure');
-			$el.meta = $el.con.find('.meta > p');
-			$el.btn_done = $el.con.find('.btn-done');
-			$el.btn_close = $el.con.find('.btn-close');
+			self.$el.wrap = self.$el.con.children('.wrap');
+			self.$el.bg = self.$el.con.children('.bg');
+			self.$el.figure = self.$el.con.find('.img-wrap figure');
+			self.$el.meta = self.$el.con.find('.meta > p');
+			self.$el.btn_done = self.$el.con.find('.btn-done');
+			self.$el.btn_close = self.$el.con.find('.btn-close');
 
 			// insert element
-			$('body').append($el.con);
+			$('body').append(self.$el.con);
 		}
 
 		/**
@@ -90,13 +93,17 @@
 		function initEvents()
 		{
 			// close in background
-			$el.bg.on('click', close);
+			self.$el.bg.on('click', function(){
+				self.close();
+			});
 
 			// close in close button
-			$el.btn_close.on('click', close);
+			self.$el.btn_close.on('click', function(){
+				self.close();
+			});
 
 			// done
-			$el.btn_done.on('click', done);
+			self.$el.btn_done.on('click', done);
 
 			// init resize event
 			$(window).on(RESIZE_EVENT, resize);
@@ -113,12 +120,12 @@
 			isMobile = true;
 
 			// change window size
-			$el.wrap
+			self.$el.wrap
 				.width('100%').height('100%')
 				.css({ marginLeft : 0, marginTop : 0, left: 0, top: 0 });
 
 			// rebuild croppie
-			if (croppie)
+			if (self.croppie)
 			{
 				rebuildCroppie(true);
 			}
@@ -135,17 +142,17 @@
 			isMobile = false;
 
 			// change window size
-			$el.wrap
-				.width(option.width).height(option.height)
+			self.$el.wrap
+				.width(self.option.width).height(self.option.height)
 				.css({
-					marginLeft : (0 - option.width * 0.5) + 'px',
-					marginTop : (0 - option.height * 0.5) + 'px',
+					marginLeft : (0 - self.option.width * 0.5) + 'px',
+					marginTop : (0 - self.option.height * 0.5) + 'px',
 					left: '50%',
 					top: '50%'
 				});
 
 			// rebuild croppie
-			if (croppie)
+			if (self.croppie)
 			{
 				rebuildCroppie(true);
 			}
@@ -160,7 +167,7 @@
 		{
 			var $win = $(window);
 
-			if (!croppie)
+			if (!self.croppie)
 			{
 				clearTimeout(resizeInterval);
 				return false;
@@ -197,26 +204,26 @@
 		function rebuildCroppie(isResize)
 		{
 			// save option
-			var save = (isResize) ? croppie.get() : {};
+			var save = (isResize) ? self.croppie.get() : {};
 
 			// destroy croppie
 			destroyCroppie();
 
 			// build croppie
-			option.croppie.boundary = {
-				width : (option.mobileSize > $(window).width()) ? $(window).width() : option.width,
-				height : ((option.mobileSize > $(window).width()) ? $(window).height() : option.height)-60
+			self.option.croppie.boundary = {
+				width : (self.option.mobileSize > $(window).width()) ? $(window).width() : self.option.width,
+				height : ((self.option.mobileSize > $(window).width()) ? $(window).height() : self.option.height)-60
 			};
-			croppie = new Croppie($el.figure.get(0), option.croppie);
+			self.croppie = new Croppie(self.$el.figure.get(0), self.option.croppie);
 
 			// bind croppie
 			if (isResize)
 			{
-				croppie.bind({
-					url : file.src,
+				self.croppie.bind({
+					url : self.file.src,
 					points : save.points
 				});
-				croppie.setZoom(save.zoom);
+				self.croppie.setZoom(save.zoom);
 			}
 		}
 
@@ -225,53 +232,11 @@
 		 */
 		function destroyCroppie()
 		{
-			if (croppie)
+			if (self.croppie)
 			{
-				croppie.destroy();
-				croppie = null;
+				self.croppie.destroy();
+				self.croppie = null;
 			}
-		}
-
-		/**
-		 * open window
-		 *
-		 * @Param {Object} obj
-		 */
-		function open(obj)
-		{
-			// show window
-			$el.con.addClass('show');
-
-			// set file value
-			file = obj;
-
-			// act pc & mobile
-			if ($(window).width() < option.mobileSize)
-			{
-				actMobile(true);
-			}
-			else
-			{
-				actDesktop(true);
-			}
-
-			// rebuild croppie
-			rebuildCroppie();
-			// bind image
-			croppie.bind({ url : file.src });
-
-			// input state
-			$el.meta.text('output size: ' + option.output.size.width + '*' + option.output.size.height);
-		}
-
-		/**
-		 * close window
-		 */
-		function close()
-		{
-			destroyCroppie();
-			file = null;
-			$el.con.removeClass('show');
 		}
 
 		/**
@@ -282,15 +247,15 @@
 		function done(e)
 		{
 			// result
-			croppie.result(option.output).then(function(res){
+			self.croppie.result(self.option.output).then(function(res){
 				$('#result').append('<img src="' + res + '" alt="">');
 
-				if (option.uploadScript)
+				if (self.option.uploadScript)
 				{
 					$.post(
-						option.uploadScript,
+						self.option.uploadScript,
 						{
-							name : file.name,
+							name : self.file.name,
 							image : res,
 							id : app.util.getUniqueNumber()
 						},
@@ -315,37 +280,93 @@
 				{
 					app.queue.import([{
 						id : app.util.getUniqueNumber(),
-						name : 'thumb-' + file.name,
+						name : 'thumb-' + self.file.name,
 						src : res,
-						type : 'image/' + option.output.format,
+						type : 'image/' + self.option.output.format,
 						size : 0
 					}]);
 				}
 
 				// close
-				close();
+				self.close();
 			});
 		}
 
 
-		// return
-		return {
-			name : name,
-			init : function(parent)
+		/**
+		 * init
+		 *
+		 * @Param {Object} parent
+		 */
+		this.init = function(parent)
+		{
+			app = parent;
+
+			// load files
+			loadExternalFiles();
+
+			// create container
+			createContainer();
+
+			// init events
+			initEvents();
+		};
+
+		/**
+		 * open window
+		 *
+		 * @Param {Object} obj
+		 */
+		this.open = function(obj)
+		{
+			// show window
+			this.$el.con.addClass('show');
+			$('html').addClass('rg-popup');
+
+			// set file value
+			this.file = obj;
+
+			// act pc & mobile
+			if ($(window).width() < this.option.mobileSize)
 			{
-				app = parent;
+				actMobile(true);
+			}
+			else
+			{
+				actDesktop(true);
+			}
 
-				// load files
-				loadExternalFiles();
+			// rebuild croppie
+			rebuildCroppie();
+			// bind image
+			this.croppie.bind({ url : this.file.src });
 
-				// create container
-				createContainer();
+			// input state
+			this.$el.meta.text('output size: ' + this.option.output.size.width + '*' + this.option.output.size.height);
+		};
 
-				// init events
-				initEvents();
-			},
-			open : open,
-			close : close
+		/**
+		 * close window
+		 */
+		this.close = function()
+		{
+			destroyCroppie();
+			this.file = null;
+			this.$el.con.removeClass('show');
+			$('html').removeClass('rg-popup');
+		};
+
+		/**
+		 * assignOption
+		 *
+		 * @Param {Object} obj
+		 */
+		this.assignOption = function(obj)
+		{
+			this.option = $.extend({}, this.option, obj);
 		}
 	}
+
+	RGUploader.prototype.plugins.thumbnail = new Thumbnail();
+
 })();

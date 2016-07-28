@@ -1,23 +1,17 @@
 ;(function(){
-	RGUploader.prototype.plugins.sizeinfo = function()
-	{
-		var name = 'sizeinfo';
+
+	function Sizeinfo() {
+
+		this.name = 'Size info';
+		this.size = { current: 0, total: 0 };
+
+		var self = this;
 		var app = null;
 		var $body = null;
 		var wrapSelector = '.size-info';
 		var $current = null;
 		var $total = null;
-		var size = { current: 0, total: 0 };
 
-		/**
-		 * update size
-		 *
-		 */
-		var update = function()
-		{
-			$current.text(app.util.bytesToSize(size.current));
-			$total.text(app.util.bytesToSize(size.total));
-		};
 
 		/**
 		 * create element
@@ -31,43 +25,65 @@
 			$total = $body.find('[data-text=totalSize]');
 		}
 
-		return {
-			name : name,
-			init : function(parent)
+
+		/**
+		 * init
+		 *
+		 * @Param {Object} parent
+		 */
+		this.init = function(parent)
+		{
+			app = parent;
+			$body = parent.$container.find(wrapSelector);
+
+			// not found $body element
+			if (!$body.length)
 			{
-				app = parent;
-				$body = parent.$container.find(wrapSelector);
+				app.plugin.error(name);
+			}
 
-				// not found $body element
-				if (!$body.length)
-				{
-					app.plugin.error(name);
-				}
+			// create elements
+			create();
 
-				// create elements
-				create();
+			// set size
+			this.size.total = app.options.limitSizeTotal;
 
-				// set size
-				size.total = app.options.limitSizeTotal;
+			// update size
+			this.update();
+		}
 
-				// update size
-				update();
-			},
-			update : update,
-			eventListener : function(type, value)
-			{
-				switch(type) {
-					case 'queue.uploadComplete':
-						size.current += value.file.size;
-						update(app.queue.getSize());
-						break;
+		/**
+		 * update
+		 */
+		this.update = function()
+		{
+			$current.text(app.util.bytesToSize(this.size.current));
+			$total.text(app.util.bytesToSize(this.size.total));
+		}
 
-					case 'queue.removeQueue':
-						size.current = app.queue.getSize();
-						update();
-						break;
-				}
+		/**
+		 * event listener
+		 *
+		 * @Param {String} type
+		 * @Param {*} value
+		 */
+		this.eventListener = function(type, value)
+		{
+			switch(type) {
+				case 'queue.uploadComplete':
+					self.size.current += value.file.size;
+					self.update(app.queue.getSize());
+					break;
+
+				case 'queue.removeQueue':
+					self.size.current = app.queue.getSize();
+					self.update();
+					break;
 			}
 		}
-	};
+	}
+
+
+	RGUploader.prototype.plugins.sizeinfo = new Sizeinfo();
+
 })();

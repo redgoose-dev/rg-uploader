@@ -1,9 +1,12 @@
-;(function() {
-	RGUploader.prototype.plugins.dnd = function ()
-	{
-		var name = 'Drag and Drop upload';
+;(function(){
+
+	function DragAndDrop() {
+
+		this.name = 'Drag and drop upload';
+		this.areaElements = [];
+
+		var self = this;
 		var app = null;
-		var areaElements = [];
 		var externalAreaElements = $('.rg-external-dropzone');
 
 
@@ -94,29 +97,35 @@
 			app.uploader.play(app.uploader.$uploadElement, (files || []));
 		};
 
-		// return
-		return {
-			name : name,
-			init : function(parent)
+
+		/**
+		 * init
+		 *
+		 * @Param {Object} parent
+		 */
+		this.init = function(parent)
+		{
+			app = parent;
+
+			// push area elements
+			this.areaElements.push(app.queue.$queue.parent().get(0));
+			externalAreaElements.each(function(){
+				self.areaElements.push(this);
+			});
+
+			// init event
+			if (this.areaElements.length)
 			{
-				app = parent;
-
-				// push area elements
-				areaElements.push(app.queue.$queue.parent().get(0));
-				externalAreaElements.each(function(){
-					areaElements.push(this);
-				});
-
-				// init event
-				if (areaElements.length)
+				var dnd = fileDragAndDrop(this.areaElements);
+				if (dnd && dnd.progress)
 				{
-					var dnd = fileDragAndDrop(areaElements);
-					if (dnd && dnd.progress)
-					{
-						dnd.progress(done);
-					}
+					dnd.progress(done);
 				}
 			}
 		}
 	}
+
+
+	RGUploader.prototype.plugins.dnd = new DragAndDrop();
+
 })();

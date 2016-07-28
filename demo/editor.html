@@ -15,26 +15,36 @@
 	<header class="demo-header">
 		<h1>redgoose file uploader</h1>
 		<nav>
-			<a href="index.html" class="active">basic</a>
+			<a href="index.html">basic</a>
 			<a href="style.html">style</a>
 			<a href="plugins.html">plugins</a>
-			<a href="editor.html">to editor</a>
+			<a href="editor.html" class="active">to editor</a>
 		</nav>
 	</header>
 
 	<section class="demo-container">
-		<h1>basic</h1>
-		<p>컴포넌트의 기본에 대한 데모입니다.</p>
+		<h1>to editor</h1>
+		<p>업로드한 파일을 텍스트폼이나 글쓰기 에디터로 삽입하는 예제를 보여드립니다.</p>
 		<section>
 			<header>
-				<h1>not option</h1>
-				<p>아무런 옵션이 옵션이 없습니다.</p>
+				<h1>textarea &amp; image elements</h1>
+				<p>
+					textarea나 다른 영역이나 에디터에다 파일을 삽입할 수 있습니다.<br>
+					이 예제는 파일 목록의 `본문삽입`버튼을 누르면 textarea에는 파일이름, 이미지 영역에는 이미지태그가 들어갑니다. (이미지영역의 이미지는 css로 사이즈를 작게 조절하도록 하겠습니다.)
+				</p>
 			</header>
-			<article class="rg-uploader" id="comp_basic">
+
+			<div class="to-editor">
+				<p><strong>textarea영역</strong></p>
+				<textarea id="target_textarea"></textarea>
+				<p><strong>image area</strong></p>
+				<figure id="target_image"></figure>
+			</div>
+			<article class="rg-uploader" id="comp_preview">
 				<!-- header -->
 				<header>
 					<h1>File upload</h1>
-					<p>아래 업로드 버튼을 눌러서 파일을 추가합니다.</p>
+					<p>아래 업로드 버튼을 눌러서 파일을 추가하거나 이 영역에 파일을 드래그하여 추가합니다.</p>
 				</header>
 				<!-- // header -->
 				<!-- body -->
@@ -104,91 +114,21 @@
 							<span>Start upload</span>
 						</a>
 					</nav>
+					<div class="size-info"></div>
 				</footer>
 				<!-- // footer -->
 			</article>
-
 			<section class="code">
 				<h1 class="blind">code</h1>
+				<h2>load js</h2>
+				<p>플러그인 파일을 불러옵니다.(이후부터 생략합니다.)</p>
+				<pre><code class="language-js">&lt;script src="../dist/js/plugin.pkgd.js">&lt;/script></code></pre>
 				<h2>javascript</h2>
-				<pre><code class="language-js">var basic = new RGUploader($('#comp_basic'));</code></pre>
-			</section>
-		</section>
-
-		<section>
-			<header>
-				<h1>external form</h1>
-				<p>
-					컴포넌트 외부의 업로드 폼을 지정하여 업로드할 수 있습니다. 그리고 파일을 선택하면 바로 업로드합니다.
-				</p>
-			</header>
-
-			<article class="rg-uploader" id="comp_ext_form">
-				<!-- body -->
-				<div class="body" data-comp="queue">
-					<!-- queue -->
-					<div class="col queue" data-element="queue"><ul></ul></div>
-					<div class="col queue" data-element="template">
-						<ul class="style-list">
-							<li class="complete">
-								<div class="wrap">
-									<figure class="col" data-element="previewImage" data-text="filename">filename.jpg</figure>
-									<div class="col bd">
-										<span class="filetype bracket large" data-text="filetype">image/jpg</span>
-										<span class="name" data-text="filename">filename.jpg</span>
-										<hr>
-										<span class="state" data-text="state">uploaded</span>
-										<span class="size bracket" data-text="filesize">123.43kb</span>
-									</div>
-									<nav class="col" data-element="customButtons"></nav>
-								</div>
-							</li>
-							<li class="error">
-								<div class="wrap">
-									<figure class="col not-image"></figure>
-									<div class="col bd">
-										<span class="filetype bracket large" data-text="filetype">image/jpg</span>
-										<span class="name" data-text="filename">filename.jpg</span>
-										<hr>
-										<span class="state" data-text="state">upload fail</span>
-									</div>
-								</div>
-							</li>
-							<li class="loading">
-								<div class="wrap">
-									<figure class="col not-image">
-										<p data-element="progress" style="width: 40%;">
-											<span><em>40</em>%</span>
-										</p>
-									</figure>
-									<div class="col bar">
-										<p data-element="progress" style="width: 30%;">
-											<span><em>30</em>%</span>
-										</p>
-									</div>
-									<div class="col bd">
-										<span class="name" data-text="filename">filename.jpg</span>
-										<hr>
-										<span class="state" data-text="state">uploading..</span>
-									</div>
-								</div>
-							</li>
-						</ul>
-					</div>
-					<!-- // queue -->
-				</div>
-				<!-- // body -->
-			</article>
-			<p><input type="file" id="ext_input" multiple></p>
-
-			<section class="code">
-				<h1 class="blind">code</h1>
-				<h2>html</h2>
-				<pre><code class="language-html">&lt;input type="file" id="ext_input" multiple></code></pre>
-				<h2>javascript</h2>
-<pre><code class="language-js">var extInputForm = new RGUploader($('#comp_ext_form'), {
-	autoUpload : true,
-	$externalFileForm : $('#ext_input')
+				<pre><code class="language-js">var plug_preview = new RGUploader($('#comp_preview'), {
+	plugin : ['preview'],
+	queue : {
+		datas : './script/data.json'
+	}
 });
 </code></pre>
 			</section>
@@ -200,15 +140,43 @@
 
 <script src="../vendor/jquery/jquery-3.1.0.min.js"></script>
 <script src="../dist/js/rg-uploader.pkgd.js"></script>
+<script src="../dist/js/plugin.pkgd.js"></script>
 <script src="./assets/prism.js"></script>
 <script>
-// basic
-var basic = new RGUploader($('#comp_basic'));
-
-// external input form
-var extInputForm = new RGUploader($('#comp_ext_form'), {
-	autoUpload : true,
-	$externalFileForm : $('#ext_input')
+// preview
+var plug_preview = new RGUploader($('#comp_preview'), {
+	queue : {
+		datas : './script/data.json',
+		buttons : [
+			{
+				name : 'open file',
+				iconName : 'open_in_new',
+				action : function(app, file) {
+					console.log('action : open file');
+					window.open(file.src);
+				}
+			},
+			{
+				name : 'insert editor',
+				iconName : 'center_focus_strong',
+				action : function(app, file) {
+					var $textarea = $('#target_textarea');
+					var $figure = $('#target_image');
+					var src = ((/^data:/g).test(file.src)) ? file.name : file.src;
+					$textarea.val($textarea.val() + ' [' + src + ']');
+					$figure.append('<img src="' + file.src + '" alt="' + file.name + '">');
+				}
+			},
+			{
+				name : 'remove queue',
+				iconName : 'close',
+				action : function(app, file) {
+					app.queue.removeQueue(file.id, false, true);
+				}
+			}
+		]
+	},
+	plugin : ['preview', 'dnd', 'changeQueueStyle', 'sizeinfo', 'thumbnail']
 });
 </script>
 </body>

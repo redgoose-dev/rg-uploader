@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<title>redgoose upload component</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="user-scalable=yes, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta name="author" content="redgoose.me">
+<meta name="description" content="admin service for goose">
+<link rel="stylesheet" href="../dist/css/rg-uploader.min.css">
+<link rel="stylesheet" href="./demo.css">
+</head>
+<body>
+<main>
+	<header class="demo-header">
+		<h1>redgoose uploader demo</h1>
+		<p>파일을 업로드하고 올린 파일들을 관리하는 컴포넌트입니다.</p>
+	</header>
+
+	<div class="container">
+		<article class="rg-uploader" id="uploadComponent">
+			<!-- header -->
+			<header>
+				<h1>File upload</h1>
+				<p>아래 업로드 버튼을 눌러서 파일을 추가하거나 이 영역에 파일을 드래그하여 추가합니다.</p>
+			</header>
+			<!-- // header -->
+
+			<!-- body -->
+			<div class="body" data-comp="queue">
+				<!-- queue -->
+				<div class="col queue" data-element="queue"><ul></ul></div>
+				<div class="col queue" data-element="template">
+					<!-- .style-list, .style-web, .style-album -->
+					<ul class="style-album">
+						<li class="complete">
+							<div class="wrap">
+								<figure class="col" data-element="previewImage" data-text="filename" style="background-image: url('https://images.unsplash.com/photo-1464655646192-3cb2ace7a67e?dpr=2&auto=compress,format&crop=entropy&fit=crop&w=376&h=250&q=80')">filename.jpg</figure>
+								<div class="col bd">
+									<span class="filetype bracket large" data-text="filetype">image/jpg</span>
+									<span class="name" data-text="filename">filenamefilenamefilenamefilenamefilenamefilenamefilenamefilename.jpg</span>
+									<hr>
+									<span class="state" data-text="state">uploaded</span>
+									<span class="size bracket" data-text="filesize">123.43kb</span>
+								</div>
+								<nav class="col" data-element="customButtons">
+									<button type="button"><i class="material-icons">launch</i></button>
+									<button type="button" class="on"><i class="material-icons">apps</i></button>
+									<button type="button"><i class="material-icons">filter_center_focus</i></button>
+									<button type="button"><i class="material-icons">close</i></button>
+								</nav>
+							</div>
+						</li>
+						<li class="error">
+							<div class="wrap">
+								<figure class="col not-image"></figure>
+								<div class="col bd">
+									<span class="filetype bracket large" data-text="filetype">image/jpg</span>
+									<span class="name" data-text="filename">filenamefilenamefilenamefilenamefilenamefilenamefilename.jpg</span>
+									<hr>
+									<span class="state" data-text="state">upload fail</span>
+								</div>
+							</div>
+						</li>
+						<li class="loading">
+							<div class="wrap">
+								<figure class="col not-image">
+									<p data-element="progress" style="width: 40%;">
+										<span><em>40</em>%</span>
+									</p>
+								</figure>
+								<div class="col bar">
+									<p data-element="progress" style="width: 30%;">
+										<span><em>30</em>%</span>
+									</p>
+								</div>
+								<div class="col bd">
+									<span class="name" data-text="filename">filename.jpg</span>
+									<hr>
+									<span class="state" data-text="state">uploading..</span>
+								</div>
+							</div>
+						</li>
+					</ul>
+				</div>
+				<!-- // queue -->
+			</div>
+			<!-- // body -->
+
+			<!-- footer -->
+			<footer>
+				<nav>
+					<label class="add-file">
+						<input type="file" data-element="addfiles" multiple>
+						<i class="material-icons">add_circle_outline</i>
+						<span>Add files</span>
+					</label>
+					<a href="#" data-element="startUpload" class="start-upload">
+						<i class="material-icons">play_circle_outline</i>
+						<span>Start upload</span>
+					</a>
+				</nav>
+				<div class="size-info"></div>
+			</footer>
+			<!-- // footer -->
+		</article>
+	</div>
+
+	<div>
+		<p><br></p>
+		<hr>
+		<p>
+			<label for="extUpload">extUpload</label><br>
+			<input type="file" id="extUpload" multiple>
+		</p>
+		<p>
+			<label for="customUpload">custom upload</label><br>
+			<input type="file" id="customUpload" multiple> <button type="button" id="btn_customUpload">start upload</button>
+		</p>
+		<p>
+			<span class="rg-external-dropzone">external dropzone</span>
+		</p>
+	</div>
+</main>
+<script>function log(o) {console.log(o);}</script>
+<script src="../vendor/jquery/jquery-3.1.0.js"></script>
+<script src="../dist/js/rg-uploader.pkgd.js"></script>
+<!--<link rel="stylesheet" href="../vendor/croppie/croppie.css">-->
+<!--<script src="../vendor/croppie/croppie.min.js"></script>-->
+<script src="../dist/js/plugin.pkgd.js"></script>
+<script>
+// make uploader instance
+var rgUploader = new RGUploader($('#uploadComponent'), {
+	uploadScript : './script/upload.php',
+	removeScript : './script/remove.php',
+	autoUpload : true,
+	$externalFileForm : $('#extUpload'),
+	allowFileTypes : ['jpeg', 'png', 'gif', 'json'],
+	eventPrefixName : 'RG-',
+	limitSize : 3000000,
+	limitSizeTotal : 10120000,
+	queue : {
+		height : 200,
+		limit : 10,
+		style : 'list',
+		buttons : [
+			{
+				name : 'open file',
+				iconName : 'open_in_new',
+				action : function(app, file) {
+					console.log('action : open file');
+					window.open(file.src);
+				}
+			},
+			{
+				name : 'make thumbnail image',
+				iconName : 'apps',
+				show : function(file) {
+					return (file.type.split('/')[0] == 'image');
+				},
+				action : function(app, file) {
+					if (!app.plugin.child.thumbnail) return false;
+					var plug = app.plugin.child.thumbnail;
+					plug.open(file);
+				}
+			},
+			{
+				name : 'insert editor',
+				iconName : 'center_focus_strong',
+				action : function(app, file) {
+					console.log('action : insert editor');
+				}
+			},
+			{
+				name : 'remove queue',
+				iconName : 'close',
+				action : function(app, file) {
+					app.queue.removeQueue(file.id, false, true);
+				}
+			}
+		],
+		datas : './script/data.php'
+	},
+	plugin : [ 'preview', 'sizeinfo', 'dnd', 'changeQueueStyle', 'thumbnail' ]
+});
+
+$('#btn_customUpload').on('click', function(){
+	rgUploader.uploader.play($('#customUpload'));
+});
+</script>
+</body>
+</html>

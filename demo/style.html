@@ -15,28 +15,28 @@
 	<header class="demo-header">
 		<h1>redgoose file uploader</h1>
 		<nav>
-			<a href="index.html" class="active">basic</a>
-			<a href="style.html">style</a>
+			<a href="index.html">basic</a>
+			<a href="style.html" class="active">style</a>
 			<a href="plugins.html">plugins</a>
 			<a href="editor.html">to editor</a>
 		</nav>
 	</header>
 
 	<section class="demo-container">
-		<h1>basic</h1>
-		<p>컴포넌트의 기본에 대한 데모입니다.</p>
+		<h1>queue style</h1>
+		<p>
+			Queue 스타일에 대한 데모입니다.<br/>
+			기본적으로 `list, web, album` 스타일이 구현되어있고, 새로운 스타일을 추가하거나 css를 수정하거나 속성을 덮어씌워서 스타일을 커스터마이즈 할 수 있습니다.
+		</p>
+		<p>
+			편의를 위하여 업로드된 파일의 정보 데이터를 불러왔습니다.
+		</p>
 		<section>
 			<header>
-				<h1>not option</h1>
-				<p>아무런 옵션이 옵션이 없습니다.</p>
+				<h1>style - list(default)</h1>
+				<p>목록형태의 스타일입니다.</p>
 			</header>
-			<article class="rg-uploader" id="comp_basic">
-				<!-- header -->
-				<header>
-					<h1>File upload</h1>
-					<p>아래 업로드 버튼을 눌러서 파일을 추가합니다.</p>
-				</header>
-				<!-- // header -->
+			<article class="rg-uploader" id="comp_style_list">
 				<!-- body -->
 				<div class="body" data-comp="queue">
 					<!-- queue -->
@@ -104,6 +104,7 @@
 							<span>Start upload</span>
 						</a>
 					</nav>
+					<div class="size-info"></div>
 				</footer>
 				<!-- // footer -->
 			</article>
@@ -111,19 +112,22 @@
 			<section class="code">
 				<h1 class="blind">code</h1>
 				<h2>javascript</h2>
-				<pre><code class="language-js">var basic = new RGUploader($('#comp_basic'));</code></pre>
+<pre><code class="language-js">var style_list = new RGUploader($('#comp_style_list'), {
+	queue : {
+		style : 'list',
+		datas : './script/data.json'
+	}
+});
+</code></pre>
 			</section>
 		</section>
 
 		<section>
 			<header>
-				<h1>external form</h1>
-				<p>
-					컴포넌트 외부의 업로드 폼을 지정하여 업로드할 수 있습니다. 그리고 파일을 선택하면 바로 업로드합니다.
-				</p>
+				<h1>style - web</h1>
+				<p>작은 썸네일 이미지와 파일정보가 나란히 표시됩니다.</p>
 			</header>
-
-			<article class="rg-uploader" id="comp_ext_form">
+			<article class="rg-uploader" id="comp_style_web">
 				<!-- body -->
 				<div class="body" data-comp="queue">
 					<!-- queue -->
@@ -178,17 +182,125 @@
 					<!-- // queue -->
 				</div>
 				<!-- // body -->
+				<!-- footer -->
+				<footer>
+					<nav>
+						<label class="add-file">
+							<input type="file" data-element="addfiles" multiple>
+							<i class="material-icons">add_circle_outline</i>
+							<span>Add files</span>
+						</label>
+						<a href="#" data-element="startUpload" class="start-upload">
+							<i class="material-icons">play_circle_outline</i>
+							<span>Start upload</span>
+						</a>
+					</nav>
+					<div class="size-info"></div>
+				</footer>
+				<!-- // footer -->
 			</article>
-			<p><input type="file" id="ext_input" multiple></p>
 
 			<section class="code">
 				<h1 class="blind">code</h1>
-				<h2>html</h2>
-				<pre><code class="language-html">&lt;input type="file" id="ext_input" multiple></code></pre>
 				<h2>javascript</h2>
-<pre><code class="language-js">var extInputForm = new RGUploader($('#comp_ext_form'), {
-	autoUpload : true,
-	$externalFileForm : $('#ext_input')
+				<pre><code class="language-js">var style_web = new RGUploader($('#comp_style_web'), {
+	queue : {
+		style : 'web',
+		height: 250,
+		datas : './script/data.json'
+	}
+});
+</code></pre>
+			</section>
+		</section>
+
+		<section>
+			<header>
+				<h1>style - album</h1>
+				<p>사진과 정보가 위아래로 정렬된 형태로 표현됩니다.</p>
+			</header>
+			<article class="rg-uploader" id="comp_style_album">
+				<!-- body -->
+				<div class="body" data-comp="queue">
+					<!-- queue -->
+					<div class="col queue" data-element="queue"><ul></ul></div>
+					<div class="col queue" data-element="template">
+						<ul class="style-list">
+							<li class="complete">
+								<div class="wrap">
+									<figure class="col" data-element="previewImage" data-text="filename">filename.jpg</figure>
+									<div class="col bd">
+										<span class="filetype bracket large" data-text="filetype">image/jpg</span>
+										<span class="name" data-text="filename">filename.jpg</span>
+										<hr>
+										<span class="state" data-text="state">uploaded</span>
+										<span class="size bracket" data-text="filesize">123.43kb</span>
+									</div>
+									<nav class="col" data-element="customButtons"></nav>
+								</div>
+							</li>
+							<li class="error">
+								<div class="wrap">
+									<figure class="col not-image"></figure>
+									<div class="col bd">
+										<span class="filetype bracket large" data-text="filetype">image/jpg</span>
+										<span class="name" data-text="filename">filename.jpg</span>
+										<hr>
+										<span class="state" data-text="state">upload fail</span>
+									</div>
+								</div>
+							</li>
+							<li class="loading">
+								<div class="wrap">
+									<figure class="col not-image">
+										<p data-element="progress" style="width: 40%;">
+											<span><em>40</em>%</span>
+										</p>
+									</figure>
+									<div class="col bar">
+										<p data-element="progress" style="width: 30%;">
+											<span><em>30</em>%</span>
+										</p>
+									</div>
+									<div class="col bd">
+										<span class="name" data-text="filename">filename.jpg</span>
+										<hr>
+										<span class="state" data-text="state">uploading..</span>
+									</div>
+								</div>
+							</li>
+						</ul>
+					</div>
+					<!-- // queue -->
+				</div>
+				<!-- // body -->
+				<!-- footer -->
+				<footer>
+					<nav>
+						<label class="add-file">
+							<input type="file" data-element="addfiles" multiple>
+							<i class="material-icons">add_circle_outline</i>
+							<span>Add files</span>
+						</label>
+						<a href="#" data-element="startUpload" class="start-upload">
+							<i class="material-icons">play_circle_outline</i>
+							<span>Start upload</span>
+						</a>
+					</nav>
+					<div class="size-info"></div>
+				</footer>
+				<!-- // footer -->
+			</article>
+
+			<section class="code">
+				<h1 class="blind">code</h1>
+				<h2>javascript</h2>
+				<pre><code class="language-js">var style_album = new RGUploader($('#comp_style_album'), {
+	queue : {
+		style : 'album',
+		height: 250,
+		datas : './script/data.json'
+	}
 });
 </code></pre>
 			</section>
@@ -200,15 +312,33 @@
 
 <script src="../vendor/jquery/jquery-3.1.0.min.js"></script>
 <script src="../dist/js/rg-uploader.pkgd.js"></script>
+<script src="../plugins/changeQueueStyle.plugin.js"></script>
 <script src="./assets/prism.js"></script>
 <script>
-// basic
-var basic = new RGUploader($('#comp_basic'));
+// style(list)
+var style_list = new RGUploader($('#comp_style_list'), {
+	queue : {
+		style : 'list',
+		datas : './script/data.json'
+	}
+});
 
-// external input form
-var extInputForm = new RGUploader($('#comp_ext_form'), {
-	autoUpload : true,
-	$externalFileForm : $('#ext_input')
+// style(web)
+var style_web = new RGUploader($('#comp_style_web'), {
+	queue : {
+		style : 'web',
+		height: 250,
+		datas : './script/data.json'
+	}
+});
+
+// style(album)
+var style_album = new RGUploader($('#comp_style_album'), {
+	queue : {
+		style : 'album',
+		height: 250,
+		datas : './script/data.json'
+	}
 });
 </script>
 </body>
