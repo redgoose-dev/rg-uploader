@@ -13,6 +13,7 @@
 <body>
 <main>
 	<header class="demo-header">
+		<figure><img src="./assets/ico-symbol.png" alt="redgoose file uploader"></figure>
 		<h1>redgoose file uploader</h1>
 		<nav>
 			<a href="index.html">basic</a>
@@ -35,12 +36,12 @@
 			</header>
 
 			<div class="to-editor">
-				<p><strong>textarea영역</strong></p>
+				<h2>textarea</h2>
 				<textarea id="target_textarea"></textarea>
-				<p><strong>image area</strong></p>
+				<h2>image area</h2>
 				<figure id="target_image"></figure>
 			</div>
-			<article class="rg-uploader" id="comp_preview">
+			<article class="rg-uploader" id="comp_editor">
 				<!-- header -->
 				<header>
 					<h1>File upload</h1>
@@ -120,15 +121,42 @@
 			</article>
 			<section class="code">
 				<h1 class="blind">code</h1>
-				<h2>load js</h2>
-				<p>플러그인 파일을 불러옵니다.(이후부터 생략합니다.)</p>
+				<h2>load plug file</h2>
 				<pre><code class="language-js">&lt;script src="../dist/js/plugin.pkgd.js">&lt;/script></code></pre>
 				<h2>javascript</h2>
-				<pre><code class="language-js">var plug_preview = new RGUploader($('#comp_preview'), {
-	plugin : ['preview'],
+				<pre><code class="language-js">var plug_editor = new RGUploader($('#comp_editor'), {
 	queue : {
-		datas : './script/data.json'
-	}
+		datas : './script/data.json',
+		buttons : [
+			{
+				name : 'open file',
+				iconName : 'open_in_new',
+				action : function(app, file) {
+					console.log('action : open file');
+					window.open(file.src);
+				}
+			},
+			{
+				name : 'insert editor',
+				iconName : 'center_focus_strong',
+				action : function(app, file) {
+					var $textarea = $('#target_textarea');
+					var $figure = $('#target_image');
+					var src = ((/^data:/g).test(file.src)) ? file.name : file.src;
+					$textarea.val($textarea.val() + ' [' + src + ']');
+					$figure.append('&lt;img src="' + file.src + '" alt="' + file.name + '">');
+				}
+			},
+			{
+				name : 'remove queue',
+				iconName : 'close',
+				action : function(app, file) {
+					app.queue.removeQueue(file.id, false, true);
+				}
+			}
+		]
+	},
+	plugin : ['preview', 'dnd', 'changeQueueStyle', 'sizeinfo', 'thumbnail']
 });
 </code></pre>
 			</section>
@@ -143,8 +171,7 @@
 <script src="../dist/js/plugin.pkgd.js"></script>
 <script src="./assets/prism.js"></script>
 <script>
-// preview
-var plug_preview = new RGUploader($('#comp_preview'), {
+var plug_editor = new RGUploader($('#comp_editor'), {
 	queue : {
 		datas : './script/data.json',
 		buttons : [
