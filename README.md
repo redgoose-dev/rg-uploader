@@ -5,7 +5,7 @@
 
 
 
-### Demo
+## Demo
 
 다음 링크를 통하여 어떠한 기능을 가지고 있는지 확인할 수 있습니다.
 
@@ -13,7 +13,7 @@ http://projects.redgoose.me/2016/rg-Uploader/demo/
 
 
 
-### Feature
+## Feature
 
 RG-Uploader는 다음과 같은 기능을 가지고 있습니다.
 
@@ -37,7 +37,7 @@ css로 다양한 스타일을 만들거나 수정하고, 선택할 수 있습니
 
 
 
-### Documentation
+## Documentation
 
 업로더가 많은 상황을 고려하고 만들어서 소스의 덩치가 자연스럽게 커지게 되었습니다.  
 사용법이나 활용에 위키 다음 링크의 위키 문서를 참조해주세요.
@@ -45,20 +45,20 @@ css로 다양한 스타일을 만들거나 수정하고, 선택할 수 있습니
 (준비중)
 
 
-### Thankful vendors
+
+## Thankful vendors
 
 RG-Uploader는 다음과 같은 라이브러리를 사용하고 있으며 좋은 라이브러리 제공에 감사를 표합니다.
 
 * jQuery - http://jquery.com
 * croppie - https://foliotek.github.io/Croppie/
+* unsplash(sample image) - https://unsplash.com
 
 
 
-### Browser Compatibility
+## Browser Compatibility
 
 다름과 같은 브라우저 버전에서 원활한 작동이 가능합니다. 좀더 낮은 버전에서도 작동할 수 있습니다. (ie예외)
 
 * safari 9+
 * chrome 52+
-
-(준비중..)
