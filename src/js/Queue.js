@@ -2,6 +2,7 @@
 const util = require('./Util.js');
 const KeyboardEvent = require('./KeyboardEvent.js');
 const lang = require('./Language.js');
+const template = require('./Template.js');
 
 
 module.exports = function Queue(parent) {
@@ -30,11 +31,6 @@ module.exports = function Queue(parent) {
 	 * @var {Object} this.$queue
 	 */
 	this.$queue = util.findDOM(parent.$container, 'element', 'queue').children('ul');
-
-	/**
-	 * @var {Object} this.$templete
-	 */
-	this.$templete = util.findDOM(parent.$container, 'element', 'template');
 
 	/**
 	 * @var {Object} keyboardEvent
@@ -216,8 +212,7 @@ module.exports = function Queue(parent) {
 	 * @Param {Object} file
 	 */
 	this.addProgress = (file) => {
-		let $tmpEl = this.$templete.children();
-		let $item = $tmpEl.children('.loading').clone();
+		let $item = $(template.loading);
 
 		// add item in queue index
 		this.add(file);
@@ -244,7 +239,7 @@ module.exports = function Queue(parent) {
 	 */
 	this.addComplete = (file, $beforeElement) => {
 		let id = file.id;
-		let $el = this.$templete.children().children('.complete').clone();
+		let $el = $(template.complete);
 		let item = this.items.files[this.findItem(id)];
 
 		// set elements in queue
@@ -310,7 +305,7 @@ module.exports = function Queue(parent) {
 	 */
 	this.addError = (file, $beforeElement) => {
 		var id = file.id;
-		let $el = this.$templete.children().children('.error').clone();
+		let $el = $(template.error);
 
 		let $fileType = util.findDOM($el, 'text', 'filetype');
 		let $fileName = util.findDOM($el, 'text', 'filename');

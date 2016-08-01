@@ -41,68 +41,15 @@
 				<h2>image area</h2>
 				<figure id="target_image"></figure>
 			</div>
+
 			<article class="rg-uploader" id="comp_editor">
-				<!-- header -->
 				<header>
 					<h1>File upload</h1>
 					<p>아래 업로드 버튼을 눌러서 파일을 추가하거나 이 영역에 파일을 드래그하여 추가합니다.</p>
 				</header>
-				<!-- // header -->
-				<!-- body -->
 				<div class="body" data-comp="queue">
-					<!-- queue -->
 					<div class="col queue" data-element="queue"><ul></ul></div>
-					<div class="col queue" data-element="template">
-						<ul class="style-list">
-							<li class="complete">
-								<div class="wrap">
-									<figure class="col" data-element="previewImage" data-text="filename">filename.jpg</figure>
-									<div class="col bd">
-										<span class="filetype bracket large" data-text="filetype">image/jpg</span>
-										<span class="name" data-text="filename">filename.jpg</span>
-										<hr>
-										<span class="state" data-text="state">uploaded</span>
-										<span class="size bracket" data-text="filesize">123.43kb</span>
-									</div>
-									<nav class="col" data-element="customButtons"></nav>
-								</div>
-							</li>
-							<li class="error">
-								<div class="wrap">
-									<figure class="col not-image"></figure>
-									<div class="col bd">
-										<span class="filetype bracket large" data-text="filetype">image/jpg</span>
-										<span class="name" data-text="filename">filename.jpg</span>
-										<hr>
-										<span class="state" data-text="state">upload fail</span>
-									</div>
-								</div>
-							</li>
-							<li class="loading">
-								<div class="wrap">
-									<figure class="col not-image">
-										<p data-element="progress" style="width: 40%;">
-											<span><em>40</em>%</span>
-										</p>
-									</figure>
-									<div class="col bar">
-										<p data-element="progress" style="width: 30%;">
-											<span><em>30</em>%</span>
-										</p>
-									</div>
-									<div class="col bd">
-										<span class="name" data-text="filename">filename.jpg</span>
-										<hr>
-										<span class="state" data-text="state">uploading..</span>
-									</div>
-								</div>
-							</li>
-						</ul>
-					</div>
-					<!-- // queue -->
 				</div>
-				<!-- // body -->
-				<!-- footer -->
 				<footer>
 					<nav>
 						<label class="add-file">
@@ -117,8 +64,8 @@
 					</nav>
 					<div class="size-info"></div>
 				</footer>
-				<!-- // footer -->
 			</article>
+
 			<section class="code">
 				<h1 class="blind">code</h1>
 				<h2>load plug file</h2>

@@ -62,14 +62,14 @@ window.RGUploader = function($con, options) {
  * @Var {Object} RGUploader.defaultOptions
  */
 RGUploader.prototype.defaultOptions = {
-	uploadScript : null,
-	removeScript : null,
 	autoUpload : false,
 	$externalFileForm : null,
 	allowFileTypes : ['jpeg', 'png', 'gif'],
-	eventPrefixName : 'RG-',
 	limitSize : 1000000,
 	limitSizeTotal : 3000000,
+	uploadScript : null,
+	removeScript : null,
+	eventPrefixName : 'RG-',
 	queue : {
 		height : 150,
 		limit : 10,
