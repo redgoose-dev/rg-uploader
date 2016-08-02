@@ -68,13 +68,51 @@ module.exports = function Uploader(parent) {
 		return files;
 	};
 
+	/**
+	 * init event
+	 */
+	var initEvent = () => {
+		this.$uploadElement = util.findDOM(parent.$container, 'element', 'addfiles');
+		this.addUploadElements(parent.options.$externalFileForm);
+
+		if (!this.$uploadElement || !this.$uploadElement.length) return false;
+
+		// init change event
+		this.$uploadElement.each((k, o) => {
+			$(o).on('change', (e) => {
+				// check auto upload
+				if (parent.options.autoUpload)
+				{
+					if (this.uploading)
+					{
+						alert(lang('error_add_upload'));
+						this.resetEvent();
+						return false;
+					}
+
+					// play upload
+					this.play(this.$uploadElement, null);
+				}
+			});
+		});
+
+		// init start upload button
+		let $el = util.findDOM(parent.$container, 'element', 'startUpload');
+		if ($el.length)
+		{
+			$el.on('click', (e) => {
+				this.play(this.$uploadElement, null);
+				return false;
+			});
+		}
+	};
 
 	/**
 	 * push ready upload files
 	 *
 	 * @Param {Object} el [type=file] element
 	 */
-	this.pushReadyUploadFiles = (files) => {
+	var pushReadyUploadFiles = (files) => {
 		let options = parent.options;
 		let limitCount = options.queue.limit;
 		let error = {
@@ -142,11 +180,40 @@ module.exports = function Uploader(parent) {
 		});
 	};
 
+
 	/**
 	 * play upload
 	 *
+	 * @Param {Object} $el
+	 * @Param {FileList|Array} files
 	 */
-	var upload = () => {
+	this.play = ($el, files) => {
+
+		let items = files || mergeFileList($el);
+
+		if (!items.length)
+		{
+			alert(lang('error_not_upload_file'));
+			return false;
+		}
+
+		// push upload items
+		pushReadyUploadFiles(items);
+
+		// reset form
+		if ($el && !files)
+		{
+			this.resetEvent($el);
+		}
+
+		// start upload
+		this.upload();
+	}
+
+	/**
+	 * play upload
+	 */
+	this.upload = () => {
 		if (!this.readyItems.length) return false;
 
 		this.uploading = true;
@@ -221,50 +288,11 @@ module.exports = function Uploader(parent) {
 		// next upload
 		if (this.readyItems.length)
 		{
-			upload();
+			this.upload();
 		}
 		else
 		{
 			this.uploading = false;
-		}
-	};
-
-	/**
-	 * init event
-	 */
-	this.initEvent = () => {
-		this.$uploadElement = util.findDOM(parent.$container, 'element', 'addfiles');
-		this.addUploadElements(parent.options.$externalFileForm);
-
-		if (!this.$uploadElement || !this.$uploadElement.length) return false;
-
-		// init change event
-		this.$uploadElement.each((k, o) => {
-			$(o).on('change', (e) => {
-				// check auto upload
-				if (parent.options.autoUpload)
-				{
-					if (this.uploading)
-					{
-						alert(lang('error_add_upload'));
-						this.resetEvent();
-						return false;
-					}
-
-					// play upload
-					this.play(this.$uploadElement, null);
-				}
-			});
-		});
-
-		// init start upload button
-		let $el = util.findDOM(parent.$container, 'element', 'startUpload');
-		if ($el.length)
-		{
-			$el.on('click', (e) => {
-				this.play(this.$uploadElement, null);
-				return false;
-			});
 		}
 	};
 
@@ -296,36 +324,7 @@ module.exports = function Uploader(parent) {
 		});
 	}
 
-	/**
-	 * play upload
-	 *
-	 * @Param {Object} $el
-	 * @Param {FileList|Array} files
-	 */
-	this.play = ($el, files) => {
-
-		let items = files || mergeFileList($el);
-
-		if (!items.length)
-		{
-			alert(lang('error_not_upload_file'));
-			return false;
-		}
-
-		// push upload items
-		this.pushReadyUploadFiles(items);
-
-		// reset form
-		if ($el && !files)
-		{
-			this.resetEvent($el);
-		}
-
-		// start upload
-		upload();
-	}
-
 
 	// ACTION
-	this.initEvent();
+	initEvent();
 };
