@@ -32,6 +32,7 @@ module.exports = function Queue(parent) {
 	 */
 	this.$queue = util.findDOM(parent.$container, 'element', 'queue').children('ul');
 
+
 	/**
 	 * @var {Object} keyboardEvent
 	 */

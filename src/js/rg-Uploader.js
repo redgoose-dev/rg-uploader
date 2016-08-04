@@ -37,7 +37,7 @@ window.RGUploader = function($con, options) {
 	};
 
 	// check $container element
-	if (!$con || !$con.length) return null;
+	if (!$con || !$con.length) return;
 
 	// set container element
 	this.$container = $con.eq(0);
