@@ -152,8 +152,6 @@ module.exports = function Queue(parent) {
 	this.import = (src) => {
 		if (!src) return false;
 
-		let items = [];
-
 		if (typeof src === 'string')
 		{
 			$.get(src, (res) => {
@@ -176,6 +174,19 @@ module.exports = function Queue(parent) {
 				this.addComplete(item);
 			});
 		}
+	};
+
+	/**
+	 * delete queue
+	 *
+	 * @Param {Array} ids
+	 */
+	this.delete = (ids) => {
+		if (!ids || !ids.length) return;
+
+		ids.forEach((id) => {
+			this.removeQueue(id, false, true);
+		});
 	};
 
 	/**
@@ -353,7 +364,7 @@ module.exports = function Queue(parent) {
 				self.remove(id);
 				parent.eventReceiver('queue.removeQueue', {});
 			});
-		}
+		};
 
 		if (isLoadingQueue)
 		{
@@ -439,7 +450,7 @@ module.exports = function Queue(parent) {
 	/**
 	 * get files size (total)
 	 *
-	 * @Param {int}
+	 * @Return {int}
 	 */
 	this.getSize = () => {
 		var size = 0;
