@@ -1,89 +1,82 @@
-;(function(){
+function RG_Sizeinfo() {
 
-	function Sizeinfo() {
+	this.name = 'Size info';
+	this.size = { current: 0, total: 0 };
 
-		this.name = 'Size info';
-		this.size = { current: 0, total: 0 };
-
-		var self = this;
-		var app = null;
-		var $body = null;
-		var wrapSelector = '.size-info';
-		var $current = null;
-		var $total = null;
+	var self = this;
+	var app = null;
+	var $body = null;
+	var wrapSelector = '.size-info';
+	var $current = null;
+	var $total = null;
 
 
-		/**
-		 * create element
-		 *
-		 */
-		var create = function()
+	/**
+	 * create element
+	 *
+	 */
+	var create = function()
+	{
+		var str = '<p>Size : <em data-text="currentSize"></em>/<em data-text="totalSize"></em></p>';
+		$body.append(str);
+		$current = $body.find('[data-text=currentSize]');
+		$total = $body.find('[data-text=totalSize]');
+	};
+
+
+	/**
+	 * init
+	 *
+	 * @Param {Object} parent
+	 */
+	this.init = function(parent)
+	{
+		app = parent;
+		$body = parent.$container.find(wrapSelector);
+
+		// not found $body element
+		if (!$body.length)
 		{
-			var str = '<p>Size : <em data-text="currentSize"></em>/<em data-text="totalSize"></em></p>';
-			$body.append(str);
-			$current = $body.find('[data-text=currentSize]');
-			$total = $body.find('[data-text=totalSize]');
+			app.plugin.error(name);
 		}
 
+		// create elements
+		create();
 
-		/**
-		 * init
-		 *
-		 * @Param {Object} parent
-		 */
-		this.init = function(parent)
-		{
-			app = parent;
-			$body = parent.$container.find(wrapSelector);
+		// set size
+		this.size.total = app.options.limitSizeTotal;
 
-			// not found $body element
-			if (!$body.length)
-			{
-				app.plugin.error(name);
-			}
+		// update size
+		this.update();
+	};
 
-			// create elements
-			create();
+	/**
+	 * update
+	 */
+	this.update = function()
+	{
+		$current.text(app.util.bytesToSize(this.size.current));
+		$total.text(app.util.bytesToSize(this.size.total));
+	};
 
-			// set size
-			this.size.total = app.options.limitSizeTotal;
+	/**
+	 * event listener
+	 *
+	 * @Param {String} type
+	 * @Param {*} value
+	 */
+	this.eventListener = function(type, value)
+	{
+		switch(type) {
+			case 'queue.uploadComplete':
+				self.size.current += value.file.size;
+				self.update(app.queue.getSize());
+				break;
 
-			// update size
-			this.update();
-		}
-
-		/**
-		 * update
-		 */
-		this.update = function()
-		{
-			$current.text(app.util.bytesToSize(this.size.current));
-			$total.text(app.util.bytesToSize(this.size.total));
-		}
-
-		/**
-		 * event listener
-		 *
-		 * @Param {String} type
-		 * @Param {*} value
-		 */
-		this.eventListener = function(type, value)
-		{
-			switch(type) {
-				case 'queue.uploadComplete':
-					self.size.current += value.file.size;
-					self.update(app.queue.getSize());
-					break;
-
-				case 'queue.removeQueue':
-					self.size.current = app.queue.getSize();
-					self.update();
-					break;
-			}
+			case 'queue.removeQueue':
+				self.size.current = app.queue.getSize();
+				self.update();
+				break;
 		}
 	}
-
-
-	RGUploader.prototype.plugins.sizeinfo = new Sizeinfo();
-
-})();
+}

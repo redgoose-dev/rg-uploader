@@ -64,10 +64,12 @@
 				<pre><code class="language-js">&lt;script src="../dist/js/plugin.pkgd.js">&lt;/script></code></pre>
 				<h2>javascript</h2>
 <pre><code class="language-js">var plug_preview = new RGUploader($('#comp_preview'), {
-	plugin : ['preview'],
 	queue : {
 		datas : './script/data.json'
-	}
+	},
+	plugin : [
+		{ name : 'preview', obj : new RG_Preview() }
+	]
 });
 </code></pre>
 			</section>
@@ -110,7 +112,9 @@
 				<pre><code class="language-js">&lt;div class="rg-external-dropzone">external dropzone&lt;/div></code></pre>
 				<h2>javascript</h2>
 				<pre><code class="language-js">var dnd_basic = new RGUploader($('#comp_dnd_basic'), {
-	plugin : ['dnd']
+	plugin : [
+		{ name : 'dnd', obj : new RG_DragAndDrop() }
+	]
 });
 </code></pre>
 			</section>
@@ -149,7 +153,9 @@
 	queue : {
 		datas : './script/data.json'
 	},
-	plugin : ['sizeinfo']
+	plugin : [
+		{ name : 'sizeinfo', obj : new RG_Sizeinfo() }
+	]
 });
 </code></pre>
 			</section>
@@ -196,7 +202,9 @@
 		style : 'web',
 		datas : './script/data.json'
 	},
-	plugin : ['changeQueueStyle']
+	plugin : [
+		{ name : 'changeQueueStyle', obj : new RG_ChangeQueueStyle() }
+	]
 });
 </code></pre>
 			</section>
@@ -267,7 +275,9 @@
 			}
 		]
 	},
-	plugin : ['thumbnail']
+	plugin : [
+		{ name : 'thumbnail', obj : new RG_Thumbnail() }
+	]
 });
 </code></pre>
 			</section>
@@ -284,15 +294,19 @@
 <script>
 // preview
 var plug_preview = new RGUploader($('#comp_preview'), {
-	plugin : ['preview'],
 	queue : {
 		datas : './script/data.json'
-	}
+	},
+	plugin : [
+		{ name : 'preview', obj : new RG_Preview() }
+	]
 });
 
 // drag & drop
 var plug_dnd = new RGUploader($('#comp_dnd'), {
-	plugin : ['dnd']
+	plugin : [
+		{ name : 'dnd', obj : new RG_DragAndDrop() }
+	]
 });
 
 // size info
@@ -300,7 +314,9 @@ var plug_sizeinfo = new RGUploader($('#comp_sizeinfo'), {
 	queue : {
 		datas : './script/data.json'
 	},
-	plugin : ['sizeinfo']
+	plugin : [
+		{ name : 'sizeinfo', obj : new RG_Sizeinfo() }
+	]
 });
 
 // change style
@@ -309,11 +325,14 @@ var plug_changeQueueStyle = new RGUploader($('#comp_change_queue_style'), {
 		style : 'web',
 		datas : './script/data.json'
 	},
-	plugin : ['changeQueueStyle']
+	plugin : [
+		{ name : 'changeQueueStyle', obj : new RG_ChangeQueueStyle() }
+	]
 });
 
 // make thumbnail
 var plug_thumbnail = new RGUploader($('#comp_thumbnail'), {
+	name : 'thumbnail1',
 	queue : {
 		style : 'album',
 		height : 240,
@@ -342,7 +361,9 @@ var plug_thumbnail = new RGUploader($('#comp_thumbnail'), {
 			}
 		]
 	},
-	plugin : ['thumbnail']
+	plugin : [
+		{ name : 'thumbnail', obj : new RG_Thumbnail() }
+	]
 });
 </script>
 </body>

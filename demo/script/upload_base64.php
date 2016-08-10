@@ -5,6 +5,7 @@ header("Content-Type: plain/text");
 
 
 // set directory
+$pwd_root = '../';
 $pwd = '../upload';
 $dir = './upload';
 $prefix = 'thumb-';
@@ -21,11 +22,13 @@ function result($type, $response)
 }
 
 // make unique filename
-function generateRandomString($length = 10) {
+function generateRandomString($length = 10)
+{
 	$characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 	$charactersLength = strlen($characters);
 	$randomString = '';
-	for ($i = 0; $i < $length; $i++) {
+	for ($i = 0; $i < $length; $i++)
+	{
 		$randomString .= $characters[rand(0, $charactersLength - 1)];
 	}
 	return $randomString;
@@ -35,7 +38,25 @@ function generateRandomString($length = 10) {
 // check post value
 if (!$_POST['name'] || !$_POST['image'] || !$_POST['id'])
 {
-	result('error', [ 'message' => 'not found $_POST' ]);
+	result('error', ['message' => 'not found $_POST']);
+}
+
+
+// check directory
+if (!is_dir($pwd))
+{
+	if (is_writable($pwd_root))
+	{
+		$umask = umask();
+		umask(000);
+		mkdir($pwd, 0707);
+		umask($umask);
+	}
+
+	if (!is_dir($pwd))
+	{
+		result('error', ['message' => 'not exist "' . $pwd . '" directory']);
+	}
 }
 
 
@@ -43,9 +64,9 @@ if (!$_POST['name'] || !$_POST['image'] || !$_POST['id'])
 $imgData = str_replace('data:image/jpeg;base64,', '', $_POST['image']);
 $imgData = str_replace(' ', '+', $imgData);
 // set filename
-$filename = $prefix.generateRandomString(15).'.'.pathinfo($_POST['name'])['extension'];
+$filename = $prefix . generateRandomString(15) . '.' . pathinfo($_POST['name'])['extension'];
 // set location
-$loc = $pwd.'/'.$filename;
+$loc = $pwd . '/' . $filename;
 
 // upload image
 $result = file_put_contents($loc, base64_decode($imgData));
@@ -57,12 +78,12 @@ if ($result)
 	result('success', [
 		'id' => (int)$_POST['id'],
 		'name' => $filename,
-		'src' => $dir.'/'.$filename,
+		'src' => $dir . '/' . $filename,
 		'size' => filesize($loc),
 		'type' => mime_content_type($loc)
 	]);
 }
 else
 {
-	result('error', [ 'message' => 'upload error' ]);
+	result('error', ['message' => 'upload error']);
 }

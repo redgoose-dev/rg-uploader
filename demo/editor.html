@@ -103,7 +103,12 @@
 			}
 		]
 	},
-	plugin : ['preview', 'dnd', 'changeQueueStyle', 'sizeinfo', 'thumbnail']
+	plugin : [
+		{ name : 'preview', obj : new RG_Preview() },
+		{ name : 'dnd', obj : new RG_DragAndDrop() },
+		{ name : 'sizeinfo', obj : new RG_Sizeinfo() },
+		{ name : 'changeQueueStyle', obj : new RG_ChangeQueueStyle() }
+	]
 });
 </code></pre>
 			</section>
@@ -150,7 +155,12 @@ var plug_editor = new RGUploader($('#comp_editor'), {
 			}
 		]
 	},
-	plugin : ['preview', 'dnd', 'changeQueueStyle', 'sizeinfo', 'thumbnail']
+	plugin : [
+		{ name : 'preview', obj : new RG_Preview() },
+		{ name : 'dnd', obj : new RG_DragAndDrop() },
+		{ name : 'sizeinfo', obj : new RG_Sizeinfo() },
+		{ name : 'changeQueueStyle', obj : new RG_ChangeQueueStyle() }
+	]
 });
 </script>
 </body>

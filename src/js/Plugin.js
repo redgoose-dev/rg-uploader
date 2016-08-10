@@ -68,14 +68,15 @@ function Plugin(parent) {
 		if (items && items.length)
 		{
 			items.forEach((item) => {
-				let obj = parent.plugins[item];
-				if (!(obj && (typeof obj === 'object')) || !(obj.init && (typeof obj.init === 'function'))) return;
+				if (!item.name) return;
+				if (!item.obj || !(typeof item.obj === 'object')) return;
+				if (!item.obj.init || !(typeof item.obj.init === 'function')) return;
 
-				this.names.push(item);
-				this.child[item] = obj;
+				this.names.push(item.name);
+				this.child[item.name] = item.obj;
 
 				// play init()
-				this.child[item].init(parent);
+				this.child[item.name].init(parent);
 			});
 		}
 	};
