@@ -6,3 +6,5 @@ README.html
 .idea/
 
 demo/upload/
+
+*.user.*

@@ -72,6 +72,9 @@ module.exports = function Uploader(parent) {
 	 * init event
 	 */
 	var initEvent = () => {
+
+		var $startUpload = util.findDOM(parent.$container, 'element', 'startUpload');
+
 		this.$uploadElement = util.findDOM(parent.$container, 'element', 'addfiles');
 		this.addUploadElements(parent.options.$externalFileForm);
 
@@ -93,15 +96,30 @@ module.exports = function Uploader(parent) {
 					// play upload
 					this.play(this.$uploadElement, null);
 				}
+				else
+				{
+					if ($startUpload.length)
+					{
+						let count = mergeFileList(this.$uploadElement).length;
+						if (count > 0)
+						{
+							$startUpload.removeClass('disabled');
+						}
+						else
+						{
+							$startUpload.addClass('disabled');
+						}
+					}
+				}
 			});
 		});
 
 		// init start upload button
-		let $el = util.findDOM(parent.$container, 'element', 'startUpload');
-		if ($el.length)
+		if ($startUpload.length)
 		{
-			$el.on('click', (e) => {
+			$startUpload.addClass('disabled').on('click', (e) => {
 				this.play(this.$uploadElement, null);
+				$startUpload.addClass('disabled');
 				return false;
 			});
 		}

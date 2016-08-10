@@ -63,6 +63,9 @@
 				&:hover {background: #f4f4f4;}
 				> * {display: inline-block; vertical-align: middle;}
 				&:first-child {border-bottom-left-radius: $border-radius;}
+				&.disabled {
+					span, i {color: #999;}
+				}
 			}
 			span {
 				margin: 0;

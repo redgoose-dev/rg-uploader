@@ -73,13 +73,17 @@ module.exports = {
 	 */
 	inputFileReset(input)
 	{
-		if (navigator.appVersion.indexOf("MSIE 10") !== -1)
+		let win10ie11 = !!navigator.userAgent.match(/Trident.*rv[ :]?[1-9]{2}\./);
+		let ie = (navigator.appVersion.indexOf("MSIE ") !== -1);
+		let ie10 = (navigator.appVersion.indexOf("MSIE 10") !== -1);
+
+		if (ie10)
 		{
 			// is IE10
 			input.type = 'radio';
 			input.type = 'file';
 		}
-		else if (navigator.appVersion.indexOf("MSIE ") !== -1)
+		else if (ie || win10ie11)
 		{
 			// is IE
 			var orgParent = input.parentNode;
