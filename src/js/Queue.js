@@ -225,6 +225,7 @@ module.exports = function Queue(parent) {
 	 */
 	this.addProgress = (file) => {
 		let $item = $(template.loading);
+		let $removeButton = util.findDOM($item, 'element', 'removeQueue').children('button');
 
 		// add item in queue index
 		this.add(file);
@@ -235,6 +236,19 @@ module.exports = function Queue(parent) {
 
 		// reset percentage
 		util.findDOM($item, 'element', 'progress').width('0%').find('em').text('0');
+
+		// init remove queue event
+		$removeButton.on('click', (e) => {
+			var id = parseInt($(e.currentTarget).closest('li').data('id'));
+			this.removeQueue(id, true, false);
+			parent.uploader.readyItems.forEach((item, n) => {
+				if (item.id == id)
+				{
+					parent.uploader.readyItems.splice(n, 1);
+					return false;
+				}
+			});
+		});
 
 		// append element
 		this.$queue.append($item);

@@ -1,6 +1,6 @@
 module.exports = {
 	loading : '' +
-		'<li class="loading">' +
+		'<li class="loading ready">' +
 			'<div class="wrap">' +
 				'<figure class="col not-image">' +
 					'<p data-element="progress" style="width: 40%;">' +
@@ -15,8 +15,11 @@ module.exports = {
 				'<div class="col bd">' +
 					'<span class="name" data-text="filename">filename.jpg</span>' +
 					'<hr>' +
-					'<span class="state" data-text="state">uploading..</span>' +
+					'<span class="state" data-text="state">ready</span>' +
 				'</div>' +
+				'<nav class="col" data-element="removeQueue">' +
+					'<button type="button" title="remove queue"><i class="material-icons">close</i></button>' +
+				'</nav>' +
 			'</div>' +
 		'</li>',
 	error : '' +

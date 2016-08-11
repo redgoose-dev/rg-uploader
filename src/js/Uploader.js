@@ -84,32 +84,12 @@ module.exports = function Uploader(parent) {
 		this.$uploadElement.each((k, o) => {
 			$(o).on('change', (e) => {
 				// check auto upload
+				this.pushReady();
+
+				// start upload
 				if (parent.options.autoUpload)
 				{
-					if (this.uploading)
-					{
-						alert(lang('error_add_upload'));
-						this.resetEvent();
-						return false;
-					}
-
-					// play upload
-					this.play(this.$uploadElement, null);
-				}
-				else
-				{
-					if ($startUpload.length)
-					{
-						let count = mergeFileList(this.$uploadElement).length;
-						if (count > 0)
-						{
-							$startUpload.removeClass('disabled');
-						}
-						else
-						{
-							$startUpload.addClass('disabled');
-						}
-					}
+					this.start();
 				}
 			});
 		});
@@ -117,9 +97,8 @@ module.exports = function Uploader(parent) {
 		// init start upload button
 		if ($startUpload.length)
 		{
-			$startUpload.addClass('disabled').on('click', (e) => {
-				this.play(this.$uploadElement, null);
-				$startUpload.addClass('disabled');
+			$startUpload.on('click', (e) => {
+				this.start();
 				return false;
 			});
 		}
@@ -138,6 +117,7 @@ module.exports = function Uploader(parent) {
 			extension : false,
 			filesize : false
 		};
+		let newReadyItems = [];
 
 		function actError(type, message)
 		{
@@ -191,23 +171,21 @@ module.exports = function Uploader(parent) {
 
 			// push upload item
 			this.readyItems.push(files[i]);
+
+			// push new ready items
+			newReadyItems.push(files[i]);
 		}
 
-		this.readyItems.forEach((item) => {
+		newReadyItems.forEach((item) => {
 			parent.queue.addProgress(item);
 		});
 	};
 
-
 	/**
-	 * play upload
-	 *
-	 * @Param {Object} $el
-	 * @Param {FileList|Array} files
+	 * push ready queue
 	 */
-	this.play = ($el, files) => {
-
-		let items = files || mergeFileList($el);
+	this.pushReady = () => {
+		let items = mergeFileList(this.$uploadElement);
 
 		if (!items.length)
 		{
@@ -219,26 +197,36 @@ module.exports = function Uploader(parent) {
 		pushReadyUploadFiles(items);
 
 		// reset form
-		if ($el && !files)
-		{
-			this.resetEvent($el);
-		}
+		this.resetEvent(this.$uploadElement);
+	};
 
-		// start upload
-		this.upload();
+	/**
+	 * start upload
+	 */
+	this.start = () => {
+		if (!this.uploading)
+		{
+			this.play();
+		}
 	}
 
 	/**
 	 * play upload
 	 */
-	this.upload = () => {
+	this.play = () => {
 		if (!this.readyItems.length) return false;
 
 		this.uploading = true;
 
+		// change ready to loading
+		let $el = parent.queue.selectQueueElement(this.readyItems[0].id);
+		$el.removeClass('ready');
+		util.findDOM($el, 'text', 'state').text('loading..');
+		util.findDOM($el, 'element', 'removeQueue').remove();
+
+		// act upload
 		let script = parent.options.uploadScript || null;
 		let upload = fileUpload(script, this.readyItems[0]);
-
 		upload
 			.done((response, file) => {
 				this.uploadComplete('success', response, file);
@@ -306,7 +294,7 @@ module.exports = function Uploader(parent) {
 		// next upload
 		if (this.readyItems.length)
 		{
-			this.upload();
+			this.play();
 		}
 		else
 		{
