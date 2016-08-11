@@ -53,6 +53,7 @@ RG-Uploader는 다음과 같은 라이브러리를 사용하고 있으며 좋은
 * jQuery - http://jquery.com
 * croppie - https://foliotek.github.io/Croppie/
 * unsplash(sample image) - https://unsplash.com
+* Matrial design icons - https://design.google.com/icons/
 
 
 
