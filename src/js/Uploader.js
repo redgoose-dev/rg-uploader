@@ -202,8 +202,17 @@ module.exports = function Uploader(parent) {
 
 	/**
 	 * start upload
+	 *
+	 * @Param {Array} files
 	 */
-	this.start = () => {
+	this.start = (files) => {
+
+		// push parameter files
+		if (files && files.length)
+		{
+			pushReadyUploadFiles(files);
+		}
+
 		if (!this.uploading)
 		{
 			this.play();
