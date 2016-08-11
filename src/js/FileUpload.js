@@ -93,13 +93,14 @@ var uploadSuccess = (e, file) => {
 		switch (e.status)
 		{
 			case 200:
+				let response = e.responseText;
 				try {
-					return JSON.parse(e.responseText);
+					return JSON.parse(response) || response;
 				} catch(e) {
 					return {
 						state : 'error',
 						response : {
-							message : e.responseText
+							message : response
 						}
 					};
 				}

@@ -395,6 +395,7 @@ module.exports = function Queue(parent) {
 					}
 					else
 					{
+						console.log(res.response);
 						alert(lang('error_remove_error'));
 						return false;
 					}
