@@ -21,7 +21,7 @@ function RG_Thumbnail() {
 		btn_close : null,
 		btn_done : null
 	};
-	this.option = {
+	this.options = {
 		width : 640,
 		height : 480,
 		mobileSize : 640,
@@ -35,7 +35,10 @@ function RG_Thumbnail() {
 		croppie : {
 			boundary : { width: 640, height: 480-60 },
 			viewport : { width: 150, height: 150, type: 'square' }
-		}
+		},
+		doneCallback : null,
+		openCallback : null,
+		closeCallback : null
 	};
 
 
@@ -146,10 +149,10 @@ function RG_Thumbnail() {
 
 		// change window size
 		self.$el.wrap
-			.width(self.option.width).height(self.option.height)
+			.width(self.options.width).height(self.options.height)
 			.css({
-				marginLeft : (0 - self.option.width * 0.5) + 'px',
-				marginTop : (0 - self.option.height * 0.5) + 'px',
+				marginLeft : (0 - self.options.width * 0.5) + 'px',
+				marginTop : (0 - self.options.height * 0.5) + 'px',
 				left: '50%',
 				top: '50%'
 			});
@@ -213,11 +216,11 @@ function RG_Thumbnail() {
 		destroyCroppie();
 
 		// build croppie
-		self.option.croppie.boundary = {
-			width : (self.option.mobileSize > $(window).width()) ? $(window).width() : self.option.width,
-			height : ((self.option.mobileSize > $(window).width()) ? $(window).height() : self.option.height)-60
+		self.options.croppie.boundary = {
+			width : (self.options.mobileSize > $(window).width()) ? $(window).width() : self.options.width,
+			height : ((self.options.mobileSize > $(window).width()) ? $(window).height() : self.options.height)-60
 		};
-		self.croppie = new Croppie(self.$el.figure.get(0), self.option.croppie);
+		self.croppie = new Croppie(self.$el.figure.get(0), self.options.croppie);
 
 		// bind croppie
 		if (isResize)
@@ -250,11 +253,11 @@ function RG_Thumbnail() {
 	function done(e)
 	{
 		// result
-		self.croppie.result(self.option.output).then(function(res){
-			if (self.option.uploadScript)
+		self.croppie.result(self.options.output).then(function(res){
+			if (self.options.uploadScript)
 			{
 				$.post(
-					self.option.uploadScript,
+					self.options.uploadScript,
 					{
 						name : self.file.name,
 						image : res,
@@ -273,19 +276,24 @@ function RG_Thumbnail() {
 							return false;
 						}
 
-						// import thumnail
-						app.queue.import([res.response]);
+						if (self.options.doneCallback)
+						{
+							self.options.doneCallback(res.response);
+						}
 					});
 			}
 			else
 			{
-				app.queue.import([{
-					id : app.util.getUniqueNumber(),
-					name : 'thumb-' + self.file.name,
-					src : res,
-					type : 'image/' + self.option.output.format,
-					size : 0
-				}]);
+				if (self.options.doneCallback)
+				{
+					self.options.doneCallback({
+						id : app.util.getUniqueNumber(),
+						name : 'thumb-' + self.file.name,
+						src : res,
+						type : 'image/' + self.options.output.format,
+						size : 0
+					});
+				}
 			}
 
 			// close
@@ -328,7 +336,7 @@ function RG_Thumbnail() {
 		this.file = obj;
 
 		// act pc & mobile
-		if ($(window).width() < this.option.mobileSize)
+		if ($(window).width() < this.options.mobileSize)
 		{
 			actMobile(true);
 		}
@@ -343,7 +351,13 @@ function RG_Thumbnail() {
 		this.croppie.bind({ url : this.file.src });
 
 		// input state
-		this.$el.meta.text('output size: ' + this.option.output.size.width + '*' + this.option.output.size.height);
+		this.$el.meta.text('output size: ' + this.options.output.size.width + '*' + this.options.output.size.height);
+
+		// callback open window
+		if (this.options.openCallback)
+		{
+			this.options.openCallback();
+		}
 	};
 
 	/**
@@ -355,6 +369,12 @@ function RG_Thumbnail() {
 		this.file = null;
 		this.$el.con.removeClass('show');
 		$('html').removeClass('rg-popup');
+
+		// callback close window
+		if (this.options.closeCallback)
+		{
+			this.options.closeCallback();
+		}
 	};
 
 	/**
@@ -364,6 +384,6 @@ function RG_Thumbnail() {
 	 */
 	this.assignOption = function(obj)
 	{
-		this.option = $.extend({}, this.option, obj);
+		this.options = $.extend({}, this.options, obj);
 	}
 }

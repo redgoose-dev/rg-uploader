@@ -348,7 +348,12 @@ var plug_thumbnail = new RGUploader($('#comp_thumbnail'), {
 					if (!app.plugin.child.thumbnail) return false;
 					var plug = app.plugin.child.thumbnail;
 
-					plug.assignOption({ uploadScript : '' });
+					plug.assignOption({
+						uploadScript : '',
+						doneCallback : function(res) {
+							app.queue.import([res]);
+						}
+					});
 					plug.open(file);
 				}
 			},
