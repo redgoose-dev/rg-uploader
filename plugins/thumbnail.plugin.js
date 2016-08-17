@@ -1,6 +1,6 @@
 // croppie : http://foliotek.github.io/Croppie/
 
-function RG_Thumbnail() {
+function RG_Thumbnail(options) {
 
 	this.name = 'Make thumbnail';
 
@@ -21,25 +21,6 @@ function RG_Thumbnail() {
 		btn_close : null,
 		btn_done : null
 	};
-	this.options = {
-		width : 640,
-		height : 480,
-		mobileSize : 640,
-		uploadScript : './script/upload_base64.php',
-		output : {
-			type : 'canvas',
-			quality : .3,
-			format : 'jpeg',
-			size : { width : 150, height : 150 }
-		},
-		croppie : {
-			boundary : { width: 640, height: 480-60 },
-			viewport : { width: 150, height: 150, type: 'square' }
-		},
-		doneCallback : null,
-		openCallback : null,
-		closeCallback : null
-	};
 
 
 	/**
@@ -54,8 +35,8 @@ function RG_Thumbnail() {
 		var scriptEl = document.createElement('script');
 
 		cssEl.rel = 'stylesheet';
-		cssEl.href = '../vendor/croppie/croppie.css';
-		scriptEl.src = '../vendor/croppie/croppie.min.js';
+		cssEl.href = self.options.url_croppieCSS;
+		scriptEl.src = self.options.url_croppieJS;
 
 		head.appendChild(cssEl);
 		head.appendChild(scriptEl);
@@ -311,6 +292,9 @@ function RG_Thumbnail() {
 	{
 		app = parent;
 
+		// merge options
+		this.assignOption(options);
+
 		// load files
 		loadExternalFiles();
 
@@ -387,3 +371,25 @@ function RG_Thumbnail() {
 		this.options = $.extend({}, this.options, obj);
 	}
 }
+
+RG_Thumbnail.prototype.options = {
+	width : 640,
+	height : 480,
+	mobileSize : 640,
+	url_croppieCSS : '../vendor/croppie/croppie.css',
+	url_croppieJS : '../vendor/croppie/croppie.min.js',
+	uploadScript : './script/upload_base64.php',
+	output : {
+		type : 'canvas',
+		quality : .3,
+		format : 'jpeg',
+		size : { width : 150, height : 150 }
+	},
+	croppie : {
+		boundary : { width: 640, height: 480-60 },
+		viewport : { width: 150, height: 150, type: 'square' }
+	},
+	doneCallback : null,
+	openCallback : null,
+	closeCallback : null
+};

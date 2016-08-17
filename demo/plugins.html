@@ -369,7 +369,13 @@ var plug_thumbnail = new RGUploader($('#comp_thumbnail'), {
 		]
 	},
 	plugin : [
-		{ name : 'thumbnail', obj : new RG_Thumbnail() }
+		{
+			name : 'thumbnail',
+			obj : new RG_Thumbnail({
+				url_croppieCSS : '../vendor/croppie/croppie.css',
+				url_croppieJS : '../vendor/croppie/croppie.min.js'
+			})
+		}
 	]
 });
 </script>
