@@ -204,6 +204,9 @@ module.exports = function Queue(parent) {
 	 *
 	 */
 	this.add = (file) => {
+		// set file values
+		file.fullSrc = parent.options.srcPrefixName + file.src;
+
 		this.items.ids.push(file.id);
 		this.items.files.push(file);
 	};
@@ -292,7 +295,7 @@ module.exports = function Queue(parent) {
 		// check image and assign preview background
 		if (file.type.split('/')[0] == 'image')
 		{
-			$previewImages.css('background-image', 'url(' + file.src + ')');
+			$previewImages.css('background-image', 'url(' + file.fullSrc + ')');
 		}
 
 		// set toggle select event

@@ -71,6 +71,7 @@ RGUploader.prototype.defaultOptions = {
 	removeScript : null,
 	sendParameters : {},
 	eventPrefixName : 'RG-',
+	srcPrefixName : '',
 	queue : {
 		height : 150,
 		limit : 10,

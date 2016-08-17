@@ -207,7 +207,7 @@ function RG_Thumbnail(options) {
 		if (isResize)
 		{
 			self.croppie.bind({
-				url : self.file.src,
+				url : self.file.fullSrc,
 				points : save.points
 			});
 			self.croppie.setZoom(save.zoom);
@@ -332,7 +332,7 @@ function RG_Thumbnail(options) {
 		// rebuild croppie
 		rebuildCroppie();
 		// bind image
-		this.croppie.bind({ url : this.file.src });
+		this.croppie.bind({ url : this.file.fullSrc });
 
 		// input state
 		this.$el.meta.text('output size: ' + this.options.output.size.width + '*' + this.options.output.size.height);
