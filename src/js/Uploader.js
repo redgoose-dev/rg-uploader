@@ -82,7 +82,7 @@ module.exports = function Uploader(parent) {
 
 		// init change event
 		this.$uploadElement.each((k, o) => {
-			$(o).on('change', (e) => {
+			$(o).on('change', () => {
 				// check auto upload
 				this.pushReady();
 
@@ -97,7 +97,7 @@ module.exports = function Uploader(parent) {
 		// init start upload button
 		if ($startUpload.length)
 		{
-			$startUpload.on('click', (e) => {
+			$startUpload.on('click', () => {
 				this.start();
 				return false;
 			});
@@ -150,7 +150,7 @@ module.exports = function Uploader(parent) {
 			{
 				actError('type', lang('error_file_type'));
 				continue;
-			};
+			}
 
 			// check file extension
 			if (options.allowFileTypes.indexOf(files[i].type.split('/')[1]) < 0)
@@ -217,7 +217,7 @@ module.exports = function Uploader(parent) {
 		{
 			this.play();
 		}
-	}
+	};
 
 	/**
 	 * play upload
@@ -237,11 +237,12 @@ module.exports = function Uploader(parent) {
 		let script = parent.options.uploadScript || null;
 		let upload = fileUpload(script, this.readyItems[0]);
 		upload
-			.done((response, file) => {
-				this.uploadComplete('success', response, file);
+			.done((res, file) => {
+				res = util.getFunctionReturn(parent.options.uploadDataFilter, res);
+				this.uploadComplete('success', res, file);
 			})
-			.progress((response, file) => {
-				this.uploadProgress(response, file);
+			.progress((res, file) => {
+				this.uploadProgress(res, file);
 			})
 			.fail((message, file) => {
 				this.uploadComplete('error', message, file);
@@ -337,7 +338,7 @@ module.exports = function Uploader(parent) {
 		$inputs.each((k, o) => {
 			util.inputFileReset(o);
 		});
-	}
+	};
 
 
 	// ACTION

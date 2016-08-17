@@ -403,6 +403,11 @@ module.exports = function Queue(parent) {
 							res = { state : 'error', response : res };
 						}
 					}
+
+					// filtering response
+					res = util.getFunctionReturn(parent.options.removeDataFilter, res);
+
+					// act
 					if (res && res.state && res.state == 'success')
 					{
 						removeElement(id);

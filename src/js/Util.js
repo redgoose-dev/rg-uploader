@@ -70,6 +70,8 @@ module.exports = {
 
 	/**
 	 * reset input[type=file]
+	 *
+	 * @Param {Object} input
 	 */
 	inputFileReset(input)
 	{
@@ -100,5 +102,18 @@ module.exports = {
 			// etc
 			input.value = '';
 		}
+	},
+
+	/**
+	 * get function return
+	 *
+	 * @Param {Function} func
+	 * @Param {Object} src
+	 * @Return {Object}
+	 */
+	getFunctionReturn(func, src)
+	{
+		if (!func || !(typeof func === 'function')) return src;
+		return func(src) || src;
 	}
 };

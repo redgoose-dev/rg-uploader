@@ -86,6 +86,10 @@ RGUploader.prototype.defaultOptions = {
 		,datas : null
 	},
 	plugin : [],
+	// upload data filtering
+	uploadDataFilter : function(res) {},
+	// remove data filtering
+	removeDataFilter : function(res) {},
 	// upload progress
 	uploadProgress : function(response, file) {},
 	// upload complete
