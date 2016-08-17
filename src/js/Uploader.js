@@ -235,10 +235,9 @@ module.exports = function Uploader(parent) {
 
 		// act upload
 		let script = parent.options.uploadScript || null;
-		let upload = fileUpload(script, this.readyItems[0], parent.options.sendParameters);
+		let upload = fileUpload(script, this.readyItems[0], parent.options.sendParameters, parent.options.uploadDataFilter);
 		upload
 			.done((res, file) => {
-				res = util.getFunctionReturn(parent.options.uploadDataFilter, res);
 				this.uploadComplete('success', res, file);
 			})
 			.progress((res, file) => {

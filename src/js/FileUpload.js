@@ -1,3 +1,5 @@
+const util = require('./Util.js');
+
 /**
  * file upload class
  *
@@ -5,9 +7,10 @@
  * @param {String} action 파일처리 백엔드 url
  * @param {File} file
  * @param {Object} params
+ * @param {Function} filter
  * @return {Object}
  */
-var fileUpload = function(action, file, params)
+var fileUpload = function(action, file, params, filter)
 {
 	var defer = $.Deferred();
 
@@ -37,6 +40,10 @@ var fileUpload = function(action, file, params)
 			// loaded event
 			xhr.addEventListener('load', function (e) {
 				let src = uploadSuccess(e.target);
+
+				// filtering response
+				src = util.getFunctionReturn(filter, src);
+
 				switch(src.state) {
 					case 'success':
 						defer.resolve(src.response, file);
