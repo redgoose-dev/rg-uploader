@@ -4,9 +4,10 @@
  * @author : redgoose
  * @param {String} action 파일처리 백엔드 url
  * @param {File} file
+ * @param {Object} params
  * @return {Object}
  */
-var fileUpload = function(action, file)
+var fileUpload = function(action, file, params)
 {
 	var defer = $.Deferred();
 
@@ -18,12 +19,22 @@ var fileUpload = function(action, file)
 		if (typeof FormData === 'function' || typeof FormData === 'object')
 		{
 			var formData = new FormData();
+			// append params
 			formData.append('file', file);
-
+			if (params && (typeof params === 'object'))
+			{
+				for (let o in params)
+				{
+					formData.append(o, params[o]);
+				}
+			}
+			// open xhr
 			xhr.open('post', action, true);
+			// progress event
 			xhr.upload.addEventListener('progress', function (e) {
 				defer.notify(uploadProgress(e), file);
 			}, false);
+			// loaded event
 			xhr.addEventListener('load', function (e) {
 				let src = uploadSuccess(e.target);
 				switch(src.state) {
