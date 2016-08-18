@@ -69,7 +69,7 @@ RGUploader.prototype.defaultOptions = {
 	limitSizeTotal : 3000000,
 	uploadScript : null,
 	removeScript : null,
-	sendParameters : {},
+	uploadParams : {},
 	eventPrefixName : 'RG-',
 	srcPrefixName : '',
 	queue : {
@@ -90,6 +90,8 @@ RGUploader.prototype.defaultOptions = {
 	plugin : [],
 	// upload data filtering
 	uploadDataFilter : function(res) {},
+	// remove parameters filter
+	removeParamsFilter : function(res) {},
 	// remove data filtering
 	removeDataFilter : function(res) {},
 	// upload progress

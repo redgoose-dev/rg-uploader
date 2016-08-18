@@ -396,6 +396,9 @@ module.exports = function Queue(parent) {
 
 			if (useScript && parent.options.removeScript && !file.isLocalFile)
 			{
+				// remove parameters filter
+				file = util.getFunctionReturn(parent.options.removeParamsFilter, file);
+
 				// play remove file script
 				$.post(parent.options.removeScript, file, (res, state) => {
 					if (typeof res === 'string')
