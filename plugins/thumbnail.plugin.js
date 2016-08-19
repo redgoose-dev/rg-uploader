@@ -259,7 +259,7 @@ function RG_Thumbnail(options) {
 
 						if (self.options.doneCallback)
 						{
-							self.options.doneCallback(res.response);
+							self.options.doneCallback(res.response, app);
 						}
 					});
 			}
@@ -273,7 +273,7 @@ function RG_Thumbnail(options) {
 						src : res,
 						type : 'image/' + self.options.output.format,
 						size : 0
-					});
+					}, app);
 				}
 			}
 
@@ -340,7 +340,7 @@ function RG_Thumbnail(options) {
 		// callback open window
 		if (this.options.openCallback)
 		{
-			this.options.openCallback();
+			this.options.openCallback(app);
 		}
 	};
 
@@ -357,7 +357,7 @@ function RG_Thumbnail(options) {
 		// callback close window
 		if (this.options.closeCallback)
 		{
-			this.options.closeCallback();
+			this.options.closeCallback(app);
 		}
 	};
 
