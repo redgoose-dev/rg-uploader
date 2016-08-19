@@ -378,7 +378,7 @@ RG_Thumbnail.prototype.options = {
 	mobileSize : 640,
 	url_croppieCSS : '../vendor/croppie/croppie.css',
 	url_croppieJS : '../vendor/croppie/croppie.min.js',
-	uploadScript : './script/upload_base64.php',
+	uploadScript : '',
 	output : {
 		type : 'canvas',
 		quality : .3,
