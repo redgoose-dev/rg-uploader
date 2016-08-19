@@ -80,6 +80,7 @@
 			{
 				name : 'open file',
 				iconName : 'open_in_new',
+				className : 'btn-open-file',
 				action : function(app, file) {
 					console.log('action : open file');
 					window.open(file.src);
@@ -88,6 +89,7 @@
 			{
 				name : 'insert editor',
 				iconName : 'center_focus_strong',
+				className : 'btn-insert-editor',
 				action : function(app, file) {
 					var $textarea = $('#target_textarea');
 					var $figure = $('#target_image');
@@ -99,6 +101,7 @@
 			{
 				name : 'remove queue',
 				iconName : 'close',
+				className : 'btn-remove-queue',
 				action : function(app, file) {
 					app.queue.removeQueue(file.id, false, true);
 				}
@@ -132,6 +135,7 @@ var plug_editor = new RGUploader($('#comp_editor'), {
 			{
 				name : 'open file',
 				iconName : 'open_in_new',
+				className : 'btn-open-file',
 				action : function(app, file) {
 					console.log('action : open file');
 					window.open(file.src);
@@ -140,6 +144,7 @@ var plug_editor = new RGUploader($('#comp_editor'), {
 			{
 				name : 'insert editor',
 				iconName : 'center_focus_strong',
+				className : 'btn-insert-editor',
 				action : function(app, file) {
 					var $textarea = $('#target_textarea');
 					var $figure = $('#target_image');
@@ -151,6 +156,7 @@ var plug_editor = new RGUploader($('#comp_editor'), {
 			{
 				name : 'remove queue',
 				iconName : 'close',
+				className : 'btn-remove-queue',
 				action : function(app, file) {
 					app.queue.removeQueue(file.id, false, true);
 				}

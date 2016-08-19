@@ -110,6 +110,10 @@
 				margin: 0; padding: 4px;
 				border: none; font-size: 0; background: none; cursor: pointer;
 				&.on i {color: $color-key;}
+				&.disabled {
+					cursor: not-allowed;
+					i {color: #b2b5b9;}
+				}
 			}
 			i {font-size: 16px; color: #57595B;}
 		}

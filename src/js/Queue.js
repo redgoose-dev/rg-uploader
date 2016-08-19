@@ -106,7 +106,8 @@ module.exports = function Queue(parent) {
 			if (!item.name || !item.iconName || !item.action) return;
 			if (item.show && item.show(file) == false) return;
 
-			let $item = $('<button type="button" title="' + item.name + '">' +
+			let className = (item.className) ? ' class="' + item.className + '"' : '';
+			let $item = $('<button type="button" title="' + item.name + '"' + className + '>' +
 				'<i class="material-icons">' + item.iconName + '</i>' +
 				'</button>');
 			$item.on('click', (e) => {

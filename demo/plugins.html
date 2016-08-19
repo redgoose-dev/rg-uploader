@@ -257,6 +257,7 @@
 			{
 				name : 'make thumbnail image',
 				iconName : 'apps',
+				className : 'btn-make-thumbnail',
 				show : function(file) {
 					return (file.type.split('/')[0] == 'image');
 				},
@@ -271,6 +272,7 @@
 			{
 				name : 'remove queue',
 				iconName : 'close',
+				className : 'btn-remove-queue',
 				action : function(app, file) {
 					app.queue.removeQueue(file.id, false, true);
 				}
@@ -343,6 +345,7 @@ var plug_thumbnail = new RGUploader($('#comp_thumbnail'), {
 			{
 				name : 'make thumbnail image',
 				iconName : 'apps',
+				className : 'btn-make-thumbnail',
 				show : function(file) {
 					return (file.type.split('/')[0] == 'image');
 				},
@@ -362,6 +365,7 @@ var plug_thumbnail = new RGUploader($('#comp_thumbnail'), {
 			{
 				name : 'remove queue',
 				iconName : 'close',
+				className : 'btn-remove-queue',
 				action : function(app, file) {
 					app.queue.removeQueue(file.id, false, true);
 				}

@@ -80,6 +80,7 @@ RGUploader.prototype.defaultOptions = {
 			{
 				name : 'remove queue',
 				iconName : 'close',
+				className : 'btn-remove-queue',
 				action : function(app, file) {
 					app.queue.removeQueue(file.id, false, true);
 				}
