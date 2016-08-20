@@ -259,7 +259,7 @@ function RG_Thumbnail(options) {
 
 						if (self.options.doneCallback)
 						{
-							self.options.doneCallback(res.response, app);
+							self.options.doneCallback(res.response, app, self.file);
 						}
 					});
 			}
@@ -273,7 +273,7 @@ function RG_Thumbnail(options) {
 						src : res,
 						type : 'image/' + self.options.output.format,
 						size : 0
-					}, app);
+					}, app, self.file);
 				}
 			}
 
