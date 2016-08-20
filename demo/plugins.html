@@ -354,7 +354,6 @@ var plug_thumbnail = new RGUploader($('#comp_thumbnail'), {
 					var plug = app.plugin.child.thumbnail;
 
 					plug.assignOption({
-						uploadScript : '',
 						doneCallback : function(res) {
 							app.queue.import([res]);
 						}

@@ -309,8 +309,10 @@ function RG_Thumbnail(options) {
 	 * open window
 	 *
 	 * @Param {Object} obj
+	 * @Param {Array} points
+	 * @Param {int} orientation
 	 */
-	this.open = function(obj)
+	this.open = function(obj, points, orientation)
 	{
 		// show window
 		this.$el.con.addClass('show');
@@ -332,7 +334,11 @@ function RG_Thumbnail(options) {
 		// rebuild croppie
 		rebuildCroppie();
 		// bind image
-		this.croppie.bind({ url : this.file.fullSrc });
+		this.croppie.bind({
+			url : this.file.fullSrc,
+			points : (points) ? points : [],
+			orientation : (orientation) ? orientation : 1
+		});
 
 		// input state
 		this.$el.meta.text('output size: ' + this.options.output.size.width + '*' + this.options.output.size.height);
