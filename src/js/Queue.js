@@ -44,22 +44,6 @@ module.exports = function Queue(parent) {
 		]
 	);
 
-	/**
-	 * init
-	 */
-	var init = () => {
-		// set queue height
-		util.findDOM(parent.$container, 'comp', 'queue').height(this.options.height);
-
-		// set style
-		this.changeStyle(this.options.style);
-
-		// import queue datas
-		if (this.options.datas)
-		{
-			this.import(this.options.datas);
-		}
-	};
 
 	/**
 	 * init select queue event
@@ -121,6 +105,23 @@ module.exports = function Queue(parent) {
 		return $buttons;
 	};
 
+
+	/**
+	 * init
+	 */
+	this.init = () => {
+		// set queue height
+		util.findDOM(parent.$container, 'comp', 'queue').height(this.options.height);
+
+		// set style
+		this.changeStyle(this.options.style);
+
+		// import queue datas
+		if (this.options.datas)
+		{
+			this.import(this.options.datas);
+		}
+	};
 
 	/**
 	 * find item
@@ -486,8 +487,4 @@ module.exports = function Queue(parent) {
 		});
 		return size;
 	};
-
-
-	// init event
-	init();
 };

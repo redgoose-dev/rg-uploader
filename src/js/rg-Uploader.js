@@ -50,6 +50,9 @@ window.RGUploader = function($con, options) {
 	// init plugin
 	this.plugin.init();
 
+	// init queue
+	this.queue.init();
+
 	// play init(external)
 	if (this.options.init)
 	{
