@@ -374,7 +374,7 @@ function RG_Thumbnail(options) {
 	 */
 	this.assignOption = function(obj)
 	{
-		this.options = $.extend({}, this.options, obj);
+		this.options = $.extend(true, this.options, obj);
 	}
 }
 
