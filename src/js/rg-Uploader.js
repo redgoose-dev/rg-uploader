@@ -67,7 +67,7 @@ window.RGUploader = function($con, options) {
 RGUploader.prototype.defaultOptions = {
 	autoUpload : false,
 	$externalFileForm : null,
-	allowFileTypes : ['jpeg', 'png', 'gif'],
+	allowFileTypes : ['jpg', 'jpeg', 'png', 'gif'],
 	limitSize : 1000000,
 	limitSizeTotal : 3000000,
 	uploadScript : null,
