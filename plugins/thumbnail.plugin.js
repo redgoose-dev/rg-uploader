@@ -309,18 +309,17 @@ function RG_Thumbnail(options) {
 	/**
 	 * open window
 	 *
-	 * @Param {Object} obj
-	 * @Param {Array} points
-	 * @Param {int} orientation
+	 * @Param {Object} file
+	 * @Param {Object} bind
 	 */
-	this.open = function(obj, points, orientation)
+	this.open = function(file, bind)
 	{
 		// show window
 		this.$el.con.addClass('show');
 		$('html').addClass('rg-popup');
 
 		// set file value
-		this.file = obj;
+		this.file = file;
 
 		// act pc & mobile
 		if ($(window).width() < this.options.mobileSize)
@@ -337,10 +336,10 @@ function RG_Thumbnail(options) {
 		// bind image
 		this.rebind({
 			src : this.file.fullSrc,
-			points : points,
-			orientation : orientation
+			points : bind.points,
+			orientation : bind.orientation
 		}, function(){
-			self.croppie.setZoom(0.1);
+			self.croppie.setZoom(bind.zoom || 0.1);
 		});
 
 		// input state
