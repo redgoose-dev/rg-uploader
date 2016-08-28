@@ -92,7 +92,7 @@ function RG_DragAndDrop() {
 		}
 
 		// play upload
-		app.uploader.start(app.uploader.$uploadElement, (files || []));
+		app.uploader.start(files || []);
 	};
 
 
