@@ -206,11 +206,12 @@ function RG_Thumbnail(options) {
 		// bind croppie
 		if (isResize)
 		{
-			self.croppie.bind({
-				url : self.file.fullSrc,
+			self.rebind({
+				src : self.file.fullSrc,
 				points : save.points
+			}, function(){
+				self.croppie.setZoom(save.zoom);
 			});
-			self.croppie.setZoom(save.zoom);
 		}
 	}
 
@@ -334,10 +335,12 @@ function RG_Thumbnail(options) {
 		// rebuild croppie
 		rebuildCroppie();
 		// bind image
-		this.croppie.bind({
-			url : this.file.fullSrc,
-			points : (points) ? points : [],
-			orientation : (orientation) ? orientation : 1
+		this.rebind({
+			src : this.file.fullSrc,
+			points : points,
+			orientation : orientation
+		}, function(){
+			self.croppie.setZoom(0.1);
 		});
 
 		// input state
@@ -365,6 +368,23 @@ function RG_Thumbnail(options) {
 		{
 			this.options.closeCallback(app);
 		}
+	};
+
+	/**
+	 * rebind
+	 *
+	 * @Param {Object} options
+	 * @Param {Function} callback
+	 */
+	this.rebind = function(options, callback)
+	{
+		this.croppie.bind({
+			url : options.src,
+			points : (options.points) ? options.points : [],
+			orientation : (options.orientation) ? options.orientation : 1
+		}, function(){
+			if (callback) callback();
+		});
 	};
 
 	/**
