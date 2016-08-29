@@ -314,6 +314,8 @@ function RG_Thumbnail(options) {
 	 */
 	this.open = function(file, bind)
 	{
+		bind = bind || {};
+
 		// show window
 		this.$el.con.addClass('show');
 		$('html').addClass('rg-popup');
