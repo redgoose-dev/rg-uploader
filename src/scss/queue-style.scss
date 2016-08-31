@@ -276,11 +276,11 @@
 				display: block;
 				margin: 8px; font-family: $font-eng-basic;
 				word-break: break-all;
-				font-size: 11px; line-height: 14px; color: #222;
+				font-size: 11px; line-height: 13px; color: #222;
 
-				hr {margin: 0; height: 3px; border: none; background: none;}
-				.filetype {display: block; margin: 0 0 1px 0; font-size: 9px; color: #888;}
-				.state, .size {font-weight: bold; font-size: 9px;}
+				hr {margin: 0; height: 4px; border: none; background: none;}
+				.filetype {display: block; margin: 0 0 2px 0; font-size: 10px; color: #888;}
+				.state, .size {font-weight: bold; font-size: 10px;}
 			}
 			nav.col {
 				@include d-flex(true);
