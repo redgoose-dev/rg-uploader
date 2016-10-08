@@ -235,7 +235,15 @@ module.exports = function Uploader(parent) {
 
 		// act upload
 		let script = parent.options.uploadScript || null;
-		let upload = fileUpload(script, this.readyItems[0], parent.options.uploadParams, parent.options.uploadDataFilter);
+		let userParams = (parent.options.uploadParamsFilter && typeof parent.options.uploadParamsFilter === 'function') && parent.options.uploadParamsFilter(this.readyItems[0]);
+		let upload = fileUpload(
+			script,
+			this.readyItems[0],
+			userParams,
+			parent.options.uploadDataFilter
+		);
+
+		// callback upload event
 		upload
 			.done((res, file) => {
 				this.uploadComplete('success', res, file);
