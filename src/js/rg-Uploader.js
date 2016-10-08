@@ -98,13 +98,15 @@ RGUploader.prototype.defaultOptions = {
 	removeParamsFilter : function(res) {},
 	// remove data filtering
 	removeDataFilter : function(res) {},
-	// upload progress
+	// progress upload
 	uploadProgress : function(response, file) {},
-	// upload complete
+	// complete upload
 	uploadComplete : function(file) {},
-	// upload fail
+	// all complete upload
+	uploadCompleteAll : function(app) {},
+	// fail upload
 	uploadFail : function(file) {},
-	// app init
+	// init app
 	init : function(app) {}
 };
 

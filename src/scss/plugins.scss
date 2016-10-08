@@ -143,3 +143,9 @@
 		}
 	}
 }
+
+// plugin - changeQueue
+.rg-plugin-changeQueue {
+	li {cursor: move;}
+	.sortable-ghost {opacity: .2;}
+}

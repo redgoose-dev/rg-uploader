@@ -308,6 +308,14 @@ module.exports = function Uploader(parent) {
 		else
 		{
 			this.uploading = false;
+
+			if (parent.options.uploadCompleteAll && typeof parent.options.uploadCompleteAll === 'function')
+			{
+				parent.options.uploadCompleteAll(parent);
+			}
+
+			// send event to plugin
+			parent.eventReceiver('queue.uploadCompleteAll');
 		}
 	};
 
