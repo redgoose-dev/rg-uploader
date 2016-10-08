@@ -22,6 +22,7 @@
 
 	border: 1px solid #ccc;
 	border-radius: $border-radius;
+	overflow: hidden;
 
 	* {-webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box;}
 	em {font-style: normal;}
@@ -89,7 +90,8 @@
 
 	// body
 	.body {
-		height: $queue-height; display: -webkit-flex; display: flex;
+		min-height: $queue-height;
+		display: -webkit-flex; display: flex;
 		> .col {-webkit-flex: 1; flex: 1;}
 
 		@media (max-width: $mobile-max-width) {

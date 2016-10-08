@@ -73,8 +73,14 @@ function RG_Preview() {
 	this.init = function(parent)
 	{
 		app = parent;
-		width = parseInt(app.options.queue.height);
 
+		// get preview width
+		width = parseInt(app.options.queue.height || parent.$container.find('.body').height());
+
+		// set container body height
+		parent.$container.find('.body').height(width);
+
+		// play create preview
 		createPreview();
 	};
 

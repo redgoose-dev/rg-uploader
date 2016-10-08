@@ -111,7 +111,10 @@ module.exports = function Queue(parent) {
 	 */
 	this.init = () => {
 		// set queue height
-		util.findDOM(parent.$container, 'comp', 'queue').height(this.options.height);
+		if (this.options.height)
+		{
+			util.findDOM(parent.$container, 'comp', 'queue').height(this.options.height);
+		}
 
 		// set style
 		this.changeStyle(this.options.style);
