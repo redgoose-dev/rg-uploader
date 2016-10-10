@@ -133,7 +133,7 @@ module.exports = function Queue(parent) {
 	 * @Return {int}
 	 */
 	this.findItem = (id) => {
-		return this.items.ids.indexOf(id);
+		return this.items.ids.indexOf(Number(id));
 	};
 
 	/**
@@ -212,7 +212,7 @@ module.exports = function Queue(parent) {
 		// set file values
 		file.fullSrc = parent.options.srcPrefixName + file.src;
 
-		this.items.ids.push(file.id);
+		this.items.ids.push(Number(file.id));
 		this.items.files.push(file);
 	};
 

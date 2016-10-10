@@ -323,7 +323,14 @@
 		datas : './script/data.json'
 	},
 	plugin : [
-		{ name : 'changeQueue', obj : new RG_ChangeQueue() }
+		{
+			name : 'changeQueue',
+			obj : new RG_ChangeQueue({
+				endChangeItem : function(app) {
+					console.log(app.queue.items);
+				}
+			})
+		}
 	]
 });
 </code></pre>
@@ -432,7 +439,14 @@ var plug_changeQueue = new RGUploader($('#comp_changeQueue'), {
 		datas : './script/data.json'
 	},
 	plugin : [
-		{ name : 'changeQueue', obj : new RG_ChangeQueue() }
+		{
+			name : 'changeQueue',
+			obj : new RG_ChangeQueue({
+				endChangeItem : function(app) {
+					console.log(app.queue.items);
+				}
+			})
+		}
 	]
 });
 </script>
