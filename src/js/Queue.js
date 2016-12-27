@@ -36,7 +36,7 @@ module.exports = function Queue(parent) {
 	/**
 	 * @var {Object} keyboardEvent
 	 */
-	var keyboardEvent = new KeyboardEvent(
+	const keyboardEvent = new KeyboardEvent(
 		parent.options.eventPrefixName,
 		[
 			{ key : 'ctrl', code : 17 },
@@ -50,29 +50,12 @@ module.exports = function Queue(parent) {
 	 *
 	 * @Param {Object} $el
 	 */
-	var initSelectQueueEvent = ($el) => {
-		let handler = 'click';
-		var selectedClassName = 'selected';
+	const initSelectQueueEvent = ($el) => {
 
-		$el.on(handler, (e) => {
-			let $this = $(e.currentTarget);
-			if (keyboardEvent.isPressKeyCode)
-			{
-				$this.toggleClass(selectedClassName);
-			}
-			else
-			{
-				let isSelected = $this.hasClass(selectedClassName);
-				this.$queue.children().removeClass(selectedClassName);
-				if (!isSelected)
-				{
-					$this.addClass(selectedClassName);
-				}
-			}
+		const handler = 'click';
 
-			// send event to plugin
-			parent.eventReceiver('queue.selectQueue', { $selectElement : $el });
-		});
+		// select queue event
+		$el.on(handler, (e) => this.selectQueue($(e.currentTarget).data('id')));
 	};
 
 	/**
@@ -81,10 +64,10 @@ module.exports = function Queue(parent) {
 	 * @Param {Object} options
 	 * @Param {Object} file
 	 */
-	var createNavigationButtons = (options, file) => {
+	const createNavigationButtons = (options, file) => {
 		if (!options || !options.length) return false;
 
-		var $buttons = [];
+		let $buttons = [];
 		options.forEach((item) => {
 
 			if (!item.name || !item.iconName || !item.action) return;
@@ -195,6 +178,58 @@ module.exports = function Queue(parent) {
 	};
 
 	/**
+	 * select queue
+	 *
+	 * @Param {number} id
+	 */
+	this.selectQueue = (id) => {
+
+		const selectedClassName = 'selected';
+		const $queues = this.$queue.children();
+		let $solo = null;
+
+		if (id)
+		{
+			let $el = this.selectQueueElement(id);
+
+			if (keyboardEvent.isPressKeyCode)
+			{
+				$el.toggleClass(selectedClassName);
+			}
+			else
+			{
+				let isSelected = $el.hasClass(selectedClassName);
+				let selectCount = $queues.filter(`.${selectedClassName}`).length;
+
+				$queues.removeClass(selectedClassName);
+
+				if (!isSelected || selectCount > 1)
+				{
+					$el.addClass(selectedClassName);
+				}
+			}
+		}
+		else
+		{
+			if ($queues.filter(`.${selectedClassName}`).length > 0)
+			{
+				$queues.removeClass(selectedClassName);
+			}
+			else
+			{
+				$queues.addClass(selectedClassName);
+			}
+		}
+
+		// send event to plugin
+		parent.eventReceiver('queue.selectQueue', {
+			$selectElements : this.$queue.children(`.${selectedClassName}`),
+			$selectElement : id ? this.selectQueueElement(id) : $queues.eq(0),
+		});
+
+	};
+
+	/**
 	 * select queue element
 	 *
 	 * @Param {String} id
@@ -247,7 +282,7 @@ module.exports = function Queue(parent) {
 
 		// init remove queue event
 		$removeButton.on('click', (e) => {
-			var id = parseInt($(e.currentTarget).closest('li').data('id'));
+			const id = parseInt($(e.currentTarget).closest('li').data('id'));
 			this.removeQueue(id, true, false);
 			parent.uploader.readyItems.forEach((item, n) => {
 				if (item.id == id)
@@ -274,7 +309,6 @@ module.exports = function Queue(parent) {
 	this.addComplete = (file, $beforeElement) => {
 		let id = file.id;
 		let $el = $(template.complete);
-		let item = this.items.files[this.findItem(id)];
 
 		// set elements in queue
 		let $previewImages = util.findDOM($el, 'element', 'previewImage');
@@ -338,12 +372,12 @@ module.exports = function Queue(parent) {
 	 * @Param {Object} $beforeElement
 	 */
 	this.addError = (file, $beforeElement) => {
-		var id = file.id;
-		let $el = $(template.error);
+		const id = file.id;
+		const $el = $(template.error);
 
-		let $fileType = util.findDOM($el, 'text', 'filetype');
-		let $fileName = util.findDOM($el, 'text', 'filename');
-		let $state = util.findDOM($el, 'text', 'state');
+		const $fileType = util.findDOM($el, 'text', 'filetype');
+		const $fileName = util.findDOM($el, 'text', 'filename');
+		const $state = util.findDOM($el, 'text', 'state');
 
 		// add queue index
 		this.add(file);
@@ -379,8 +413,8 @@ module.exports = function Queue(parent) {
 	 */
 	this.removeQueue = (id, isLoadingQueue, useScript) => {
 
-		var self = this;
-		var removeElement = (id) => {
+		const self = this;
+		const removeElement = (id) => {
 			this.selectQueueElement(id).fadeOut(400, function() {
 				$(this).remove();
 				self.remove(id);
@@ -484,7 +518,7 @@ module.exports = function Queue(parent) {
 	 * @Return {int}
 	 */
 	this.getSize = () => {
-		var size = 0;
+		let size = 0;
 		this.items.files.forEach((item) => {
 			size += item.size;
 		});

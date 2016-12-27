@@ -54,6 +54,10 @@
 							<i class="material-icons">play_circle_outline</i>
 							<span>Start upload</span>
 						</a>
+						<a href="#" class="select-queue">
+							<i class="material-icons">crop_free</i>
+							<span>Select queue</span>
+						</a>
 					</nav>
 					<div class="size-info"></div>
 				</footer>
@@ -166,6 +170,10 @@ var style_list = new RGUploader($('#comp_style_list'), {
 		datas : './script/data.json'
 	}
 });
+$('#comp_style_list .select-queue').on('click', function () {
+	style_list.queue.selectQueue();
+	return false;
+});
 
 // style(web)
 var style_web = new RGUploader($('#comp_style_web'), {
@@ -184,6 +192,8 @@ var style_album = new RGUploader($('#comp_style_album'), {
 		datas : './script/data.json'
 	}
 });
+
+
 </script>
 </body>
 </html>
