@@ -186,7 +186,6 @@ module.exports = function Queue(parent) {
 
 		const selectedClassName = 'selected';
 		const $queues = this.$queue.children();
-		let $solo = null;
 
 		if (id)
 		{
