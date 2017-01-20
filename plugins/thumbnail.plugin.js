@@ -408,7 +408,7 @@ RG_Thumbnail.prototype.options = {
 	uploadScript : '',
 	output : {
 		type : 'canvas',
-		quality : .3,
+		quality : .75,
 		format : 'jpeg',
 		size : { width : 150, height : 150 }
 	},
