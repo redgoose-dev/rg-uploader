@@ -280,6 +280,8 @@ function RG_Thumbnail(options) {
 
 			// close
 			self.close();
+		}, function (error) {
+			console.log('ERROR', error);
 		});
 	}
 
@@ -413,6 +415,7 @@ RG_Thumbnail.prototype.options = {
 		size : { width : 150, height : 150 }
 	},
 	croppie : {
+		enableOrientation: true,
 		boundary : { width: 640, height: 480-60 },
 		viewport : { width: 150, height: 150, type: 'square' }
 	},
