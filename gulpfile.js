@@ -1,20 +1,18 @@
-var log = function(o) { console.log(o); };
-
 // log modules
-var gulp = require('gulp');
-var concat = require('gulp-concat');
-var sourcemaps = require('gulp-sourcemaps');
-var uglify = require('gulp-uglify');
-var scss = require('gulp-sass');
-var rename = require('gulp-rename');
-var webpack = require('webpack-stream');
+const gulp = require('gulp');
+const concat = require('gulp-concat');
+const sourcemaps = require('gulp-sourcemaps');
+const uglify = require('gulp-uglify');
+const scss = require('gulp-sass');
+const rename = require('gulp-rename');
+const webpack = require('webpack-stream');
 
 
 // set directory
-var src = './src';
-var dist = './dist';
-var maps = 'maps';
-var plugins = './plugins';
+const src = './src';
+const dist = './dist';
+const maps = 'maps';
+const plugins = './plugins';
 
 
 // build scss
@@ -25,9 +23,8 @@ gulp.task('scss', function(){
 			//outputStyle : 'compact'
 			outputStyle: 'compressed'
 		}).on('error', scss.logError))
-		.pipe(rename({ suffix: '.min' }))
 		.pipe(sourcemaps.write(maps))
-		.pipe(gulp.dest(dist + '/css'));
+		.pipe(gulp.dest(dist));
 });
 gulp.task('scss:watch', function(){
 	gulp.watch([src + '/scss/*.scss', '!' + src + '/scss/demo.scss'], ['scss']);
@@ -42,7 +39,7 @@ gulp.task('js', function() {
 				require('./webpack.config.js')
 			)
 		)
-		.pipe(gulp.dest(dist + '/js/'));
+		.pipe(gulp.dest(dist));
 });
 
 
@@ -50,10 +47,10 @@ gulp.task('js', function() {
 gulp.task('js-plugin', function(){
 	gulp.src(plugins + '/*.plugin.js')
 		.pipe(sourcemaps.init())
-		.pipe(concat('plugin.pkgd.js'))
+		.pipe(concat('rg-uploader.plugins.js'))
 		.pipe(uglify())
 		.pipe(sourcemaps.write(maps))
-		.pipe(gulp.dest(dist + '/js/'));
+		.pipe(gulp.dest(dist));
 });
 gulp.task('js-plugin:watch', function(){
 	gulp.watch(plugins + '/**/*.js', ['js-plugin']);

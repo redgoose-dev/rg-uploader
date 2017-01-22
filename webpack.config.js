@@ -6,7 +6,7 @@ module.exports = {
 		extensions: ['', '.js']
 	},
 	output: {
-		filename: 'rg-uploader.pkgd.js'
+		filename: 'rg-uploader.js'
 	},
 	externals: {
 		'jquery': '$'
