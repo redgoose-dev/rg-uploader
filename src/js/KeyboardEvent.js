@@ -5,8 +5,8 @@
  * @Param {Array} list
  * @Return {Object}
  */
-var createKeyCodeObject = (list) => {
-	var result = {};
+const createKeyCodeObject = (list) => {
+	let result = {};
 	list = list || [];
 
 	list.forEach((item) => {
@@ -50,9 +50,9 @@ module.exports = function(eventPrefix, keyList) {
 	 *
 	 * @Param {Object} e
 	 */
-	var keyDown = (e) => {
+	const keyDown = (e) => {
 		this.pressKeyCode = e.keyCode;
-		this.isPressKeyCode = ((e.keyCode == KEY_CODE.ctrl) || (e.keyCode == KEY_CODE.cmd));
+		this.isPressKeyCode = ((e.keyCode === KEY_CODE.ctrl) || (e.keyCode === KEY_CODE.cmd));
 
 		// set event
 		$(window)
@@ -65,7 +65,7 @@ module.exports = function(eventPrefix, keyList) {
 	 *
 	 * @Param {Object} e
 	 */
-	var keyUp = (e) => {
+	const keyUp = (e) => {
 		this.pressKeyCode = null;
 		this.isPressKeyCode = false;
 

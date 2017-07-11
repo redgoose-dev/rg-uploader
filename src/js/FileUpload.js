@@ -10,18 +10,18 @@ const util = require('./Util.js');
  * @param {Function} filter
  * @return {Object}
  */
-var fileUpload = function(action, file, params, filter)
+const fileUpload = function(action, file, params, filter)
 {
-	var defer = $.Deferred();
+	const defer = $.Deferred();
 
 	if (action)
 	{
 		// server upload
-		var xhr = new XMLHttpRequest();
+		const xhr = new XMLHttpRequest();
 
 		if (typeof FormData === 'function' || typeof FormData === 'object')
 		{
-			var formData = new FormData();
+			let formData = new FormData();
 			// append params
 			formData.append('file', file);
 			if (params && (typeof params === 'object'))
@@ -90,7 +90,7 @@ var fileUpload = function(action, file, params, filter)
  * @Param {XMLHttpRequestProgressEvent} e
  * @Return {object}
  */
-var uploadProgress = (e) => {
+const uploadProgress = (e) => {
 	if (e.lengthComputable)
 	{
 		return { loaded : e.loaded, total : e.total };
@@ -105,8 +105,8 @@ var uploadProgress = (e) => {
  * @Param {File} file
  * @Return {Object}
  */
-var uploadSuccess = (e, file) => {
-	if (e.readyState == 4)
+const uploadSuccess = (e, file) => {
+	if (e.readyState === 4)
 	{
 		switch (e.status)
 		{

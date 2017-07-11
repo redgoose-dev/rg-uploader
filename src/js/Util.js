@@ -12,9 +12,9 @@ module.exports = {
 	 */
 	bytesToSize(bytes)
 	{
-		var sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
-		if (bytes == 0) return '0';
-		var i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
+		const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+		if (bytes === 0) return '0';
+		const i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
 		return Math.round(bytes / Math.pow(1024, i), 2) + '' + sizes[i];
 	},
 
@@ -40,18 +40,20 @@ module.exports = {
 	getUniqueNumber(length)
 	{
 		length = length || 10;
-		var timestamp = +new Date;
 
-		var _getRandomInt = function( min, max ) {
+		const timestamp = +new Date;
+		const _getRandomInt = function( min, max )
+		{
 			return Math.floor( Math.random() * ( max - min + 1 ) ) + min;
 		};
 
-		var ts = timestamp.toString();
-		var parts = ts.split( "" ).reverse();
-		var id = "";
+		const ts = timestamp.toString();
+		const parts = ts.split( "" ).reverse();
+		let id = "";
 
-		for( var i = 0; i < length; ++i ) {
-			var index = _getRandomInt( 0, parts.length - 1 );
+		for( let i = 0; i < length; ++i )
+		{
+			const index = _getRandomInt( 0, parts.length - 1 );
 			id += parts[index];
 		}
 
@@ -88,10 +90,10 @@ module.exports = {
 		else if (ie || win10ie11)
 		{
 			// is IE
-			var orgParent = input.parentNode;
-			var orgNext = input.nextSibling;
+			const orgParent = input.parentNode;
+			const orgNext = input.nextSibling;
 
-			var tmp = document.createElement('form');
+			let tmp = document.createElement('form');
 			tmp.appendChild(input);
 			tmp.reset();
 

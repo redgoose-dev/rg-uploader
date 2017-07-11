@@ -71,7 +71,7 @@ module.exports = function Queue(parent) {
 		options.forEach((item) => {
 
 			if (!item.name || !item.iconName || !item.action) return;
-			if (item.show && item.show(file) == false) return;
+			if (item.show && item.show(file) === false) return;
 
 			let className = (item.className) ? ' class="' + item.className + '"' : '';
 			let $item = $('<button type="button" title="' + item.name + '"' + className + '>' +
@@ -284,7 +284,7 @@ module.exports = function Queue(parent) {
 			const id = parseInt($(e.currentTarget).closest('li').data('id'));
 			this.removeQueue(id, true, false);
 			parent.uploader.readyItems.forEach((item, n) => {
-				if (item.id == id)
+				if (item.id === id)
 				{
 					parent.uploader.readyItems.splice(n, 1);
 					return false;
@@ -331,7 +331,7 @@ module.exports = function Queue(parent) {
 		$customButtons.html('');
 
 		// check image and assign preview background
-		if (file.type.split('/')[0] == 'image')
+		if (file.type.split('/')[0] === 'image')
 		{
 			$previewImages.css('background-image', 'url(' + file.fullSrc + ')');
 		}
@@ -432,6 +432,12 @@ module.exports = function Queue(parent) {
 		{
 			let file = this.items.files[this.findItem(id)];
 
+			if (file < 0)
+			{
+				console.error('Not found queue id');
+				return false;
+			}
+
 			if (useScript && parent.options.removeScript && !file.isLocalFile)
 			{
 				// remove parameters filter
@@ -452,13 +458,13 @@ module.exports = function Queue(parent) {
 					res = util.getFunctionReturn(parent.options.removeDataFilter, res);
 
 					// act
-					if (res && res.state && res.state == 'success')
+					if (res && res.state && res.state === 'success')
 					{
 						removeElement(id);
 					}
 					else
 					{
-						console.log(res.response);
+						console.error(res.response);
 						alert(lang('error_remove_error'));
 						return false;
 					}

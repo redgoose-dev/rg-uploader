@@ -42,8 +42,8 @@ module.exports = function Uploader(parent) {
 	 * @Param {Array} items
 	 * @Return {int}
 	 */
-	var getTotalReadySize = (items) => {
-		var size = 0;
+	const getTotalReadySize = (items) => {
+		let size = 0;
 		for (let i=0; i<items.length; i++)
 		{
 			size += items[i].size;
@@ -57,8 +57,8 @@ module.exports = function Uploader(parent) {
 	 * @Param {Object} $el
 	 * @Return {Array}
 	 */
-	var mergeFileList = ($el) => {
-		var files = [];
+	const mergeFileList = ($el) => {
+		let files = [];
 		$el.each((k, o) => {
 			for (let i=0; i<o.files.length; i++)
 			{
@@ -71,9 +71,8 @@ module.exports = function Uploader(parent) {
 	/**
 	 * init event
 	 */
-	var initEvent = () => {
-
-		var $startUpload = util.findDOM(parent.$container, 'element', 'startUpload');
+	const initEvent = () => {
+		const $startUpload = util.findDOM(parent.$container, 'element', 'startUpload');
 
 		this.$uploadElement = util.findDOM(parent.$container, 'element', 'addfiles');
 		this.addUploadElements(parent.options.$externalFileForm);
@@ -109,7 +108,7 @@ module.exports = function Uploader(parent) {
 	 *
 	 * @Param {Object} el [type=file] element
 	 */
-	var pushReadyUploadFiles = (files) => {
+	const pushReadyUploadFiles = (files) => {
 		let options = parent.options;
 		let limitCount = options.queue.limit;
 		let error = {
@@ -121,7 +120,7 @@ module.exports = function Uploader(parent) {
 
 		function actError(type, message)
 		{
-			if (error[type] == false)
+			if (error[type] === false)
 			{
 				alert(message);
 				error[type] = true;
@@ -296,7 +295,7 @@ module.exports = function Uploader(parent) {
 			case 'error':
 				file.message = res;
 				parent.queue.uploadResult('error', file);
-				console.log(file.message);
+				console.error(file.message);
 
 				// callback
 				if (parent.options.uploadFail)

@@ -1,4 +1,4 @@
-var dic = {
+const dic = {
 	ko : {
 		error_add_upload : '업로드가 끝난후에 추가해주세요.',
 		error_upload_limit : '파일은 총 {0}개까지 업로드할 수 있습니다.',
@@ -33,7 +33,7 @@ var dic = {
 function stringFormat(str, args)
 {
 	return str.replace(/{(\d+)}/g, function(match, number) {
-		return typeof args[number] != 'undefined' ? args[number] : match;
+		return typeof args[number] !== 'undefined' ? args[number] : match;
 	});
 }
 
