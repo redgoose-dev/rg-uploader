@@ -173,9 +173,8 @@
 
             img.exifdata = null;
             img.removeAttribute('crossOrigin');
-	         img.setAttribute('crossOrigin', 'anonymous');
             if (src.match(/^https?:\/\/|^\/\//)) {
-
+	            img.setAttribute('crossOrigin', 'anonymous');
             }
             img.onload = function () {
                 if (doExif) {
