@@ -1,3 +1,4 @@
+const HtmlWebPackPlugin = require("html-webpack-plugin");
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 
@@ -6,15 +7,13 @@ module.exports = {
 	context: __dirname,
 
 	entry: {
-		RG_Uploader: `./src/pro.js`,
+		index: `./src/dev.js`,
 	},
 
 	output: {
 		publicPath: '/',
-		filename: 'rg-uploader.js',
-		library: '[name]',
-		libraryTarget: 'umd',
-		libraryExport: 'default'
+		filename: '[name].js',
+		chunkFilename: '[name].js',
 	},
 
 	module: {
@@ -25,6 +24,17 @@ module.exports = {
 				use: {
 					loader: "babel-loader"
 				}
+			},
+			{
+				test: /\.html$/,
+				use: [
+					{
+						loader: "html-loader",
+						options: {
+							minimize: false
+						}
+					}
+				]
 			},
 			{
 				test: /\.s?css$/,
@@ -45,12 +55,17 @@ module.exports = {
 		]
 	},
 
-	externals: {
-		jquery: 'jQuery',
-	},
-
 	plugins: [
-		new ExtractTextPlugin({ filename: 'rg-uploader.css' }),
-	]
+		new HtmlWebPackPlugin({
+			template: "./src/dev.html"
+		}),
+		new ExtractTextPlugin({ filename: 'style.css' }),
+	],
 
+	devServer: {
+		open: false,
+		port: 4000,
+		historyApiFallback: true,
+		noInfo: true,
+	},
 };

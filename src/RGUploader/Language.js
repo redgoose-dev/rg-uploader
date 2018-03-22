@@ -39,7 +39,7 @@ function stringFormat(str, args)
 
 
 // export
-module.exports = function(code, values)
+export default function language(code, values)
 {
 	let lang = $('html').attr('lang') || 'ko';
 	let str = dic[lang][code] || '';
@@ -48,4 +48,4 @@ module.exports = function(code, values)
 	str = (values && values.length) ? stringFormat(str, values) : str;
 
 	return str;
-};
+}
