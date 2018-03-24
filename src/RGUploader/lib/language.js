@@ -1,3 +1,6 @@
+import $ from 'jquery';
+
+
 const dic = {
 	ko : {
 		error_add_upload : '업로드가 끝난후에 추가해주세요.',

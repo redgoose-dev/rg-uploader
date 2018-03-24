@@ -1,29 +1,9 @@
 import $ from 'jquery';
 
-import * as util from './lib/util';
-import defaultOptions from './lib/defaultOptions';
-// load modules
-// const Queue = require('./Queue.js');
-// const Uploader = require('./Uploader.js');
-// const Plugin = require('./Plugin.js');
-// const lang = require('./Language.js');
-
-
-
-// /**
-//  * @Var {Object} RGUploader.util
-//  */
-// RGUploader.prototype.util = util;
-//
-// /**
-//  * @Var {Function} RGUploader.lang
-//  */
-// RGUploader.prototype.lang = lang;
-//
-// /**
-//  * @Var {Object} RGUploader.plugins
-//  */
-// RGUploader.prototype.plugins = {};
+import Uploader from './Uploader';
+import Queue from './Queue';
+import Plugin from './Plugin';
+import * as lib from './lib';
 
 
 export default class RGUploader {
@@ -31,40 +11,40 @@ export default class RGUploader {
 	/**
 	 * constructor
 	 *
-	 * @param {Object} $con container element
+	 * @param {Object} el HTMLElement
 	 * @param {Object} options
 	 */
-	constructor($con, options=null)
+	constructor(el, options=null)
 	{
-		// check $container element
-		if (!$con || !$con.length) return;
+		// check container element
+		if (!el) return;
 
 		// merge options
-		this.options = { ...defaultOptions, ...options };
+		this.options = { ...lib.defaultOptions, ...options };
 		if (options && options.queue)
 		{
-			this.options.queue = { ...defaultOptions.queue, ...options.queue };
+			this.options.queue = { ...lib.defaultOptions.queue, ...options.queue };
 		}
 
 		// set container element
-		this.$container = $con.eq(0);
+		this.$container = $(el);
 
 		// init sub modules
-		// this.plugin = new Plugin(this);
-		// this.queue = new Queue(this);
-		// this.uploader = new Uploader(this);
+		this.plugin = new Plugin(this);
+		this.queue = new Queue(this);
+		this.uploader = new Uploader(this);
 
-		// // init plugin
-		// this.plugin.init();
-		//
-		// // init queue
-		// this.queue.init();
-		//
-		// // play init(external)
-		// if (this.options.init)
-		// {
-		// 	this.options.init(this);
-		// }
+		// init plugin
+		this.plugin.init();
+
+		// init queue
+		this.queue.init();
+
+		// play init(external)
+		if (this.options.init && typeof this.options.init === 'function')
+		{
+			this.options.init(this);
+		}
 	}
 
 	/**
@@ -75,9 +55,7 @@ export default class RGUploader {
 	 */
 	eventReceiver(type, value)
 	{
-		let eventListener = this.plugin.eventListener;
-		if (!eventListener || !(typeof eventListener === 'function')) return false;
-		eventListener(type, value);
+		this.plugin.eventListener(type, value);
 	}
 
 }

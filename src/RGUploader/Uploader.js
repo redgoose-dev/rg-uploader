@@ -1,83 +1,26 @@
-/**
- * Uploader component
- */
-
-const fileUpload = require('FileUpload.js');
-const util = require('./Util.js');
-const lang = require('./Language.js');
+import $ from 'jquery';
+import * as lib from './lib';
 
 
-// export
-module.exports = function Uploader(parent) {
+export default class Uploader {
 
-	/**
-	 * @var {String} component name
-	 */
-	this.name = 'Uploader';
+	constructor(parent)
+	{
+		this.parent = parent;
+		this.name = 'Uploader';
+		this.queue = parent.queue;
+		this.$uploadElement = null;
+		this.readyItems = [];
+		this.uploading = false;
 
-	/**
-	 * @var {Queue} queue
-	 */
-	this.queue = parent.queue;
+		// set start upload element
+		const $startUpload = lib.util.findDOM(parent.$container, 'element', 'startUpload');
 
-	/**
-	 * @var {Object} upload elements
-	 */
-	this.$uploadElement = null;
-
-	/**
-	 * @var {Array} this.readyItems
-	 */
-	this.readyItems = [];
-
-	/**
-	 * @var {Boolean} uploading
-	 */
-	this.uploading = false;
-
-
-	/**
-	 * get total ready items size
-	 *
-	 * @Param {Array} items
-	 * @Return {int}
-	 */
-	const getTotalReadySize = (items) => {
-		let size = 0;
-		for (let i=0; i<items.length; i++)
-		{
-			size += items[i].size;
-		}
-		return size;
-	};
-
-	/**
-	 * merge file list
-	 *
-	 * @Param {Object} $el
-	 * @Return {Array}
-	 */
-	const mergeFileList = ($el) => {
-		let files = [];
-		$el.each((k, o) => {
-			for (let i=0; i<o.files.length; i++)
-			{
-				files.push(o.files[i]);
-			}
-		});
-		return files;
-	};
-
-	/**
-	 * init event
-	 */
-	const initEvent = () => {
-		const $startUpload = util.findDOM(parent.$container, 'element', 'startUpload');
-
-		this.$uploadElement = util.findDOM(parent.$container, 'element', 'addfiles');
+		// set upload element
+		this.$uploadElement = lib.util.findDOM(parent.$container, 'element', 'addFiles');
 		this.addUploadElements(parent.options.$externalFileForm);
 
-		if (!this.$uploadElement || !this.$uploadElement.length) return false;
+		if (!(this.$uploadElement && this.$uploadElement.length)) return;
 
 		// init change event
 		this.$uploadElement.each((k, o) => {
@@ -94,22 +37,57 @@ module.exports = function Uploader(parent) {
 		});
 
 		// init start upload button
-		if ($startUpload.length)
+		if ($startUpload && $startUpload.length)
 		{
 			$startUpload.on('click', () => {
 				this.start();
 				return false;
 			});
 		}
+	}
+
+	/**
+	 * get total ready items size
+	 *
+	 * @param {Array} items
+	 * @return {int}
+	 */
+	static getTotalReadySize(items)
+	{
+		let size = 0;
+		for (let i=0; i<items.length; i++)
+		{
+			size += items[i].size;
+		}
+		return size;
+	};
+
+	/**
+	 * merge file list
+	 *
+	 * @param {Object} $el
+	 * @return {Array}
+	 */
+	static mergeFileList($el)
+	{
+		let files = [];
+		$el.each((k, o) => {
+			for (let i=0; i<o.files.length; i++)
+			{
+				files.push(o.files[i]);
+			}
+		});
+		return files;
 	};
 
 	/**
 	 * push ready upload files
 	 *
-	 * @Param {Object} el [type=file] element
+	 * @param {Array} files [type=file] element // TODO: 타입 알아봐야함
 	 */
-	const pushReadyUploadFiles = (files) => {
-		let options = parent.options;
+	pushReadyUploadFiles(files)
+	{
+		let options = this.parent.options;
 		let limitCount = options.queue.limit;
 		let error = {
 			type : false,
@@ -128,17 +106,17 @@ module.exports = function Uploader(parent) {
 		}
 
 		// check file count
-		if ((parent.queue.items.ids.length + files.length) > limitCount)
+		if ((this.parent.queue.items.ids.length + files.length) > limitCount)
 		{
-			alert(lang('error_upload_limit', [options.queue.limit]));
+			alert(lib.language('error_upload_limit', [options.queue.limit]));
 			return false;
 		}
 
 		// check total upload size
-		let size = parent.queue.getSize() + getTotalReadySize(this.readyItems) + getTotalReadySize(files);
+		let size = this.parent.queue.getSize() + this.constructor.getTotalReadySize(this.readyItems) + this.constructor.getTotalReadySize(files);
 		if (options.limitSizeTotal < size)
 		{
-			alert(lang('error_limit_size'));
+			alert(lib.language('error_limit_size'));
 			return false;
 		}
 
@@ -147,26 +125,26 @@ module.exports = function Uploader(parent) {
 		{
 			if (!files[i].type)
 			{
-				actError('type', lang('error_file_type'));
+				actError('type', lib.language('error_file_type'));
 				continue;
 			}
 
 			// check file extension
 			if (options.allowFileTypes.indexOf(files[i].type.split('/')[1]) < 0)
 			{
-				actError('extension', lang('error_check_file'));
+				actError('extension', lib.language('error_check_file'));
 				continue;
 			}
 
 			// check file size
 			if (files[i].size > options.limitSize)
 			{
-				actError('filesize', lang('error_limit_size2'));
+				actError('filesize', lib.language('error_limit_size2'));
 				continue;
 			}
 
 			// set unique id
-			files[i].id = util.getUniqueNumber();
+			files[i].id = lib.util.getUniqueNumber();
 
 			// push upload item
 			this.readyItems.push(files[i]);
@@ -176,24 +154,26 @@ module.exports = function Uploader(parent) {
 		}
 
 		newReadyItems.forEach((item) => {
-			parent.queue.addProgress(item);
+			this.parent.queue.addProgress(item);
 		});
 	};
 
 	/**
 	 * push ready queue
 	 */
-	this.pushReady = () => {
-		let items = mergeFileList(this.$uploadElement);
+	pushReady()
+	{
+		let items = this.constructor.mergeFileList(this.$uploadElement);
 
+		// check items
 		if (!items.length)
 		{
-			alert(lang('error_not_upload_file'));
+			alert(lib.language('error_not_upload_file'));
 			return false;
 		}
 
 		// push upload items
-		pushReadyUploadFiles(items);
+		this.pushReadyUploadFiles(items);
 
 		// reset form
 		this.resetEvent(this.$uploadElement);
@@ -202,17 +182,22 @@ module.exports = function Uploader(parent) {
 	/**
 	 * start upload
 	 *
-	 * @Param {Array} files
+	 * @param {Array} files
 	 */
-	this.start = (files) => {
-
+	start(files=[])
+	{
 		// push parameter files
 		if (files && files.length)
 		{
-			pushReadyUploadFiles(files);
+			this.pushReadyUploadFiles(files);
 		}
 
-		if (!this.uploading)
+		if (this.uploading)
+		{
+			// TODO: 업로드중이라고 오류 표시
+			alert('uploading..');
+		}
+		else
 		{
 			this.play();
 		}
@@ -221,25 +206,26 @@ module.exports = function Uploader(parent) {
 	/**
 	 * play upload
 	 */
-	this.play = () => {
-		if (!this.readyItems.length) return false;
+	play()
+	{
+		if (!this.readyItems.length) return;
 
 		this.uploading = true;
 
 		// change ready to loading
-		let $el = parent.queue.selectQueueElement(this.readyItems[0].id);
+		let $el = this.parent.queue.selectQueueElement(this.readyItems[0].id);
 		$el.removeClass('ready');
-		util.findDOM($el, 'text', 'state').text('loading..');
-		util.findDOM($el, 'element', 'removeQueue').remove();
+		lib.util.findDOM($el, 'text', 'state').text('loading...');
+		lib.util.findDOM($el, 'element', 'removeQueue').remove();
 
 		// act upload
-		let script = parent.options.uploadScript || null;
-		let userParams = (parent.options.uploadParamsFilter && typeof parent.options.uploadParamsFilter === 'function') && parent.options.uploadParamsFilter(this.readyItems[0]);
-		let upload = fileUpload(
+		let script = this.parent.options.uploadScript || null;
+		let userParams = (this.parent.options.uploadParamsFilter && typeof this.parent.options.uploadParamsFilter === 'function') && this.parent.options.uploadParamsFilter(this.readyItems[0]);
+		let upload = lib.fileUpload(
 			script,
 			this.readyItems[0],
 			userParams,
-			parent.options.uploadDataFilter
+			this.parent.options.uploadDataFilter
 		);
 
 		// callback upload event
@@ -258,49 +244,54 @@ module.exports = function Uploader(parent) {
 	/**
 	 * upload progress event
 	 *
-	 * @Param {Object} res
-	 * @Param {File} file
+	 * @param {Object} res
+	 * @param {File} file
 	 */
-	this.uploadProgress = (res, file) => {
-		parent.queue.updateProgress({
+	uploadProgress(res, file)
+	{
+		this.parent.queue.updateProgress({
 			id : file.id,
 			data : res
 		});
-		if (parent.options.uploadProgress)
+		if (this.parent.options.uploadProgress)
 		{
-			parent.options.uploadProgress(res, file);
+			this.parent.options.uploadProgress(res, file);
 		}
 	};
 
 	/**
 	 * upload complete event
 	 *
-	 * @Param {String} state (success|error)
-	 * @Param {Object} res
-	 * @Param {File} file
+	 * @param {String} state (success|error)
+	 * @param {Object} res
+	 * @param {File} file
 	 */
-	this.uploadComplete = (state, res, file) => {
-		switch(state) {
+	uploadComplete(state, res, file)
+	{
+		switch(state)
+		{
 			case 'success':
 				file = $.extend({}, file, res);
+				//file = { ...file, ...res };
 				delete file.slice;
-				parent.queue.uploadResult('success', file);
+				this.parent.queue.uploadResult('success', file);
 
 				// callback
-				if (parent.options.uploadComplete)
+				if (this.parent.options.uploadComplete)
 				{
-					parent.options.uploadComplete(file);
+					this.parent.options.uploadComplete(file);
 				}
 				break;
+
 			case 'error':
 				file.message = res;
-				parent.queue.uploadResult('error', file);
+				this.parent.queue.uploadResult('error', file);
 				console.error(file.message);
 
 				// callback
-				if (parent.options.uploadFail)
+				if (this.parent.options.uploadFail)
 				{
-					parent.options.uploadFail(file);
+					this.parent.options.uploadFail(file);
 				}
 				break;
 		}
@@ -316,22 +307,23 @@ module.exports = function Uploader(parent) {
 		{
 			this.uploading = false;
 
-			if (parent.options.uploadCompleteAll && typeof parent.options.uploadCompleteAll === 'function')
+			if (this.parent.options.uploadCompleteAll && typeof this.parent.options.uploadCompleteAll === 'function')
 			{
-				parent.options.uploadCompleteAll(parent);
+				this.parent.options.uploadCompleteAll(this.parent);
 			}
 
 			// send event to plugin
-			parent.eventReceiver('queue.uploadCompleteAll');
+			this.parent.eventReceiver('queue.uploadCompleteAll');
 		}
 	};
 
 	/**
 	 * add upload elements
 	 *
-	 * @Param {Object} $el
+	 * @param {Object} $el
 	 */
-	this.addUploadElements = ($el) => {
+	addUploadElements($el)
+	{
 		if (this.$uploadElement && this.$uploadElement.length)
 		{
 			this.$uploadElement = this.$uploadElement.add($el);
@@ -345,16 +337,14 @@ module.exports = function Uploader(parent) {
 	/**
 	 * reset event
 	 *
-	 * @Param {Object} $el
+	 * @param {Object} $el
 	 */
-	this.resetEvent = ($el) => {
+	resetEvent($el)
+	{
 		let $inputs = $el || this.$uploadElement;
 		$inputs.each((k, o) => {
-			util.inputFileReset(o);
+			lib.util.inputFileReset(o);
 		});
 	};
 
-
-	// ACTION
-	initEvent();
-};
+}

@@ -42,6 +42,17 @@ module.exports = {
 					]
 				}),
 			},
+			{
+				test: /\.(eot|ttf|woff|woff2)$/,
+				use: [
+					{
+						loader: 'file-loader',
+						options: {
+							name: 'assets/[name].[ext]'
+						}
+					}
+				]
+			},
 		]
 	},
 

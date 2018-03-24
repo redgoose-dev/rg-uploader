@@ -23,6 +23,7 @@ export function bytesToSize(bytes)
  */
 export function findDOM($con, key, name)
 {
+	if (!($con && $con.length)) return null;
 	return $con.find('[data-' + key + '=' + name + ']');
 }
 

@@ -1,11 +1,15 @@
+import $ from 'jquery';
+
+
 /**
  * create key code object
  * make keylist to keycode object
  *
- * @Param {Array} list
- * @Return {Object}
+ * @param {Array} list
+ * @return {Object}
  */
-const createKeyCodeObject = (list) => {
+function createKeyCodeObject(list)
+{
 	let result = {};
 	list = list || [];
 
@@ -15,40 +19,27 @@ const createKeyCodeObject = (list) => {
 	});
 
 	return result;
-};
+}
 
 
 /**
  * Keyboard Event
  *
- * @Param {String} eventPrefix
- * @Param {Array} keyList
+ * @param {String} eventPrefix
+ * @param {Array} keyList
  */
-module.exports = function(eventPrefix, keyList) {
-	/**
-	 * @Const {String} EVENT_PREFIX
-	 */
+export default function(eventPrefix, keyList)
+{
 	const EVENT_PREFIX = eventPrefix;
-
-	/**
-	 * @Const {Object} KEY_CODE
-	 */
 	const KEY_CODE = createKeyCodeObject(keyList);
 
-	/**
-	 * @Var {int} pressKeyCode
-	 */
 	this.pressKeyCode = null;
-
-	/**
-	 * @Var {Boolean} isPressKeyCode
-	 */
 	this.isPressKeyCode = false;
 
 	/**
 	 * key down event
 	 *
-	 * @Param {Object} e
+	 * @param {Object} e
 	 */
 	const keyDown = (e) => {
 		this.pressKeyCode = e.keyCode;
@@ -63,7 +54,7 @@ module.exports = function(eventPrefix, keyList) {
 	/**
 	 * key up event
 	 *
-	 * @Param {Object} e
+	 * @param {Object} e
 	 */
 	const keyUp = (e) => {
 		this.pressKeyCode = null;

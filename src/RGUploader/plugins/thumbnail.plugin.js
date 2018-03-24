@@ -252,7 +252,7 @@ function RG_Thumbnail(options) {
 							alert('parse error');
 							return false;
 						}
-						if (res.state == 'error')
+						if (res.state === 'error')
 						{
 							alert(res.response.message);
 							return false;

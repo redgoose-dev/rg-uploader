@@ -8,11 +8,13 @@
 <meta charset="UTF-8">
 <meta name="author" content="redgoose.me">
 <meta name="description" content="rg-uploader">
+<link rel="stylesheet" href="./dist/rg-uploader.css">
 </head>
 <body>
 <main>
+	<h1>index page</h1>
 
-	<article class="rg-uploader" id="example_basic">
+	<article class="rg-uploader" id="comp_basic">
 		<header>
 			<h1>File upload</h1>
 			<p>아래 업로드 버튼을 눌러서 파일을 추가합니다.</p>
@@ -23,7 +25,7 @@
 		<footer>
 			<nav>
 				<label class="add-file">
-					<input type="file" data-element="addFiles" multiple>
+					<input type="file" data-element="addfiles" multiple>
 					<i class="material-icons">add_circle_outline</i>
 					<span>Add files</span>
 				</label>
@@ -34,7 +36,8 @@
 			</nav>
 		</footer>
 	</article>
-
 </main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="./dist/rg-uploader.js"></script>
 </body>
 </html>

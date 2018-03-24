@@ -1,51 +1,33 @@
-/**
- * check method
- *
- * @Param {Function} obj
- * @Param {Boolean}
- */
-function checkMethod(obj)
-{
-	return (obj && (typeof obj === 'object'));
-}
+export default class Plugin {
 
-/*
- * receive event list
- *
- * queue.changeStyle
- * queue.selectQueue
- * queue.addProgress
- * queue.updateProgress
- * queue.uploadComplete
- * queue.removeQueue
- */
-
-function Plugin(parent) {
-
-	/**
-	 * @var {Array} this.items
-	 */
-	this.names = [];
-
-	/**
-	 * @var {Object} this.obj
-	 */
-	this.child = {};
-
+	constructor(parent)
+	{
+		this.parent = parent;
+		this.names = [];
+		this.child = {};
+	}
 
 	/**
 	 * event listener
 	 *
+	 * queue.changeStyle
+	 * queue.selectQueue
+	 * queue.addProgress
+	 * queue.updateProgress
+	 * queue.uploadComplete
+	 * queue.removeQueue
+	 *
 	 * @Param {String} type
-	 * @Param {*} value
+	 * @Param {Any} value
 	 */
-	this.eventListener = (type, value) => {
+	eventListener(type, value)
+	{
 		this.names.forEach((name) => {
 			let evt = this.child[name].eventListener;
 			if (!evt || !(typeof evt === 'function')) return;
 			evt(type, value);
 		});
-	};
+	}
 
 	/**
 	 * error plugin
@@ -53,18 +35,19 @@ function Plugin(parent) {
 	 *
 	 * @Param {String} childName error plugin name
 	 */
-	this.error = (childName) => {
+	error(childName)
+	{
 		this.names.splice(this.names.indexOf(childName), 1);
 		delete this.child[childName];
-	};
+	}
 
 	/**
 	 * init
-	 *
 	 */
-	this.init = () => {
+	init()
+	{
 		// init plugins
-		let items = parent.options.plugin;
+		let items = this.parent.options.plugin;
 		if (items && items.length)
 		{
 			items.forEach((item) => {
@@ -76,12 +59,9 @@ function Plugin(parent) {
 				this.child[item.name] = item.obj;
 
 				// play init()
-				this.child[item.name].init(parent);
+				this.child[item.name].init(this.parent);
 			});
 		}
-	};
+	}
+
 }
-
-
-// export module
-module.exports = Plugin;

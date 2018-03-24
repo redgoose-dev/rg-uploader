@@ -98,13 +98,13 @@ function RG_Preview() {
 				var id = value.$selectElement.data('id');
 				var n = app.queue.findItem(id);
 				var file = app.queue.items.files[n];
-				var src = (value.$selectElement.hasClass('selected') && (file.type.split('/')[0] == 'image')) ? file.fullSrc : null;
+				var src = (value.$selectElement.hasClass('selected') && (file.type.split('/')[0] === 'image')) ? file.fullSrc : null;
 				updatePreview(src);
 				break;
 
 			// change queue style
 			case 'queue.changeStyle':
-				visiblePreview( (value.style == 'list') );
+				visiblePreview( (value.style === 'list') );
 				break;
 		}
 	}

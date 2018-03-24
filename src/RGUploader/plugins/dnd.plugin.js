@@ -32,7 +32,7 @@ function RG_DragAndDrop() {
 			e.stopPropagation();
 			e.preventDefault();
 
-			if (e.type == 'dragover')
+			if (e.type === 'dragover')
 			{
 				if (over) return false;
 				over = true;

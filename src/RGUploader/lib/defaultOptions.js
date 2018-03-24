@@ -1,6 +1,6 @@
 export default {
 	autoUpload : false,
-	$externalFileForm : null,
+	$externalFileForm : null, // TODO: no jquery
 	allowFileTypes : ['jpeg', 'png', 'gif'],
 	limitSize : 1000000,
 	limitSizeTotal : 3000000,
@@ -21,26 +21,27 @@ export default {
 					app.queue.removeQueue(file.id, false, true);
 				}
 			}
-		]
-		,datas : null
+		],
+		datas : null
 	},
 	plugin : [],
-	// upload parameters filter
-	uploadParamsFilter : function(res) {},
-	// upload data filtering
-	uploadDataFilter : function(res) {},
-	// remove parameters filter
-	removeParamsFilter : function(res) {},
-	// remove data filtering
-	removeDataFilter : function(res) {},
-	// progress upload
-	uploadProgress : function(response, file) {},
-	// complete upload
-	uploadComplete : function(file) {},
-	// all complete upload
-	uploadCompleteAll : function(app) {},
-	// fail upload
-	uploadFail : function(file) {},
-	// init app
-	init : function(app) {}
+
+	// upload parameters filter `function(res) {}`
+	uploadParamsFilter: null,
+	// upload data filtering `function(res) {}`
+	uploadDataFilter: null,
+	// remove parameters filter `function(res) {}`
+	removeParamsFilter: null,
+	// remove data filtering `function(res) {}`
+	removeDataFilter: null,
+	// progress upload `function(response, file) {}`
+	uploadProgress: null,
+	// complete upload `function(file) {}`
+	uploadComplete: null,
+	// all complete upload `function(app) {}`
+	uploadCompleteAll: null,
+	// fail upload `function(file) {}`
+	uploadFail: null,
+	// init app `function(app) {}`
+	init: null
 };
