@@ -1,4 +1,6 @@
+const HtmlWebPackPlugin = require("html-webpack-plugin");
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
+const ConcatPlugin = require('webpack-concat-plugin');
 
 
 module.exports = {
@@ -6,13 +8,13 @@ module.exports = {
 	context: __dirname,
 
 	entry: {
-		RG_Uploader: `./src/pro.js`,
+		'rg-uploader': './src/production.js',
 	},
 
 	output: {
-		publicPath: '/',
-		filename: 'rg-uploader.js',
-		library: '[name]',
+		publicPath: './',
+		filename: '[name].js',
+		library: 'RG_Uploader',
 		libraryTarget: 'umd',
 		libraryExport: 'default'
 	},
@@ -25,6 +27,17 @@ module.exports = {
 				use: {
 					loader: "babel-loader"
 				}
+			},
+			{
+				test: /\.html$/,
+				use: [
+					{
+						loader: "html-loader",
+						options: {
+							minimize: false
+						}
+					}
+				]
 			},
 			{
 				test: /\.s?css$/,
@@ -48,6 +61,7 @@ module.exports = {
 					{
 						loader: 'file-loader',
 						options: {
+							publicPath: './',
 							name: 'assets/[name].[ext]'
 						}
 					}
@@ -61,7 +75,19 @@ module.exports = {
 	},
 
 	plugins: [
+		new HtmlWebPackPlugin({
+			template: "./src/production.html"
+		}),
 		new ExtractTextPlugin({ filename: 'rg-uploader.css' }),
+		new ConcatPlugin({
+			name: 'rg-uploader',
+			uglify: false,
+			sourceMap: false,
+			outputPath: '',
+			fileName: '[name].plugin.js',
+			filesToConcat: ['./src/plugins/**'],
+			attributes: { async: true },
+		}),
 	]
 
 };

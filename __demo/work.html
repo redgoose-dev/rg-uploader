@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<title>redgoose upload component</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="user-scalable=yes, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta name="author" content="redgoose.me">
+<meta name="description" content="admin service for goose">
+<link rel="stylesheet" href="../dist/rg-uploader.css">
+<link rel="stylesheet" href="./assets/demo.css">
+<link rel="stylesheet" href="./assets/prism.css">
+<style>
+#thumbnailImage {margin: 0;}
+#thumbnailImage img {zoom: 1;}
+</style>
+</head>
+<body>
+<main>
+	<article class="rg-uploader" id="comp_thumbnail">
+		<header>
+			<h1>File upload</h1>
+			<p>아래 업로드 버튼을 눌러서 파일을 추가하거나 이 영역에 파일을 드래그하여 추가합니다.</p>
+		</header>
+		<div class="body" data-comp="queue">
+			<div class="col queue" data-element="queue"><ul></ul></div>
+		</div>
+		<footer>
+			<nav>
+				<label class="add-file">
+					<input type="file" data-element="addFiles" multiple>
+					<i class="material-icons">add_circle_outline</i>
+					<span>Add files</span>
+				</label>
+				<a href="#" data-element="startUpload" class="start-upload">
+					<i class="material-icons">play_circle_outline</i>
+					<span>Start upload</span>
+				</a>
+			</nav>
+			<div class="size-info"></div>
+		</footer>
+	</article>
+	<hr>
+	<figure id="thumbnailImage"></figure>
+</main>
+
+<script src="../vendor/jquery/jquery-3.3.1.min.js"></script>
+<script src="../resource/plugins/thumbnail.plugin.js"></script>
+<script src="../resource/plugins/dnd.plugin.js"></script>
+<script src="../dist/rg-uploader.js"></script>
+<script>
+// make thumbnail
+var plug_thumbnail = new RG_Uploader($('#comp_thumbnail'), {
+	name : 'thumbnail1',
+	limitSize : 100000000,
+	limitSizeTotal : 300000000,
+	autoUpload: false,
+	uploadScript: 'http://tools/rg-Uploader/demo/script/upload.php',
+	removeScript : 'http://tools/rg-Uploader/demo/script/remove.php',
+	queue : {
+		style : 'album',
+		height : 240,
+		//datas : './script/data.json',
+		buttons : [
+			{
+				name : 'make thumbnail image',
+				iconName : 'apps',
+				className : 'btn-make-thumbnail',
+				show : function(file) {
+					return (file.type.split('/')[0] === 'image');
+				},
+				action : function(app, file) {
+					if (!app.plugin.child.thumbnail) return false;
+					var plug = app.plugin.child.thumbnail;
+
+					plug.assignOption({
+						doneCallback : function(res) {
+							$('#thumbnailImage').html('<img src="' + res.src + '" alt="' + res.name + '"/>');
+						}
+					});
+					plug.open(file);
+				}
+			},
+			{
+				name : 'remove queue',
+				iconName : 'close',
+				className : 'btn-remove-queue',
+				action : function(app, file) {
+					app.queue.removeQueue(file.id, false, true);
+				}
+			}
+		]
+	},
+	plugin : [
+		{
+			name : 'thumbnail',
+			obj : new RG_Thumbnail({
+				url_croppieCSS : '../vendor/Croppie/croppie.css',
+				url_croppieJS : '../vendor/Croppie/croppie.min.js',
+				output : {
+					type : 'canvas',
+					quality : .85,
+					format : 'jpeg',
+					size : { width : 300, height : 300 },
+					sampling : 2,
+				},
+				croppie : {
+					boundary : { width: 640, height: 480-60 },
+					viewport : { width: 300, height: 300, type: 'square' }
+				},
+			})
+		},
+		{
+			name : 'dnd',
+			obj : new RG_DragAndDrop()
+		}
+	],
+	uploadParamsFilter: function(res)
+	{
+		return {
+			dir: 'http://tools/rg-Uploader/demo/upload'
+		};
+	},
+	uploadDataFilter: function(res) {
+		return {
+			state: res.state,
+			response: {
+				src: res.response.src,
+				name: res.response.name,
+				message: res.response.message
+			}
+		};
+	}
+});
+</script>
+</body>
+</html>

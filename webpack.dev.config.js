@@ -7,7 +7,7 @@ module.exports = {
 	context: __dirname,
 
 	entry: {
-		index: `./src/dev.js`,
+		index: `./src/development.js`,
 	},
 
 	output: {
@@ -68,7 +68,7 @@ module.exports = {
 
 	plugins: [
 		new HtmlWebPackPlugin({
-			template: "./src/dev.html"
+			template: "./src/development.html"
 		}),
 		new ExtractTextPlugin({ filename: 'style.css' }),
 	],
@@ -79,4 +79,5 @@ module.exports = {
 		historyApiFallback: true,
 		noInfo: true,
 	},
+
 };
