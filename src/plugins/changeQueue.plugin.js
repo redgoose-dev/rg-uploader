@@ -158,4 +158,3 @@
 	return RG_ChangeQueue;
 
 }));
-

@@ -129,6 +129,11 @@ export default class Queue {
 						res = [];
 					}
 				}
+				if (!(res && res.length))
+				{
+					alert(lib.language('error_import'));
+					return;
+				}
 				res.forEach((item) => {
 					this.addComplete(item);
 				});
@@ -285,7 +290,7 @@ export default class Queue {
 	 * @param {Object} file
 	 * @param {Object} $beforeElement
 	 */
-	addComplete(file, $beforeElement)
+	addComplete(file, $beforeElement=null)
 	{
 		let id = file.id;
 		let $el = $(lib.template.complete);
@@ -447,8 +452,8 @@ export default class Queue {
 					}
 					else
 					{
-						console.error(res.response);
 						alert(lib.language('error_remove_error'));
+						// TODO: confirm으로 오류가 났는데 진짜로 지울거냐고 물어보고 y 누르면 큐 삭제
 						return false;
 					}
 				});
@@ -461,7 +466,7 @@ export default class Queue {
 	};
 
 	/**
-	 * updare queue
+	 * update queue
 	 *
 	 * @param {Object} res
 	 */
@@ -469,8 +474,13 @@ export default class Queue {
 	{
 		let $el = this.$queue.children(`li[data-id=${res.id}]`);
 		let $progress = lib.util.findDOM($el, 'element', 'progress');
+
+		// check
+		if (!(res && res.data)) return;
+
+		// get percent
 		let percent = parseInt((res.data.loaded / res.data.total) * 100);
-		$progress.width(percent + '%').find('em').text(percent);
+		$progress.width(`${percent}%`).find('em').text(percent);
 
 		this.parent.eventReceiver('queue.updateProgress', {
 			$selectElement : $el,

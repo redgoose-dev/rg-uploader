@@ -1,5 +1,5 @@
-const HtmlWebPackPlugin = require("html-webpack-plugin");
-const ExtractTextPlugin = require("extract-text-webpack-plugin");
+const HtmlWebPackPlugin = require('html-webpack-plugin');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 
 module.exports = {
@@ -78,6 +78,11 @@ module.exports = {
 		port: 4000,
 		historyApiFallback: true,
 		noInfo: true,
+		before(app) {
+			app.post('/upload', require('./upload/script-node/upload'));
+			app.post('/remove', require('./upload/script-node/remove'));
+			app.get('/data', require('./upload/script-node/data'));
+		}
 	},
 
 };

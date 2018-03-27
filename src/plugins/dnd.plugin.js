@@ -1,124 +1,136 @@
-function RG_DragAndDrop() {
+(function(root, factory) {
+	if (typeof define === 'function' && define.amd) {
+		define(['jquery'], factory);
+	} else if (typeof exports === 'object') {
+		module.exports = factory(require('jquery'));
+	} else {
+		root.RG_SizeInfo = factory(jQuery);
+	}
+}(this, function($) {
 
-	this.name = 'Drag And Drop';
-	this.areaElements = [];
+	return function RG_DragAndDrop() {
 
-	var self = this;
-	var app = null;
-	var externalAreaElements = $('.rg-external-dropzone');
+		this.name = 'Drag And Drop';
+		this.areaElements = [];
 
+		var self = this;
+		var app = null;
+		var externalAreaElements = $('.rg-external-dropzone');
 
-	/**
-	 * init file drag and drop event
-	 *
-	 * @Param {Array} area
-	 * @Return {Object}
-	 */
-	var fileDragAndDrop = function(area)
-	{
-		if (!window.File || !window.FileList || !window.FileReader || !window.Blob) return false;
-		if (!area.length) return false;
-
-		var defer = $.Deferred();
-		var over = false;
 
 		/**
-		 * dragover handler
+		 * init file drag and drop event
 		 *
-		 * @Param {Object} e
+		 * @Param {Array} area
+		 * @Return {Object}
 		 */
-		var overHandler = function(e)
+		var fileDragAndDrop = function(area)
 		{
-			e.stopPropagation();
-			e.preventDefault();
+			if (!window.File || !window.FileList || !window.FileReader || !window.Blob) return false;
+			if (!area.length) return false;
 
-			if (e.type === 'dragover')
+			var defer = $.Deferred();
+			var over = false;
+
+			/**
+			 * dragover handler
+			 *
+			 * @Param {Object} e
+			 */
+			var overHandler = function(e)
 			{
-				if (over) return false;
-				over = true;
-				$(e.currentTarget).addClass('drop-mode');
-				e.dataTransfer.dropEffect = 'copy';
-			}
-			else
+				e.stopPropagation();
+				e.preventDefault();
+
+				if (e.type === 'dragover')
+				{
+					if (over) return false;
+					over = true;
+					$(e.currentTarget).addClass('drop-mode');
+					e.dataTransfer.dropEffect = 'copy';
+				}
+				else
+				{
+					over = false;
+					$(e.currentTarget).removeClass('drop-mode');
+				}
+				return false;
+			};
+
+			/**
+			 * drop handler
+			 *
+			 * @Param {Object} e
+			 */
+			var dropHandler = function(e)
 			{
-				over = false;
-				$(e.currentTarget).removeClass('drop-mode');
+				e.stopPropagation();
+				e.preventDefault();
+
+				overHandler(e);
+
+				var files = (e.dataTransfer) ? e.dataTransfer.files : null;
+				if (files && files.length)
+				{
+					defer.notify(files);
+				}
+				return false;
+			};
+
+			// set events
+			for (var i=0; i<area.length; i++)
+			{
+				area[i].addEventListener('dragover', overHandler, false);
+				area[i].addEventListener('dragleave', overHandler, false);
+				area[i].addEventListener('drop', dropHandler, false);
 			}
-			return false;
+
+			return defer.promise();
 		};
 
 		/**
-		 * drop handler
+		 * done event
 		 *
-		 * @Param {Object} e
+		 * @Param {FileList} files
 		 */
-		var dropHandler = function(e)
+		var done = function(files)
 		{
-			e.stopPropagation();
-			e.preventDefault();
-
-			overHandler(e);
-
-			var files = (e.dataTransfer) ? e.dataTransfer.files : null;
-			if (files && files.length)
+			if (app.uploader.uploading)
 			{
-				defer.notify(files);
+				alert(app.lang('error_add_upload'));
+				return false;
 			}
-			return false;
+
+			// play upload
+			app.uploader.start(files || []);
 		};
 
-		// set events
-		for (var i=0; i<area.length; i++)
+
+		/**
+		 * init
+		 *
+		 * @Param {Object} parent
+		 */
+		this.init = function(parent)
 		{
-			area[i].addEventListener('dragover', overHandler, false);
-			area[i].addEventListener('dragleave', overHandler, false);
-			area[i].addEventListener('drop', dropHandler, false);
-		}
+			app = parent;
 
-		return defer.promise();
-	};
+			// push area elements
+			this.areaElements.push(app.queue.$queue.parent().get(0));
+			externalAreaElements.each(function(){
+				self.areaElements.push(this);
+			});
 
-	/**
-	 * done event
-	 *
-	 * @Param {FileList} files
-	 */
-	var done = function(files)
-	{
-		if (app.uploader.uploading)
-		{
-			alert(app.lang('error_add_upload'));
-			return false;
-		}
-
-		// play upload
-		app.uploader.start(files || []);
-	};
-
-
-	/**
-	 * init
-	 *
-	 * @Param {Object} parent
-	 */
-	this.init = function(parent)
-	{
-		app = parent;
-
-		// push area elements
-		this.areaElements.push(app.queue.$queue.parent().get(0));
-		externalAreaElements.each(function(){
-			self.areaElements.push(this);
-		});
-
-		// init event
-		if (this.areaElements.length)
-		{
-			var dnd = fileDragAndDrop(this.areaElements);
-			if (dnd && dnd.progress)
+			// init event
+			if (this.areaElements.length)
 			{
-				dnd.progress(done);
+				var dnd = fileDragAndDrop(this.areaElements);
+				if (dnd && dnd.progress)
+				{
+					dnd.progress(done);
+				}
 			}
 		}
 	}
-}
+
+}));

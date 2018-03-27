@@ -4,52 +4,86 @@ import './scss/index.scss';
 import SizeInfo from './plugins/sizeinfo.plugin';
 import ChangeQueueStyle from './plugins/changeQueueStyle.plugin';
 import ChangeQueue from './plugins/changeQueue.plugin';
+import DragAndDrop from './plugins/dnd.plugin';
+import Preview from './plugins/preview.plugin';
+import Thumbnail from './plugins/thumbnail.plugin';
 
 
 let basic = new RGUploader(document.getElementById('example_basic'), {
-	uploadScript: 'http://tools/rg-Uploader/upload/script-php/upload.php',
-	removeScript : 'http://tools/rg-Uploader/upload/script-php/remove.php',
-	queue : {
-		height: 'auto',
-		datas : [
+	autoUpload: true,
+	uploadScript: '/upload',
+	removeScript: 'http://tools/rg-Uploader/upload/script-php/remove.php',
+	queue: {
+		datas: '/data',
+		buttons: [
 			{
-				"id" : 8742867877,
-				"name" : "img-demo-1.jpg",
-				"size" : 53710,
-				"src" : "https://goose.redgoose.me/data/upload/original/201803/rg-20180315-000424.jpg",
-				"type" : "image/jpeg"
+				name: 'make thumbnail image',
+				iconName: 'apps',
+				className: 'btn-make-thumbnail',
+				show : function(file) {
+					return (file.type.split('/')[0] === 'image');
+				},
+				action : function(app, file) {
+					if (!app.plugin.child.thumbnail) return false;
+					var plug = app.plugin.child.thumbnail;
+
+					plug.assignOption({
+						doneCallback : function(res) {
+							app.queue.import([res]);
+						}
+					});
+					plug.open(file);
+				}
 			},
 			{
-				"id" : 6860860674,
-				"name" : "img-demo-2.jpg",
-				"size" : 129454,
-				"src" : "https://goose.redgoose.me/data/upload/original/201711/rg-20171109-000393.jpg",
-				"type" : "image/jpeg"
+				name : 'remove queue',
+				iconName : 'close',
+				className : 'btn-remove-queue',
+				action : function(app, file) {
+					app.queue.removeQueue(file.id, false, true);
+				}
 			}
 		]
 	},
 	plugin: [
 		{
+			name: 'changeQueue',
+			obj: new ChangeQueue({
+				endChangeItem: function(app)
+				{
+					console.log('endChangeItem', app.queue.items);
+				}
+			})
+		},
+		{
+			name: 'changeQueueStyle',
+			obj: new ChangeQueueStyle(),
+		},
+		{
+			name: 'dragAndDrop',
+			obj: new DragAndDrop(),
+		},
+		{
+			name: 'preview',
+			obj: new Preview(),
+		},
+		{
 			name: 'sizeinfo',
 			obj: new SizeInfo('.size-info'),
 		},
 		{
-			name: 'changeQueueStyle',
-			obj : new ChangeQueueStyle(),
+			name: 'thumbnail',
+			obj: new Thumbnail(),
 		},
-		{
-			name: 'changeQueue',
-			obj : new ChangeQueue({
-				endChangeItem : function(app) {
-					console.log(app.queue.items);
-				}
-			})
-		}
 	],
 	uploadParamsFilter: function(res)
 	{
 		return {
-			dir: 'http://tools/rg-Uploader/upload/attachments'
+			dir: '/upload/attachments'
 		};
 	},
+	uploadComplete: function(file)
+	{
+		console.log(file);
+	}
 });
