@@ -6,6 +6,7 @@ README.html
 .idea/
 
 upload/attachments/
+upload/tmp/
 
 *.user.*
 

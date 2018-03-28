@@ -12,7 +12,7 @@ import Thumbnail from './plugins/thumbnail.plugin';
 let basic = new RGUploader(document.getElementById('example_basic'), {
 	autoUpload: true,
 	uploadScript: '/upload',
-	removeScript: 'http://tools/rg-Uploader/upload/script-php/remove.php',
+	removeScript: '/remove',
 	queue: {
 		datas: '/data',
 		buttons: [
@@ -84,6 +84,6 @@ let basic = new RGUploader(document.getElementById('example_basic'), {
 	},
 	uploadComplete: function(file)
 	{
-		console.log(file);
+		//console.log(file);
 	}
 });
