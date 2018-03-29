@@ -14,6 +14,7 @@ let basic = new RGUploader(document.getElementById('example_basic'), {
 	uploadScript: '/upload',
 	removeScript: '/remove',
 	queue: {
+		height: 240,
 		datas: '/data',
 		buttons: [
 			{
@@ -51,7 +52,7 @@ let basic = new RGUploader(document.getElementById('example_basic'), {
 			obj: new ChangeQueue({
 				endChangeItem: function(app)
 				{
-					console.log('endChangeItem', app.queue.items);
+					console.log('USER::endChangeItem', app.queue.items);
 				}
 			})
 		},
@@ -84,6 +85,19 @@ let basic = new RGUploader(document.getElementById('example_basic'), {
 	},
 	uploadComplete: function(file)
 	{
-		//console.log(file);
+		console.log('USER::uploadComplete - ', file);
+	},
+	// removeParamsFilter: function(res)
+	// {
+	// 	return {
+	// 		name: res.name
+	// 	};
+	// },
+	removeDataFilter: function(res)
+	{
+		console.log('removeDataFilter', res);
+		return {
+			state: 'success',
+		}
 	}
 });

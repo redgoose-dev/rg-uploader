@@ -1991,6 +1991,10 @@ detect-conflict@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/detect-conflict/-/detect-conflict-1.0.1.tgz#088657a66a961c05019db7c4230883b1c6b4176e"
 
+detect-file-type@^0.1.3:
+  version "0.1.3"
+  resolved "https://registry.yarnpkg.com/detect-file-type/-/detect-file-type-0.1.3.tgz#b2f3fd6cff706c46d85a0e09643b1debf32745b0"
+
 detect-indent@^4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/detect-indent/-/detect-indent-4.0.0.tgz#f76d064352cdf43a1cb6ce619c4ee3a9475de208"
