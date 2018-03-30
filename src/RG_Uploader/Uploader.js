@@ -18,7 +18,7 @@ export default class Uploader {
 
 		// set upload element
 		this.$uploadElement = lib.util.findDOM(parent.$container, 'element', 'addFiles');
-		this.addUploadElements(parent.options.$externalFileForm);
+		this.addUploadElements($(parent.options.externalFileForm));
 
 		if (!(this.$uploadElement && this.$uploadElement.length)) return;
 
@@ -83,7 +83,7 @@ export default class Uploader {
 	/**
 	 * push ready upload files
 	 *
-	 * @param {Array} files [type=file] element // TODO: 타입 알아봐야함
+	 * @param {Array} files [type=file] element
 	 */
 	pushReadyUploadFiles(files)
 	{
@@ -194,8 +194,7 @@ export default class Uploader {
 
 		if (this.uploading)
 		{
-			// TODO: 업로드중이라고 오류 표시
-			alert('uploading..');
+			alert(lib.language('error_now_uploading'));
 		}
 		else
 		{

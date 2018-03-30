@@ -1,111 +1,123 @@
-function RG_Preview() {
+(function(root, factory) {
+	if (typeof define === 'function' && define.amd) {
+		define(['jquery'], factory);
+	} else if (typeof exports === 'object') {
+		module.exports = factory(require('jquery'));
+	} else {
+		root.RG_SizeInfo = factory(jQuery);
+	}
+}(this, function($) {
 
-	this.name = 'Preview';
-	this.$preview = null;
+	return function RG_Preview() {
 
-	var self = this;
-	var app = null;
-	var classNameNotImage = 'not-image';
-	var width = 150;
+		this.name = 'Preview';
+		this.$preview = null;
+
+		var self = this;
+		var app = null;
+		var classNameNotImage = 'not-image';
+		var width = 150;
 
 
-	/**
-	 * create preview
-	 */
-	var createPreview = function()
-	{
-		var str = '<div class="col preview"><figure></figure></div>';
-		self.$preview = $(str);
-
-		// set width
-		self.$preview.width(width);
-
-		// append element
-		app.$container.find('[data-comp=queue]').prepend(self.$preview);
-
-		// update
-		updatePreview();
-	};
-
-	/**
-	 * update preview
-	 *
-	 * @Param {String} src
-	 */
-	var updatePreview = function(src)
-	{
-		var $figure = self.$preview.children('figure');
-		if (src)
+		/**
+		 * create preview
+		 */
+		var createPreview = function()
 		{
-			$figure
-				.css('backgroundImage', 'url(\'' + src + '\')')
-				.removeClass(classNameNotImage);
-		}
-		else
+			var str = '<div class="col preview"><figure></figure></div>';
+			self.$preview = $(str);
+
+			// set width
+			self.$preview.width(width);
+
+			// append element
+			app.$container.find('[data-comp=queue]').prepend(self.$preview);
+
+			// update
+			updatePreview();
+		};
+
+		/**
+		 * update preview
+		 *
+		 * @Param {String} src
+		 */
+		var updatePreview = function(src)
 		{
-			$figure.attr('style', '').addClass(classNameNotImage);
-		}
-	};
+			var $figure = self.$preview.children('figure');
+			if (src)
+			{
+				$figure
+					.css('backgroundImage', 'url(\'' + src + '\')')
+					.removeClass(classNameNotImage);
+			}
+			else
+			{
+				$figure.attr('style', '').addClass(classNameNotImage);
+			}
+		};
 
-	/**
-	 * visible preview
-	 *
-	 * @Param {Boolean} src
-	 */
-	var visiblePreview = function(sw)
-	{
-		if (sw)
+		/**
+		 * visible preview
+		 *
+		 * @Param {Boolean} src
+		 */
+		var visiblePreview = function(sw)
 		{
-			self.$preview.removeClass('hide');
-		}
-		else
+			if (sw)
+			{
+				self.$preview.removeClass('hide');
+			}
+			else
+			{
+				self.$preview.addClass('hide');
+			}
+		};
+
+
+		/**
+		 * init
+		 *
+		 * @Param {Object} parent
+		 */
+		this.init = function(parent)
 		{
-			self.$preview.addClass('hide');
-		}
-	};
+			app = parent;
 
+			// get preview width
+			width = parseInt(app.options.queue.height || parent.$container.find('.body').height());
 
-	/**
-	 * init
-	 *
-	 * @Param {Object} parent
-	 */
-	this.init = function(parent)
-	{
-		app = parent;
+			// set container body height
+			parent.$container.find('.body').height(width);
 
-		// get preview width
-		width = parseInt(app.options.queue.height || parent.$container.find('.body').height());
+			// play create preview
+			createPreview();
+		};
 
-		// set container body height
-		parent.$container.find('.body').height(width);
+		/**
+		 * event listener
+		 *
+		 * @Param {String} type
+		 * @Param {*} value
+		 */
+		this.eventListener = function(type, value)
+		{
+			switch(type) {
+				// select queue
+				case 'queue.selectQueue':
+					var id = value.$selectElement.data('id');
+					var n = app.queue.findItem(id);
+					var file = app.queue.items.files[n];
+					var src = (value.$selectElement.hasClass('selected') && (file.type.split('/')[0] === 'image')) ? file.fullSrc : null;
+					updatePreview(src);
+					break;
 
-		// play create preview
-		createPreview();
-	};
-
-	/**
-	 * event listener
-	 *
-	 * @Param {String} type
-	 * @Param {*} value
-	 */
-	this.eventListener = function(type, value)
-	{
-		switch(type) {
-			// select queue
-			case 'queue.selectQueue':
-				var id = value.$selectElement.data('id');
-				var n = app.queue.findItem(id);
-				var file = app.queue.items.files[n];
-				var src = (value.$selectElement.hasClass('selected') && (file.type.split('/')[0] === 'image')) ? file.fullSrc : null;
-				updatePreview(src);
-				break;
-
-			// change queue style
-			case 'queue.changeStyle':
-				visiblePreview( (value.style === 'list') );
-				break;
+				// change queue style
+				case 'queue.changeStyle':
+					visiblePreview( (value.style === 'list') );
+					break;
+			}
 		}
 	}
-}
+
+}));

@@ -15,7 +15,7 @@
 
 		var self = this;
 		var app = null;
-		var externalAreaElements = $('.rg-external-dropzone');
+		var externalAreaElements = $('.rg-external-dropzone'); // TODO: 사용자 선택 가능해야함
 
 
 		/**

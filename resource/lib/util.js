@@ -12,8 +12,8 @@ exports.getFunctionReturn = getFunctionReturn;
 /**
  * byte to size convert
  *
- * @Param {Number} bytes
- * @Return {String}
+ * @param {Number} bytes
+ * @return {String}
  */
 function bytesToSize(bytes) {
 	var sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
@@ -25,10 +25,10 @@ function bytesToSize(bytes) {
 /**
  * find DOM
  *
- * @Param {Object} $con
- * @Param {String} key
- * @Param {String} name
- * @Return {Object}
+ * @param {Object} $con
+ * @param {String} key
+ * @param {String} name
+ * @return {Object}
  */
 function findDOM($con, key, name) {
 	if (!($con && $con.length)) return null;
@@ -38,8 +38,8 @@ function findDOM($con, key, name) {
 /**
  * get unique number
  *
- * @Param {int} length
- * @Return {int}
+ * @param {int} length
+ * @return {int}
  */
 function getUniqueNumber(length) {
 	length = length || 10;
@@ -64,7 +64,7 @@ function getUniqueNumber(length) {
 /**
  * detect touch event
  *
- * @Return {Boolean}
+ * @return {Boolean}
  */
 function detectTouchEvent() {
 	return 'ontouchstart' in document.documentElement;
@@ -73,7 +73,7 @@ function detectTouchEvent() {
 /**
  * reset input[type=file]
  *
- * @Param {Object} input
+ * @param {Object} input
  */
 function inputFileReset(input) {
 	var win10ie11 = !!navigator.userAgent.match(/Trident.*rv[ :]?[1-9]{2}\./);
@@ -103,9 +103,9 @@ function inputFileReset(input) {
 /**
  * get function return
  *
- * @Param {Function} func
- * @Param {Object} src
- * @Return {Object}
+ * @param {Function} func
+ * @param {Object} src
+ * @return {Object}
  */
 function getFunctionReturn(func, src) {
 	if (!func || !(typeof func === 'function')) return src;

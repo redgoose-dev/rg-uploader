@@ -453,7 +453,6 @@ export default class Queue {
 					else
 					{
 						alert(lib.language('error_remove_error'));
-						// TODO: confirm으로 오류가 났는데 진짜로 지울거냐고 물어보고 y 누르면 큐 삭제
 						return false;
 					}
 				});

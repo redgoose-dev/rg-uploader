@@ -18,40 +18,51 @@
 
 
 		/**
-		 * load vendor
+		 * load vendor Sortable
 		 *
 		 * @return {Object|Boolean}
 		 */
-		function loadVendor()
+		function loadVendorSortable()
 		{
 			var defer = $.Deferred();
+
+			if (self.options.class_sortable && self.options.class_sortable.name === 'Sortable')
+			{
+				window.loadedVendorSortable = true;
+				window.Sortable = self.options.class_sortable;
+				// 약간의 딜레이가 필요함.
+				setTimeout(defer.resolve, 100);
+				return defer.promise();
+			}
 
 			// check loaded vendor
 			if (window.loadedVendorSortable)
 			{
 				defer.resolve();
 			}
+			else
+			{
+				var head = document.getElementsByTagName('head')[0];
+				var scriptElement = document.createElement('script');
 
-			var head = document.getElementsByTagName('head')[0];
-			var scriptElement = document.createElement('script');
+				scriptElement.src = self.options.path_sortable;
 
-			scriptElement.src = self.options.path_sortable;
+				head.appendChild(scriptElement);
 
-			head.appendChild(scriptElement);
-
-			var n = 0;
-			var interval = setInterval(function(){
-				n++;
-				try {
-					if (Sortable)
-					{
-						clearInterval(interval);
-						window.loadedVendorSortable = true;
-						defer.resolve();
+				var n = 0;
+				var interval = setInterval(function(){
+					n++;
+					try {
+						if (Sortable)
+						{
+							clearInterval(interval);
+							window.loadedVendorSortable = true;
+							defer.resolve();
+						}
 					}
-				}
-				catch(e) {}
-			}, 50);
+					catch(e) {}
+				}, 50);
+			}
 
 			return defer.promise();
 		}
@@ -106,8 +117,7 @@
 			this.options = this.assignOption(options);
 
 			// load vendor
-			// TODO: 벤더 객체가 존재한다면 불러올 필요가 없어진다.
-			var vendor = loadVendor();
+			var vendor = loadVendorSortable();
 
 			vendor.done(function(){
 				// add class
@@ -145,9 +155,7 @@
 	}
 
 	RG_ChangeQueue.prototype.options = {
-		// TODO: Sortable 객체를 직접 선택할 수 있게 한다.
-		// TODO: 없으면 `path_sortable`로 직접 불러오게 한다.
-		// Sortable: null,
+		class_sortable: null,
 		path_sortable: 'https://cdn.jsdelivr.net/npm/sortablejs@1.6.1/Sortable.min.js',
 		vendorOptions: {
 			animation: 150,

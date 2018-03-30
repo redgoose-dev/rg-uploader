@@ -1,36 +1,48 @@
 (function(root, factory) {
 	if (typeof define === 'function' && define.amd) {
-		define([], factory);
+		define(['jquery'], factory);
 	} else if (typeof exports === 'object') {
-		module.exports = factory();
+		module.exports = factory(require('jquery'));
 	} else {
-		root.RG_SizeInfo = factory();
+		root.RG_SizeInfo = factory(jQuery);
 	}
-}(this, function() {
-	return function RG_SizeInfo() {
+}(this, function($) {
 
+	return function RG_SizeInfo(selector) {
 		this.name = 'Size info';
 		this.size = { current: 0, total: 0 };
 
 		var self = this;
 		var app = null;
 		var $body = null;
-		var wrapSelector = '.size-info';
 		var $current = null;
 		var $total = null;
 
 
 		/**
 		 * create element
-		 *
 		 */
-		var create = function()
+		function create()
 		{
 			var str = '<p>Size : <em data-text="currentSize"></em>/<em data-text="totalSize"></em></p>';
 			$body.append(str);
 			$current = $body.find('[data-text=currentSize]');
 			$total = $body.find('[data-text=totalSize]');
-		};
+		}
+
+		/**
+		 * byte to size convert
+		 *
+		 * @param {Number} bytes
+		 * @return {String}
+		 */
+		function bytesToSize(bytes)
+		{
+			const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+			if (bytes === 0) return '0';
+			const i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
+			return Math.round(bytes / Math.pow(1024, i), 2) + '' + sizes[i];
+		}
 
 
 		/**
@@ -41,7 +53,15 @@
 		this.init = function(parent)
 		{
 			app = parent;
-			$body = parent.$container.find(wrapSelector);
+
+			if (selector)
+			{
+				$body = $(selector);
+			}
+			else
+			{
+				$body = app.$container.find('.size-info');
+			}
 
 			// not found $body element
 			if (!$body.length)
@@ -64,8 +84,8 @@
 		 */
 		this.update = function()
 		{
-			$current.text(app.util.bytesToSize(this.size.current));
-			$total.text(app.util.bytesToSize(this.size.total));
+			$current.text(bytesToSize(this.size.current));
+			$total.text(bytesToSize(this.size.total));
 		};
 
 		/**
@@ -88,6 +108,6 @@
 					break;
 			}
 		}
-
 	}
+
 }));

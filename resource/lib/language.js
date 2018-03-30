@@ -20,7 +20,9 @@ var dic = {
 		error_file_type: '잘못된 형식의 파일입니다.',
 		error_check_file: '허용되지 않는 파일은 제외됩니다.',
 		error_not_upload_file: '업로드할 파일이 없습니다.',
-		error_remove_error: '파일삭제 오류'
+		error_remove_error: '파일을 삭제하는중에 오류가 발생했습니다.',
+		error_import: '데이터 가져오기 실패',
+		error_now_uploading: '지금 업로드중입니다.'
 	},
 	en: {
 		error_add_upload: 'Please add after upload.',
@@ -30,7 +32,9 @@ var dic = {
 		error_file_type: 'Invalid file.',
 		error_check_file: 'Do not allow files are excluded.',
 		error_not_upload_file: 'There are no files to upload.',
-		error_remove_error: 'Deleting file error'
+		error_remove_error: 'Deleting file error.',
+		error_import: 'Data import failed.',
+		error_now_uploading: 'Uploading now.'
 	}
 };
 

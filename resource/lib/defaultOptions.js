@@ -5,7 +5,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = {
 	autoUpload: false,
-	$externalFileForm: null, // TODO: no jquery
+	externalFileForm: null,
 	allowFileTypes: ['jpeg', 'png', 'gif'],
 	limitSize: 10000000,
 	limitSizeTotal: 30000000,

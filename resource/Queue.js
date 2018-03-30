@@ -156,6 +156,10 @@ var Queue = function () {
 							res = [];
 						}
 					}
+					if (!(res && res.length)) {
+						alert(lib.language('error_import'));
+						return;
+					}
 					res.forEach(function (item) {
 						_this3.addComplete(item);
 					});
@@ -320,7 +324,9 @@ var Queue = function () {
 
 	}, {
 		key: 'addComplete',
-		value: function addComplete(file, $beforeElement) {
+		value: function addComplete(file) {
+			var $beforeElement = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+
 			var id = file.id;
 			var $el = (0, _jquery2.default)(lib.template.complete);
 
@@ -473,7 +479,6 @@ var Queue = function () {
 						if (res && res.state && res.state === 'success') {
 							removeElement(id);
 						} else {
-							console.error(res.response);
 							alert(lib.language('error_remove_error'));
 							return false;
 						}
@@ -488,13 +493,18 @@ var Queue = function () {
 
 
 		/**
-   * updare queue
+   * update queue
    *
    * @param {Object} res
    */
 		value: function updateProgress(res) {
 			var $el = this.$queue.children('li[data-id=' + res.id + ']');
 			var $progress = lib.util.findDOM($el, 'element', 'progress');
+
+			// check
+			if (!(res && res.data)) return;
+
+			// get percent
 			var percent = parseInt(res.data.loaded / res.data.total * 100);
 			$progress.width(percent + '%').find('em').text(percent);
 

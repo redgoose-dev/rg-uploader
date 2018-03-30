@@ -8,11 +8,15 @@ import DragAndDrop from './plugins/dnd.plugin';
 import Preview from './plugins/preview.plugin';
 import Thumbnail from './plugins/thumbnail.plugin';
 
+// plugin vendors
+import Sortable from 'sortablejs';
 
-let basic = new RGUploader(document.getElementById('example_basic'), {
+
+window.rgUploader = new RGUploader(document.getElementById('example_basic'), {
 	autoUpload: true,
 	uploadScript: '/upload',
 	removeScript: '/remove',
+	externalFileForm : document.querySelector('#external'),
 	queue: {
 		height: 240,
 		datas: '/data',
@@ -50,6 +54,7 @@ let basic = new RGUploader(document.getElementById('example_basic'), {
 		{
 			name: 'changeQueue',
 			obj: new ChangeQueue({
+				class_sortable: Sortable,
 				endChangeItem: function(app)
 				{
 					console.log('USER::endChangeItem', app.queue.items);
@@ -85,17 +90,11 @@ let basic = new RGUploader(document.getElementById('example_basic'), {
 	},
 	uploadComplete: function(file)
 	{
-		console.log('USER::uploadComplete - ', file);
+		console.log('USER::uploadComplete', file);
 	},
-	// removeParamsFilter: function(res)
-	// {
-	// 	return {
-	// 		name: res.name
-	// 	};
-	// },
 	removeDataFilter: function(res)
 	{
-		console.log('removeDataFilter', res);
+		console.log('USER::removeDataFilter', res);
 		return {
 			state: 'success',
 		}

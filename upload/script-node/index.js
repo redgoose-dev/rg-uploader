@@ -1,6 +1,7 @@
 const fs = require('fs');
 const multer = require('multer');
 const detect = require('detect-file-type');
+const queryString = require('query-string');
 
 const move = require('./move');
 
@@ -10,8 +11,6 @@ const dir_dest = './upload/attachments';
 
 module.exports = function(app)
 {
-	//app.use(express.bodyParser());
-
 	// get data
 	app.get('/data', function(req, res) {
 		try
@@ -52,14 +51,23 @@ module.exports = function(app)
 	// remove file
 	app.post('/remove', function(req, res) {
 		let bodyStr = '';
+		let body = null;
 
-		req.on("data",function(chunk){
+		req.on('data', function(chunk){
 			bodyStr += chunk.toString();
 		});
-		req.on("end",function(){
-			// TODO: 여기까지 작업했음. object로 변환해야함.
-			console.log(bodyStr);
-			res.json({ foo: 'remove' });
+		req.on('end', function(){
+			try
+			{
+				body = queryString.parse(bodyStr);
+				fs.unlinkSync(`${dir_dest}/${body.name}`);
+				res.json({ state: 'success' });
+			}
+			catch(e)
+			{
+				console.error(e);
+				return res.json({ state: 'error' });
+			}
 		});
 	});
 };

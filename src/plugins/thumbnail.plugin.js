@@ -444,6 +444,7 @@
 		width : 640,
 		height : 480,
 		mobileSize : 640,
+		class_croppie: null, // TODO: 객체를 따로 넣을 수 있게 해야함.
 		url_croppieCSS : 'https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.2/croppie.min.css',
 		url_croppieJS : 'https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.2/croppie.min.js',
 		uploadScript : '',
