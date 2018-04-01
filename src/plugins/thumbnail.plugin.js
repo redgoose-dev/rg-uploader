@@ -38,18 +38,30 @@
 		 */
 		function loadExternalFiles()
 		{
-			if (window.loadedCroppie) return false;
+			if (window.loadedCroppie) return;
 
 			var head = document.getElementsByTagName('head')[0];
-			var cssEl = document.createElement('link');
-			var scriptEl = document.createElement('script');
+			var isCroppie = (!!self.options.class_croppie && self.options.class_croppie.name === 'Croppie');
 
-			cssEl.rel = 'stylesheet';
-			cssEl.href = self.options.url_croppieCSS;
-			scriptEl.src = self.options.url_croppieJS;
+			if (isCroppie)
+			{
+				window.Croppie = self.options.class_croppie;
+			}
 
-			head.appendChild(cssEl);
-			head.appendChild(scriptEl);
+			if (!isCroppie && self.options.url_croppieJS)
+			{
+				var scriptEl = document.createElement('script');
+				scriptEl.src = self.options.url_croppieJS;
+				head.appendChild(scriptEl);
+			}
+
+			if (self.options.url_croppieCSS)
+			{
+				var cssEl = document.createElement('link');
+				cssEl.rel = 'stylesheet';
+				cssEl.href = self.options.url_croppieCSS;
+				head.appendChild(cssEl);
+			}
 
 			window.loadedCroppie = true;
 		}

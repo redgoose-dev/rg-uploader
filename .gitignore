@@ -11,5 +11,3 @@ upload/tmp/
 *.user.*
 
 yarn-error.log
-
-__demo/

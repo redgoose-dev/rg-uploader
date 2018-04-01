@@ -10,6 +10,7 @@ import Thumbnail from './plugins/thumbnail.plugin';
 
 // plugin vendors
 import Sortable from 'sortablejs';
+import croppie from 'croppie';
 
 
 window.rgUploader = new RGUploader(document.getElementById('example_basic'), {
@@ -79,7 +80,9 @@ window.rgUploader = new RGUploader(document.getElementById('example_basic'), {
 		},
 		{
 			name: 'thumbnail',
-			obj: new Thumbnail(),
+			obj: new Thumbnail({
+				class_croppie: croppie.Croppie,
+			}),
 		},
 	],
 	uploadParamsFilter: function(res)
