@@ -6,7 +6,7 @@
 	} else if (typeof exports === 'object') {
 		module.exports = factory(require('jquery'));
 	} else {
-		root.RG_SizeInfo = factory(jQuery);
+		root.RG_Thumbnail = factory(jQuery);
 	}
 }(this, function($) {
 
@@ -31,7 +31,6 @@
 			btn_close : null,
 			btn_done : null
 		};
-
 
 		/**
 		 * load external vendor files
@@ -456,7 +455,7 @@
 		width : 640,
 		height : 480,
 		mobileSize : 640,
-		class_croppie: null, // TODO: 객체를 따로 넣을 수 있게 해야함.
+		class_croppie: null,
 		url_croppieCSS : 'https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.2/croppie.min.css',
 		url_croppieJS : 'https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.2/croppie.min.js',
 		uploadScript : '',

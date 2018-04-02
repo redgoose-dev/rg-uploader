@@ -4,7 +4,7 @@
 	} else if (typeof exports === 'object') {
 		module.exports = factory(require('jquery'));
 	} else {
-		root.RG_SizeInfo = factory(jQuery);
+		root.RG_ChangeQueue = factory(jQuery);
 	}
 }(this, function($) {
 

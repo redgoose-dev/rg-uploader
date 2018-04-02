@@ -8,7 +8,7 @@
 	}
 }(this, function($) {
 
-	return function RG_SizeInfo(selector) {
+	function RG_SizeInfo(selector) {
 		this.name = 'Size info';
 		this.size = { current: 0, total: 0 };
 
@@ -109,5 +109,7 @@
 			}
 		}
 	}
+
+	return RG_SizeInfo;
 
 }));

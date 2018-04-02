@@ -4,11 +4,11 @@
 	} else if (typeof exports === 'object') {
 		module.exports = factory(require('jquery'));
 	} else {
-		root.RG_SizeInfo = factory(jQuery);
+		root.RG_DragAndDrop = factory(jQuery);
 	}
 }(this, function($) {
 
-	return function RG_DragAndDrop() {
+	function RG_DragAndDrop() {
 
 		this.name = 'Drag And Drop';
 		this.areaElements = [];
@@ -132,5 +132,7 @@
 			}
 		}
 	}
+
+	return RG_DragAndDrop;
 
 }));

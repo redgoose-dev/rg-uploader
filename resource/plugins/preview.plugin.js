@@ -4,11 +4,11 @@
 	} else if (typeof exports === 'object') {
 		module.exports = factory(require('jquery'));
 	} else {
-		root.RG_SizeInfo = factory(jQuery);
+		root.RG_Preview = factory(jQuery);
 	}
 }(this, function($) {
 
-	return function RG_Preview() {
+	function RG_Preview() {
 
 		this.name = 'Preview';
 		this.$preview = null;
@@ -119,5 +119,7 @@
 			}
 		}
 	}
+
+	return RG_Preview;
 
 }));

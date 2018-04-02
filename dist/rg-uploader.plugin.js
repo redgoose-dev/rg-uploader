@@ -4,7 +4,7 @@
 	} else if (typeof exports === 'object') {
 		module.exports = factory(require('jquery'));
 	} else {
-		root.RG_SizeInfo = factory(jQuery);
+		root.RG_ChangeQueue = factory(jQuery);
 	}
 }(this, function($) {
 
@@ -172,11 +172,11 @@
 	} else if (typeof exports === 'object') {
 		module.exports = factory(require('jquery'));
 	} else {
-		root.RG_SizeInfo = factory(jQuery);
+		root.RG_ChangeQueueStyle = factory(jQuery);
 	}
 }(this, function($) {
 
-	return function RG_ChangeQueueStyle(selector) {
+	function RG_ChangeQueueStyle(selector) {
 
 		var self = this;
 		var app = null;
@@ -266,6 +266,8 @@
 		}
 	}
 
+	return RG_ChangeQueueStyle;
+
 }));
 (function(root, factory) {
 	if (typeof define === 'function' && define.amd) {
@@ -273,11 +275,11 @@
 	} else if (typeof exports === 'object') {
 		module.exports = factory(require('jquery'));
 	} else {
-		root.RG_SizeInfo = factory(jQuery);
+		root.RG_DragAndDrop = factory(jQuery);
 	}
 }(this, function($) {
 
-	return function RG_DragAndDrop() {
+	function RG_DragAndDrop() {
 
 		this.name = 'Drag And Drop';
 		this.areaElements = [];
@@ -402,6 +404,8 @@
 		}
 	}
 
+	return RG_DragAndDrop;
+
 }));
 (function(root, factory) {
 	if (typeof define === 'function' && define.amd) {
@@ -413,7 +417,122 @@
 	}
 }(this, function($) {
 
-	return function RG_Preview() {
+	function RG_SizeInfo(selector) {
+		this.name = 'Size info';
+		this.size = { current: 0, total: 0 };
+
+		var self = this;
+		var app = null;
+		var $body = null;
+		var $current = null;
+		var $total = null;
+
+
+		/**
+		 * create element
+		 */
+		function create()
+		{
+			var str = '<p>Size : <em data-text="currentSize"></em>/<em data-text="totalSize"></em></p>';
+			$body.append(str);
+			$current = $body.find('[data-text=currentSize]');
+			$total = $body.find('[data-text=totalSize]');
+		}
+
+		/**
+		 * byte to size convert
+		 *
+		 * @param {Number} bytes
+		 * @return {String}
+		 */
+		function bytesToSize(bytes)
+		{
+			const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+			if (bytes === 0) return '0';
+			const i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
+			return Math.round(bytes / Math.pow(1024, i), 2) + '' + sizes[i];
+		}
+
+
+		/**
+		 * init
+		 *
+		 * @Param {Object} parent
+		 */
+		this.init = function(parent)
+		{
+			app = parent;
+
+			if (selector)
+			{
+				$body = $(selector);
+			}
+			else
+			{
+				$body = app.$container.find('.size-info');
+			}
+
+			// not found $body element
+			if (!$body.length)
+			{
+				app.plugin.error(name);
+			}
+
+			// create elements
+			create();
+
+			// set size
+			this.size.total = app.options.limitSizeTotal;
+
+			// update size
+			this.update();
+		};
+
+		/**
+		 * update
+		 */
+		this.update = function()
+		{
+			$current.text(bytesToSize(this.size.current));
+			$total.text(bytesToSize(this.size.total));
+		};
+
+		/**
+		 * event listener
+		 *
+		 * @Param {String} type
+		 * @Param {*} value
+		 */
+		this.eventListener = function(type, value)
+		{
+			switch(type) {
+				case 'queue.uploadComplete':
+					self.size.current += value.file.size;
+					self.update(app.queue.getSize());
+					break;
+
+				case 'queue.removeQueue':
+					self.size.current = app.queue.getSize();
+					self.update();
+					break;
+			}
+		}
+	}
+
+	return RG_SizeInfo;
+
+}));
+(function(root, factory) {
+	if (typeof define === 'function' && define.amd) {
+		define(['jquery'], factory);
+	} else if (typeof exports === 'object') {
+		module.exports = factory(require('jquery'));
+	} else {
+		root.RG_Preview = factory(jQuery);
+	}
+}(this, function($) {
+
+	function RG_Preview() {
 
 		this.name = 'Preview';
 		this.$preview = null;
@@ -525,118 +644,7 @@
 		}
 	}
 
-}));
-(function(root, factory) {
-	if (typeof define === 'function' && define.amd) {
-		define(['jquery'], factory);
-	} else if (typeof exports === 'object') {
-		module.exports = factory(require('jquery'));
-	} else {
-		root.RG_SizeInfo = factory(jQuery);
-	}
-}(this, function($) {
-
-	return function RG_SizeInfo(selector) {
-		this.name = 'Size info';
-		this.size = { current: 0, total: 0 };
-
-		var self = this;
-		var app = null;
-		var $body = null;
-		var $current = null;
-		var $total = null;
-
-
-		/**
-		 * create element
-		 */
-		function create()
-		{
-			var str = '<p>Size : <em data-text="currentSize"></em>/<em data-text="totalSize"></em></p>';
-			$body.append(str);
-			$current = $body.find('[data-text=currentSize]');
-			$total = $body.find('[data-text=totalSize]');
-		}
-
-		/**
-		 * byte to size convert
-		 *
-		 * @param {Number} bytes
-		 * @return {String}
-		 */
-		function bytesToSize(bytes)
-		{
-			const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
-			if (bytes === 0) return '0';
-			const i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
-			return Math.round(bytes / Math.pow(1024, i), 2) + '' + sizes[i];
-		}
-
-
-		/**
-		 * init
-		 *
-		 * @Param {Object} parent
-		 */
-		this.init = function(parent)
-		{
-			app = parent;
-
-			if (selector)
-			{
-				$body = $(selector);
-			}
-			else
-			{
-				$body = app.$container.find('.size-info');
-			}
-
-			// not found $body element
-			if (!$body.length)
-			{
-				app.plugin.error(name);
-			}
-
-			// create elements
-			create();
-
-			// set size
-			this.size.total = app.options.limitSizeTotal;
-
-			// update size
-			this.update();
-		};
-
-		/**
-		 * update
-		 */
-		this.update = function()
-		{
-			$current.text(bytesToSize(this.size.current));
-			$total.text(bytesToSize(this.size.total));
-		};
-
-		/**
-		 * event listener
-		 *
-		 * @Param {String} type
-		 * @Param {*} value
-		 */
-		this.eventListener = function(type, value)
-		{
-			switch(type) {
-				case 'queue.uploadComplete':
-					self.size.current += value.file.size;
-					self.update(app.queue.getSize());
-					break;
-
-				case 'queue.removeQueue':
-					self.size.current = app.queue.getSize();
-					self.update();
-					break;
-			}
-		}
-	}
+	return RG_Preview;
 
 }));
 // croppie : http://foliotek.github.io/Croppie/
@@ -647,7 +655,7 @@
 	} else if (typeof exports === 'object') {
 		module.exports = factory(require('jquery'));
 	} else {
-		root.RG_SizeInfo = factory(jQuery);
+		root.RG_Thumbnail = factory(jQuery);
 	}
 }(this, function($) {
 
@@ -672,7 +680,6 @@
 			btn_close : null,
 			btn_done : null
 		};
-
 
 		/**
 		 * load external vendor files
@@ -1097,7 +1104,7 @@
 		width : 640,
 		height : 480,
 		mobileSize : 640,
-		class_croppie: null, // TODO: 객체를 따로 넣을 수 있게 해야함.
+		class_croppie: null,
 		url_croppieCSS : 'https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.2/croppie.min.css',
 		url_croppieJS : 'https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.2/croppie.min.js',
 		uploadScript : '',
