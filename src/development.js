@@ -64,11 +64,11 @@ window.rgUploader = new RGUploader(document.getElementById('example_basic'), {
 		},
 		{
 			name: 'changeQueueStyle',
-			obj: new ChangeQueueStyle(),
+			obj: new ChangeQueueStyle(document.querySelector('.rg-uploader > header')),
 		},
 		{
 			name: 'dragAndDrop',
-			obj: new DragAndDrop(),
+			obj: new DragAndDrop(document.querySelector('.external-dropzone')),
 		},
 		{
 			name: 'preview',
@@ -76,7 +76,7 @@ window.rgUploader = new RGUploader(document.getElementById('example_basic'), {
 		},
 		{
 			name: 'sizeinfo',
-			obj: new SizeInfo('.size-info'),
+			obj: new SizeInfo(document.querySelector('.size-info')),
 		},
 		{
 			name: 'thumbnail',

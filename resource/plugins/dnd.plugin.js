@@ -8,14 +8,13 @@
 	}
 }(this, function($) {
 
-	function RG_DragAndDrop() {
+	function RG_DragAndDrop(el) {
 
 		this.name = 'Drag And Drop';
 		this.areaElements = [];
 
 		var self = this;
 		var app = null;
-		var externalAreaElements = $('.rg-external-dropzone'); // TODO: 사용자 선택 가능해야함
 
 
 		/**
@@ -115,11 +114,17 @@
 		{
 			app = parent;
 
+			// set external area
+			var externalAreaElements = !!el ? $(el) : null;
+
 			// push area elements
 			this.areaElements.push(app.queue.$queue.parent().get(0));
-			externalAreaElements.each(function(){
-				self.areaElements.push(this);
-			});
+			if (externalAreaElements)
+			{
+				externalAreaElements.each(function(){
+					self.areaElements.push(this);
+				});
+			}
 
 			// init event
 			if (this.areaElements.length)

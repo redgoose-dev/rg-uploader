@@ -279,14 +279,13 @@
 	}
 }(this, function($) {
 
-	function RG_DragAndDrop() {
+	function RG_DragAndDrop(el) {
 
 		this.name = 'Drag And Drop';
 		this.areaElements = [];
 
 		var self = this;
 		var app = null;
-		var externalAreaElements = $('.rg-external-dropzone'); // TODO: 사용자 선택 가능해야함
 
 
 		/**
@@ -386,11 +385,17 @@
 		{
 			app = parent;
 
+			// set external area
+			var externalAreaElements = !!el ? $(el) : null;
+
 			// push area elements
 			this.areaElements.push(app.queue.$queue.parent().get(0));
-			externalAreaElements.each(function(){
-				self.areaElements.push(this);
-			});
+			if (externalAreaElements)
+			{
+				externalAreaElements.each(function(){
+					self.areaElements.push(this);
+				});
+			}
 
 			// init event
 			if (this.areaElements.length)
@@ -405,121 +410,6 @@
 	}
 
 	return RG_DragAndDrop;
-
-}));
-(function(root, factory) {
-	if (typeof define === 'function' && define.amd) {
-		define(['jquery'], factory);
-	} else if (typeof exports === 'object') {
-		module.exports = factory(require('jquery'));
-	} else {
-		root.RG_SizeInfo = factory(jQuery);
-	}
-}(this, function($) {
-
-	function RG_SizeInfo(selector) {
-		this.name = 'Size info';
-		this.size = { current: 0, total: 0 };
-
-		var self = this;
-		var app = null;
-		var $body = null;
-		var $current = null;
-		var $total = null;
-
-
-		/**
-		 * create element
-		 */
-		function create()
-		{
-			var str = '<p>Size : <em data-text="currentSize"></em>/<em data-text="totalSize"></em></p>';
-			$body.append(str);
-			$current = $body.find('[data-text=currentSize]');
-			$total = $body.find('[data-text=totalSize]');
-		}
-
-		/**
-		 * byte to size convert
-		 *
-		 * @param {Number} bytes
-		 * @return {String}
-		 */
-		function bytesToSize(bytes)
-		{
-			const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
-			if (bytes === 0) return '0';
-			const i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
-			return Math.round(bytes / Math.pow(1024, i), 2) + '' + sizes[i];
-		}
-
-
-		/**
-		 * init
-		 *
-		 * @Param {Object} parent
-		 */
-		this.init = function(parent)
-		{
-			app = parent;
-
-			if (selector)
-			{
-				$body = $(selector);
-			}
-			else
-			{
-				$body = app.$container.find('.size-info');
-			}
-
-			// not found $body element
-			if (!$body.length)
-			{
-				app.plugin.error(name);
-			}
-
-			// create elements
-			create();
-
-			// set size
-			this.size.total = app.options.limitSizeTotal;
-
-			// update size
-			this.update();
-		};
-
-		/**
-		 * update
-		 */
-		this.update = function()
-		{
-			$current.text(bytesToSize(this.size.current));
-			$total.text(bytesToSize(this.size.total));
-		};
-
-		/**
-		 * event listener
-		 *
-		 * @Param {String} type
-		 * @Param {*} value
-		 */
-		this.eventListener = function(type, value)
-		{
-			switch(type) {
-				case 'queue.uploadComplete':
-					self.size.current += value.file.size;
-					self.update(app.queue.getSize());
-					break;
-
-				case 'queue.removeQueue':
-					self.size.current = app.queue.getSize();
-					self.update();
-					break;
-			}
-		}
-	}
-
-	return RG_SizeInfo;
 
 }));
 (function(root, factory) {
@@ -645,6 +535,121 @@
 	}
 
 	return RG_Preview;
+
+}));
+(function(root, factory) {
+	if (typeof define === 'function' && define.amd) {
+		define(['jquery'], factory);
+	} else if (typeof exports === 'object') {
+		module.exports = factory(require('jquery'));
+	} else {
+		root.RG_SizeInfo = factory(jQuery);
+	}
+}(this, function($) {
+
+	function RG_SizeInfo(selector) {
+		this.name = 'Size info';
+		this.size = { current: 0, total: 0 };
+
+		var self = this;
+		var app = null;
+		var $body = null;
+		var $current = null;
+		var $total = null;
+
+
+		/**
+		 * create element
+		 */
+		function create()
+		{
+			var str = '<p>Size : <em data-text="currentSize"></em>/<em data-text="totalSize"></em></p>';
+			$body.append(str);
+			$current = $body.find('[data-text=currentSize]');
+			$total = $body.find('[data-text=totalSize]');
+		}
+
+		/**
+		 * byte to size convert
+		 *
+		 * @param {Number} bytes
+		 * @return {String}
+		 */
+		function bytesToSize(bytes)
+		{
+			const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+			if (bytes === 0) return '0';
+			const i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
+			return Math.round(bytes / Math.pow(1024, i), 2) + '' + sizes[i];
+		}
+
+
+		/**
+		 * init
+		 *
+		 * @Param {Object} parent
+		 */
+		this.init = function(parent)
+		{
+			app = parent;
+
+			if (selector)
+			{
+				$body = $(selector);
+			}
+			else
+			{
+				$body = app.$container.find('.size-info');
+			}
+
+			// not found $body element
+			if (!$body.length)
+			{
+				app.plugin.error(name);
+			}
+
+			// create elements
+			create();
+
+			// set size
+			this.size.total = app.options.limitSizeTotal;
+
+			// update size
+			this.update();
+		};
+
+		/**
+		 * update
+		 */
+		this.update = function()
+		{
+			$current.text(bytesToSize(this.size.current));
+			$total.text(bytesToSize(this.size.total));
+		};
+
+		/**
+		 * event listener
+		 *
+		 * @Param {String} type
+		 * @Param {*} value
+		 */
+		this.eventListener = function(type, value)
+		{
+			switch(type) {
+				case 'queue.uploadComplete':
+					self.size.current += value.file.size;
+					self.update(app.queue.getSize());
+					break;
+
+				case 'queue.removeQueue':
+					self.size.current = app.queue.getSize();
+					self.update();
+					break;
+			}
+		}
+	}
+
+	return RG_SizeInfo;
 
 }));
 // croppie : http://foliotek.github.io/Croppie/
