@@ -1,5 +1,5 @@
 {
-  "name": "rg-Uploader",
+  "name": "rg-uploader",
   "version": "1.2.0",
   "main": "./lib/index.js",
   "scripts": {
