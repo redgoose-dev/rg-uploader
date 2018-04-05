@@ -2,6 +2,7 @@ vendor/
 upload/
 .idea/
 
+.babelrc
 yarn.lock
 yarn-error.log
 webpack.dev.config.js
