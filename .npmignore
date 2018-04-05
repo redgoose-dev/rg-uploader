@@ -1,3 +1,9 @@
 vendor/
 upload/
+.idea/
+
 yarn.lock
+yarn-error.log
+webpack.dev.config.js
+webpack.pro.config.js
+gulpfile.js
