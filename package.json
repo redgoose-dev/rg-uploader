@@ -6,6 +6,7 @@
     "dev": "webpack-dev-server --mode development --config webpack.dev.config.js",
     "prebuild": "rm -rf dist && rm -rf resource && babel ./src/RG_Uploader --out-dir ./resource && cp -r src/plugins resource",
     "build": "webpack --mode production --config webpack.pro.config.js",
+    "postbuild": "uglifyjs dist/rg-uploader.plugin.js -o dist/rg-uploader.plugin.min.js",
     "version-patch": "npm version patch"
   },
   "description": "File upload component",

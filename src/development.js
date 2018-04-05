@@ -1,13 +1,7 @@
 import RGUploader from './RG_Uploader';
 import './scss/index.scss';
-
-import SizeInfo from './plugins/sizeinfo.plugin';
-import ChangeQueueStyle from './plugins/changeQueueStyle.plugin';
-import ChangeQueue from './plugins/changeQueue.plugin';
-import DragAndDrop from './plugins/dnd.plugin';
-import Preview from './plugins/preview.plugin';
-import Thumbnail from './plugins/thumbnail.plugin';
-
+// load plugins
+import * as plugins from './plugins';
 // plugin vendors
 import Sortable from 'sortablejs';
 import croppie from 'croppie';
@@ -54,7 +48,7 @@ window.rgUploader = new RGUploader(document.getElementById('example_basic'), {
 	plugin: [
 		{
 			name: 'changeQueue',
-			obj: new ChangeQueue({
+			obj: new plugins.ChangeQueue({
 				class_sortable: Sortable,
 				endChangeItem: function(app)
 				{
@@ -64,23 +58,23 @@ window.rgUploader = new RGUploader(document.getElementById('example_basic'), {
 		},
 		{
 			name: 'changeQueueStyle',
-			obj: new ChangeQueueStyle(document.querySelector('.rg-uploader > header')),
+			obj: new plugins.ChangeQueueStyle(document.querySelector('.rg-uploader > header')),
 		},
 		{
 			name: 'dragAndDrop',
-			obj: new DragAndDrop(document.querySelector('.external-dropzone')),
+			obj: new plugins.DragAndDrop(document.querySelector('.external-dropzone')),
 		},
 		{
 			name: 'preview',
-			obj: new Preview(),
+			obj: new plugins.Preview(),
 		},
 		{
 			name: 'sizeinfo',
-			obj: new SizeInfo(document.querySelector('.size-info')),
+			obj: new plugins.SizeInfo(document.querySelector('.size-info')),
 		},
 		{
 			name: 'thumbnail',
-			obj: new Thumbnail({
+			obj: new plugins.Thumbnail({
 				class_croppie: croppie.Croppie,
 			}),
 		},

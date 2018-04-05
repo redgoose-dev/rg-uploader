@@ -85,7 +85,7 @@ module.exports = {
 			sourceMap: false,
 			outputPath: '',
 			fileName: '[name].plugin.js',
-			filesToConcat: ['./src/plugins/**'],
+			filesToConcat: ['./src/plugins/*.plugin.*'],
 			attributes: { async: true },
 		}),
 	]
