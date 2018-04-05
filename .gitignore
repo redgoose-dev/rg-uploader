@@ -5,6 +5,9 @@ node_modules/
 README.html
 .idea/
 
-demo/upload/
+upload/attachments/
+upload/tmp/
 
 *.user.*
+
+yarn-error.log
