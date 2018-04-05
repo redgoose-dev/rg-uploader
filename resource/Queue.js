@@ -127,8 +127,8 @@ var Queue = function () {
 	}, {
 		key: 'changeStyle',
 		value: function changeStyle(styleName) {
+			this.$queue.removeClass('style-' + this.style).addClass('style-' + styleName);
 			this.style = styleName;
-			this.$queue.removeClass().addClass('style-' + styleName);
 
 			// send event to plugin
 			this.parent.eventReceiver('queue.changeStyle', { style: styleName });
