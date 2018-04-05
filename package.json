@@ -1,7 +1,7 @@
 {
   "name": "rg-uploader",
   "version": "1.2.0",
-  "main": "./lib/index.js",
+  "main": "./resource/index.js",
   "scripts": {
     "dev": "webpack-dev-server --mode development --config webpack.dev.config.js",
     "prebuild": "rm -rf dist && rm -rf resource && babel ./src/RG_Uploader --out-dir ./resource && cp -r src/plugins resource",
@@ -35,12 +35,12 @@
     "extract-text-webpack-plugin": "^4.0.0-beta.0",
     "file-loader": "^1.1.11",
     "html-loader": "^0.5.5",
-    "html-webpack-plugin": "^3.0.7",
-    "node-sass": "^4.7.2",
+    "html-webpack-plugin": "^3.2.0",
+    "node-sass": "^4.8.3",
     "sass-loader": "^6.0.7",
     "style-loader": "^0.20.3",
-    "webpack": "^4.2.0",
-    "webpack-cli": "^2.0.12",
+    "webpack": "^4.5.0",
+    "webpack-cli": "^2.0.14",
     "webpack-concat-plugin": "^3.0.0-beta.0",
     "webpack-dev-server": "^3.1.1"
   },
