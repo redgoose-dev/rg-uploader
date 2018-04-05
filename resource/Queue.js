@@ -156,13 +156,15 @@ var Queue = function () {
 							res = [];
 						}
 					}
-					if (!(res && res.length)) {
+					if (!(res && res instanceof Array)) {
 						alert(lib.language('error_import'));
 						return;
 					}
-					res.forEach(function (item) {
-						_this3.addComplete(item);
-					});
+					if (res.length) {
+						res.forEach(function (item) {
+							_this3.addComplete(item);
+						});
+					}
 				});
 			} else if (src instanceof Array) {
 				src.forEach(function (item) {

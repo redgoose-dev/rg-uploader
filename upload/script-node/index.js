@@ -15,14 +15,27 @@ module.exports = function(app)
 	app.get('/data', function(req, res) {
 		try
 		{
+			// make dir
+			if (!fs.existsSync(`${dir_dest}/`))
+			{
+				fs.mkdirSync(dir_dest);
+			}
+
 			let files = fs.readdirSync(`${dir_dest}/`);
 
-			getFileList(files).then((result) => {
-				return res.json(result);
-			}).catch((e) => {
-				console.error(e);
+			if (files.length)
+			{
+				getFileList(files).then((result) => {
+					return res.json(result);
+				}).catch((e) => {
+					console.error(e);
+					return res.json([]);
+				});
+			}
+			else
+			{
 				return res.json([]);
-			});
+			}
 		}
 		catch(e)
 		{
@@ -33,10 +46,16 @@ module.exports = function(app)
 
 	// upload file
 	app.post('/upload', multer({ dest: dir_tmp }).single('file'), function(req, res) {
+		// make dir
+		if (!fs.existsSync(`${dir_dest}/`))
+		{
+			fs.mkdirSync(dir_dest);
+		}
+
 		move(req.file.path, `${dir_dest}/${req.file.originalname}`, function(err) {
 			if (err)
 			{
-				return res.json({ state: 'error', message: err });
+				return res.json({ state: 'error', message: 'Upload failed', error: err });
 			}
 			return res.json({
 				state: 'success',

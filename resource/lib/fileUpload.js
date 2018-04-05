@@ -40,7 +40,7 @@ exports.default = function (action, file, params, filter) {
 						defer.resolve(src.response, file);
 						break;
 					case 'error':
-						defer.reject(src.response.message, file);
+						defer.reject(src.message, file);
 						break;
 				}
 			});

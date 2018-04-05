@@ -45,7 +45,7 @@
 				var head = document.getElementsByTagName('head')[0];
 				var scriptElement = document.createElement('script');
 
-				scriptElement.src = self.options.path_sortable;
+				scriptElement.src = self.options.url_sortable;
 
 				head.appendChild(scriptElement);
 
@@ -70,7 +70,7 @@
 		/**
 		 * end change item event
 		 */
-		function _change()
+		function change()
 		{
 			var newIds = [];
 			var newFiles = [];
@@ -99,7 +99,7 @@
 		 */
 		function initEvent()
 		{
-			self.options.vendorOptions.onEnd = _change;
+			self.options.vendorOptions.onEnd = change;
 
 			self.sortable = new Sortable(app.queue.$queue.get(0), self.options.vendorOptions);
 		}
@@ -138,7 +138,7 @@
 		{
 			switch(type) {
 				case 'queue.uploadCompleteAll':
-					_change();
+					change();
 					break;
 			}
 		};
@@ -156,7 +156,7 @@
 
 	RG_ChangeQueue.prototype.options = {
 		class_sortable: null,
-		path_sortable: 'https://cdn.jsdelivr.net/npm/sortablejs@1.6.1/Sortable.min.js',
+		url_sortable: 'https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js',
 		vendorOptions: {
 			animation: 150,
 		},

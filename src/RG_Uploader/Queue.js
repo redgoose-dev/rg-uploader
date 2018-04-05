@@ -129,14 +129,17 @@ export default class Queue {
 						res = [];
 					}
 				}
-				if (!(res && res.length))
+				if (!(res && res instanceof Array))
 				{
 					alert(lib.language('error_import'));
 					return;
 				}
-				res.forEach((item) => {
-					this.addComplete(item);
-				});
+				if (res.length)
+				{
+					res.forEach((item) => {
+						this.addComplete(item);
+					});
+				}
 			});
 		}
 		else if (src instanceof Array)
