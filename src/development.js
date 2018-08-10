@@ -1,4 +1,5 @@
 import RGUploader from './RG_Uploader';
+import './scss/icons.scss';
 import './scss/index.scss';
 // load plugins
 import * as plugins from './plugins';

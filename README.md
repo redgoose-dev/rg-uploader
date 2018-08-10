@@ -51,7 +51,8 @@ yarn add rg-uploader
 
 ```
 import rgUploader from 'rg-uploader';
-import 'rg-uploader/dist/rg-uploader.css';
+import 'rg-uploader/src/scss/icons.scss';
+import 'rg-uploader/src/scss/index.scss';
 
 const rgUploader = new RG_Uploader(document.getElementById('id'), {});
 ```
@@ -63,7 +64,7 @@ const rgUploader = new RG_Uploader(document.getElementById('id'), {});
 업로더가 많은 상황을 고려하고 만들어서 소스의 덩치가 자연스럽게 커지게 되었습니다.  
 사용법이나 활용에 위키 다음 링크의 위키 문서를 참조해주세요.
 
-https://github.com/redgoose-dev/rg-Uploader/wiki
+https://github.com/redgoose-dev/rg-uploader/wiki
 
 
 

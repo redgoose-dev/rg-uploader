@@ -1,6 +1,7 @@
 vendor/
 upload/
 .idea/
+dist/
 
 .babelrc
 yarn.lock
