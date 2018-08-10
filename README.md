@@ -9,7 +9,7 @@
 
 다음 링크를 통하여 어떠한 기능을 가지고 있는지 확인할 수 있습니다.
 
-https://redgoosedev.github.io/rg-uploader/
+https://redgoose-dev.github.io/rg-uploader/
 
 
 
@@ -63,7 +63,7 @@ const rgUploader = new RG_Uploader(document.getElementById('id'), {});
 업로더가 많은 상황을 고려하고 만들어서 소스의 덩치가 자연스럽게 커지게 되었습니다.  
 사용법이나 활용에 위키 다음 링크의 위키 문서를 참조해주세요.
 
-https://github.com/RedgooseDev/rg-Uploader/wiki
+https://github.com/redgoose-dev/rg-Uploader/wiki
 
 
 
