@@ -403,6 +403,8 @@ export default class Queue {
 	removeQueue(id, isLoadingQueue, useScript=false)
 	{
 		const self = this;
+		const { options } = this.parent;
+
 		function removeElement(id)
 		{
 			self.selectQueueElement(id).fadeOut(400, function() {
@@ -429,34 +431,40 @@ export default class Queue {
 				return false;
 			}
 
-			if (useScript && this.parent.options.removeScript && !file.isLocalFile)
+			if (useScript && options.removeScript && !file.isLocalFile)
 			{
 				// remove parameters filter
-				file = lib.util.getFunctionReturn(this.parent.options.removeParamsFilter, file);
+				file = lib.util.getFunctionReturn(options.removeParamsFilter, file);
 
 				// play remove file script
-				$.post(this.parent.options.removeScript, file, (res, state) => {
-					if (typeof res === 'string')
-					{
-						try {
-							res = JSON.parse(res);
-						} catch(e) {
-							res = { state : 'error', response : res };
+				$.ajax({
+					url: options.removeScript,
+					type: 'post',
+					data: file,
+					headers: options.removeHeaders ? options.removeHeaders : ((options.uploadHeaders) ? options.uploadHeaders : null),
+					success: function(res, state) {
+						if (typeof res === 'string')
+						{
+							try {
+								res = JSON.parse(res);
+							} catch(e) {
+								res = { state : 'error', response : res };
+							}
 						}
-					}
 
-					// filtering response
-					res = lib.util.getFunctionReturn(this.parent.options.removeDataFilter, res);
+						// filtering response
+						res = lib.util.getFunctionReturn(options.removeDataFilter, res);
 
-					// act
-					if (res && res.state && res.state === 'success')
-					{
-						removeElement(id);
-					}
-					else
-					{
-						alert(lib.language('error_remove_error'));
-						return false;
+						// act
+						if (res && res.state && res.state === 'success')
+						{
+							removeElement(id);
+						}
+						else
+						{
+							alert(lib.language('error_remove_error'));
+							return false;
+						}
 					}
 				});
 			}

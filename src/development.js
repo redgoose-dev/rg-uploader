@@ -12,6 +12,8 @@ window.rgUploader = new RGUploader(document.getElementById('example_basic'), {
 	autoUpload: true,
 	uploadScript: '/upload',
 	removeScript: '/remove',
+	uploadHeaders: { 'UPLOAD_AUTH': '1' },
+	removeHeaders: { 'REMOVE_AUTH': '1' },
 	externalFileForm : document.querySelector('#external'),
 	queue: {
 		height: 240,

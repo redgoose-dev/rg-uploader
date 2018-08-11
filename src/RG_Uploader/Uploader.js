@@ -220,10 +220,12 @@ export default class Uploader {
 		// act upload
 		let script = this.parent.options.uploadScript || null;
 		let userParams = (this.parent.options.uploadParamsFilter && typeof this.parent.options.uploadParamsFilter === 'function') && this.parent.options.uploadParamsFilter(this.readyItems[0]);
+
 		let upload = lib.fileUpload(
 			script,
 			this.readyItems[0],
 			userParams,
+			this.parent.options.uploadHeaders,
 			this.parent.options.uploadDataFilter
 		);
 
