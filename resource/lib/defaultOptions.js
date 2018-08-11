@@ -11,6 +11,8 @@ exports.default = {
 	limitSizeTotal: 30000000,
 	uploadScript: null,
 	removeScript: null,
+	uploadHeaders: null,
+	removeHeaders: null,
 	eventPrefixName: 'RG-',
 	srcPrefixName: '',
 	queue: {

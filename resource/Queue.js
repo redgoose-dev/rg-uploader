@@ -434,11 +434,12 @@ var Queue = function () {
 	}, {
 		key: 'removeQueue',
 		value: function removeQueue(id, isLoadingQueue) {
-			var _this7 = this;
-
 			var useScript = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
 
 			var self = this;
+			var options = this.parent.options;
+
+
 			function removeElement(id) {
 				self.selectQueueElement(id).fadeOut(400, function () {
 					(0, _jquery2.default)(this).remove();
@@ -460,29 +461,35 @@ var Queue = function () {
 					return false;
 				}
 
-				if (useScript && this.parent.options.removeScript && !file.isLocalFile) {
+				if (useScript && options.removeScript && !file.isLocalFile) {
 					// remove parameters filter
-					file = lib.util.getFunctionReturn(this.parent.options.removeParamsFilter, file);
+					file = lib.util.getFunctionReturn(options.removeParamsFilter, file);
 
 					// play remove file script
-					_jquery2.default.post(this.parent.options.removeScript, file, function (res, state) {
-						if (typeof res === 'string') {
-							try {
-								res = JSON.parse(res);
-							} catch (e) {
-								res = { state: 'error', response: res };
+					_jquery2.default.ajax({
+						url: options.removeScript,
+						type: 'post',
+						data: file,
+						headers: options.removeHeaders ? options.removeHeaders : options.uploadHeaders ? options.uploadHeaders : null,
+						success: function success(res, state) {
+							if (typeof res === 'string') {
+								try {
+									res = JSON.parse(res);
+								} catch (e) {
+									res = { state: 'error', response: res };
+								}
 							}
-						}
 
-						// filtering response
-						res = lib.util.getFunctionReturn(_this7.parent.options.removeDataFilter, res);
+							// filtering response
+							res = lib.util.getFunctionReturn(options.removeDataFilter, res);
 
-						// act
-						if (res && res.state && res.state === 'success') {
-							removeElement(id);
-						} else {
-							alert(lib.language('error_remove_error'));
-							return false;
+							// act
+							if (res && res.state && res.state === 'success') {
+								removeElement(id);
+							} else {
+								alert(lib.language('error_remove_error'));
+								return false;
+							}
 						}
 					});
 				} else {

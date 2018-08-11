@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
-exports.default = function (action, file, params, filter) {
+exports.default = function (action, file, params, headers, filter) {
 	var defer = _jquery2.default.Deferred();
 
 	if (action) {
@@ -24,6 +24,12 @@ exports.default = function (action, file, params, filter) {
 			}
 			// open xhr
 			xhr.open('post', action, true);
+			// set header
+			if (headers && (typeof headers === 'undefined' ? 'undefined' : _typeof(headers)) === 'object') {
+				Object.keys(headers).forEach(function (o) {
+					xhr.setRequestHeader(o, headers[o]);
+				});
+			}
 			// progress event
 			xhr.upload.addEventListener('progress', function (e) {
 				defer.notify(uploadProgress(e), file);
@@ -156,6 +162,7 @@ function uploadSuccess(e, file) {
  * @param {String} action 파일처리 백엔드 url
  * @param {File} file
  * @param {Object} params
+ * @param {Object} headers
  * @param {Function} filter
  * @return {Object}
  */

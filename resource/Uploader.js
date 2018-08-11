@@ -214,7 +214,8 @@ var Uploader = function () {
 			// act upload
 			var script = this.parent.options.uploadScript || null;
 			var userParams = this.parent.options.uploadParamsFilter && typeof this.parent.options.uploadParamsFilter === 'function' && this.parent.options.uploadParamsFilter(this.readyItems[0]);
-			var upload = lib.fileUpload(script, this.readyItems[0], userParams, this.parent.options.uploadDataFilter);
+
+			var upload = lib.fileUpload(script, this.readyItems[0], userParams, this.parent.options.uploadHeaders, this.parent.options.uploadDataFilter);
 
 			// callback upload event
 			upload.done(function (res, file) {
