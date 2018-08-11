@@ -1,6 +1,6 @@
 {
   "name": "rg-uploader",
-  "version": "1.2.10",
+  "version": "1.2.11",
   "main": "./resource/index.js",
   "scripts": {
     "dev": "webpack-dev-server --mode development --config webpack.dev.config.js",
