@@ -51,8 +51,8 @@ yarn add rg-uploader
 
 ```
 import rgUploader from 'rg-uploader';
-import 'rg-uploader/src/scss/icons.scss';
-import 'rg-uploader/src/scss/index.scss';
+import 'rg-uploader/resource/icons/material-icons.css';
+import 'rg-uploader/resource/style.css';
 
 const rgUploader = new RG_Uploader(document.getElementById('id'), {});
 ```
