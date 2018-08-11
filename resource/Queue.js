@@ -467,7 +467,7 @@ var Queue = function () {
 
 					// play remove file script
 					_jquery2.default.ajax({
-						url: options.removeScript,
+						url: lib.util.getFunctionReturn(options.removeScriptFunc, options.removeScript, file),
 						type: 'post',
 						data: file,
 						headers: options.removeHeaders ? options.removeHeaders : options.uploadHeaders ? options.uploadHeaders : null,

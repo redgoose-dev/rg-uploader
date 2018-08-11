@@ -111,10 +111,11 @@ export function inputFileReset(input)
  *
  * @param {Function} func
  * @param {Object} src
+ * @param params
  * @return {Object}
  */
-export function getFunctionReturn(func, src)
+export function getFunctionReturn(func, src, params)
 {
 	if (!func || !(typeof func === 'function')) return src;
-	return func(src) || src;
+	return func(src, params) || src;
 }

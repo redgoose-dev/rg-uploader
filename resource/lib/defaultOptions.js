@@ -31,6 +31,10 @@ exports.default = {
 	},
 	plugin: [],
 
+	// upload script url callback
+	uploadScriptFunc: null,
+	// remove script url callback
+	removeScriptFunc: null,
 	// upload parameters filter `function(res) {}`
 	uploadParamsFilter: null,
 	// upload data filtering `function(res) {}`

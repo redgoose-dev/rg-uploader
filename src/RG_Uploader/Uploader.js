@@ -207,6 +207,8 @@ export default class Uploader {
 	 */
 	play()
 	{
+		const { options } = this.parent;
+
 		if (!this.readyItems.length) return;
 
 		this.uploading = true;
@@ -218,15 +220,14 @@ export default class Uploader {
 		lib.util.findDOM($el, 'element', 'removeQueue').remove();
 
 		// act upload
-		let script = this.parent.options.uploadScript || null;
-		let userParams = (this.parent.options.uploadParamsFilter && typeof this.parent.options.uploadParamsFilter === 'function') && this.parent.options.uploadParamsFilter(this.readyItems[0]);
+		let userParams = (options.uploadParamsFilter && typeof options.uploadParamsFilter === 'function') && options.uploadParamsFilter(this.readyItems[0]);
 
 		let upload = lib.fileUpload(
-			script,
+			lib.util.getFunctionReturn(options.uploadScriptFunc, options.uploadScript) + '',
 			this.readyItems[0],
 			userParams,
-			this.parent.options.uploadHeaders,
-			this.parent.options.uploadDataFilter
+			options.uploadHeaders,
+			options.uploadDataFilter
 		);
 
 		// callback upload event

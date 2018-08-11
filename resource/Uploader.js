@@ -201,6 +201,9 @@ var Uploader = function () {
 		value: function play() {
 			var _this3 = this;
 
+			var options = this.parent.options;
+
+
 			if (!this.readyItems.length) return;
 
 			this.uploading = true;
@@ -212,10 +215,9 @@ var Uploader = function () {
 			lib.util.findDOM($el, 'element', 'removeQueue').remove();
 
 			// act upload
-			var script = this.parent.options.uploadScript || null;
-			var userParams = this.parent.options.uploadParamsFilter && typeof this.parent.options.uploadParamsFilter === 'function' && this.parent.options.uploadParamsFilter(this.readyItems[0]);
+			var userParams = options.uploadParamsFilter && typeof options.uploadParamsFilter === 'function' && options.uploadParamsFilter(this.readyItems[0]);
 
-			var upload = lib.fileUpload(script, this.readyItems[0], userParams, this.parent.options.uploadHeaders, this.parent.options.uploadDataFilter);
+			var upload = lib.fileUpload(lib.util.getFunctionReturn(options.uploadScriptFunc, options.uploadScript) + '', this.readyItems[0], userParams, options.uploadHeaders, options.uploadDataFilter);
 
 			// callback upload event
 			upload.done(function (res, file) {
