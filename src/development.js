@@ -1,5 +1,5 @@
 import RGUploader from './RG_Uploader';
-import './scss/icons.scss';
+import '../vendor/material-design-icons/material-icons.css';
 import './scss/index.scss';
 // load plugins
 import * as plugins from './plugins';
