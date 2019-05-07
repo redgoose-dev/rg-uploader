@@ -1,0 +1,453 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <title>redgoose upload component</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="user-scalable=yes, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta name="author" content="redgoose.me">
+  <meta name="description" content="redgoose web browser upload component">
+  <link rel="stylesheet" href="./dist/rg-uploader.css">
+  <link rel="stylesheet" href="./assets/demo.css">
+  <link rel="stylesheet" href="./assets/prism.css">
+</head>
+<body>
+<main>
+  <header class="demo-header">
+    <figure><img src="./assets/ico-symbol.png" alt="redgoose file uploader"/></figure>
+    <h1>redgoose file uploader</h1>
+    <nav>
+      <a href="index.html">basic</a>
+      <a href="style.html">style</a>
+      <a href="plugins.html" class="active">plugins</a>
+      <a href="editor.html">to editor</a>
+    </nav>
+  </header>
+
+  <div class="demo-container">
+    <p>
+      플러그인은 업로드 컴포넌트의 필수요소는 아니지만 좀더 편하거나 강력한 기능을 덧붙이기 위하여 만들었습니다.<br>
+      코어의 기능을 참조하여 프로그램의 기능을 추가할 수 있습니다.
+    </p>
+
+    <section>
+      <h1>Preview</h1>
+      <p>
+        업로드한 이미지 큐를 선택하면 왼쪽 영역에서 어떤 사진인지 확인할 수 있습니다.
+      </p>
+      <div class="example">
+        <article class="rg-uploader" id="comp_preview">
+          <div class="rg-uploader-body" data-comp="queue">
+            <div class="col queue" data-element="queue"><ul></ul></div>
+          </div>
+          <footer class="rg-uploader-footer">
+            <nav>
+              <label class="add-file">
+                <input type="file" data-element="addFiles" multiple>
+                <i class="material-icons">add_circle_outline</i>
+                <span>Add files</span>
+              </label>
+              <a href="#" data-element="startUpload" class="start-upload">
+                <i class="material-icons">play_circle_outline</i>
+                <span>Start upload</span>
+              </a>
+            </nav>
+            <div class="size-info"></div>
+          </footer>
+        </article>
+      </div>
+      <div class="code">
+<pre><code class="language-js">var plug_preview = new RG_Uploader.core(document.getElementById('element_id'), {
+	queue : {
+		datas : 'data.json'
+	},
+	plugin : [
+		{ name : 'preview', obj: new RG_Uploader.plugins.Preview() }
+	]
+});</code></pre>
+      </div>
+    </section>
+
+    <section>
+      <h1>drag &amp; drop</h1>
+      <p>
+        큐 목록 공간으로 파일을 드래그 앤 드롭으로 집어넣으면 업로드를 할 수 있습니다.<br>
+        다른 영역에 엘리먼트를 만들어서 거기로 파일을 넣을수도 있습니다.
+      </p>
+      <div class="example">
+        <article class="rg-uploader" id="comp_dnd">
+          <div class="rg-uploader-body" data-comp="queue">
+            <div class="col queue" data-element="queue"><ul></ul></div>
+          </div>
+          <footer class="rg-uploader-footer">
+            <nav>
+              <label class="add-file">
+                <input type="file" data-element="addFiles" multiple>
+                <i class="material-icons">add_circle_outline</i>
+                <span>Add files</span>
+              </label>
+            </nav>
+            <div class="size-info"></div>
+          </footer>
+        </article>
+
+        <div class="rg-external-dropzone">external dropzone</div>
+      </div>
+      <p>set html element</p>
+      <div class="code">
+        <pre><code class="language-html">&lt;div class="rg-external-dropzone">external dropzone&lt;/div></code></pre>
+      </div>
+      <p>javascript code</p>
+      <div class="code">
+<pre><code class="language-js">var dnd_basic = new RG_Uploader.core(document.getElementById('element_id'), {
+	plugin : [
+		{ name : 'dnd', obj: new RG_Uploader.plugins.DragAndDrop() }
+	]
+});</code></pre>
+      </div>
+    </section>
+
+    <section>
+      <h1>Size info</h1>
+      <p>현재 올라온 파일들의 용량과 어느정도까지 업로드할 수 있는지 정보를 표시합니다.</p>
+      <div class="example">
+        <article class="rg-uploader" id="comp_sizeInfo">
+          <div class="rg-uploader-body" data-comp="queue">
+            <div class="col queue" data-element="queue"><ul></ul></div>
+          </div>
+          <footer class="rg-uploader-footer">
+            <nav>
+              <label class="add-file">
+                <input type="file" data-element="addFiles" multiple>
+                <i class="material-icons">add_circle_outline</i>
+                <span>Add files</span>
+              </label>
+              <a href="#" data-element="startUpload" class="start-upload">
+                <i class="material-icons">play_circle_outline</i>
+                <span>Start upload</span>
+              </a>
+            </nav>
+            <div class="size-info"></div>
+          </footer>
+        </article>
+      </div>
+      <div class="code">
+<pre><code class="language-js">var plug_sizeInfo = new RG_Uploader.core(document.getElementById('element_id'), {
+	queue : {
+		datas : 'data.json'
+	},
+	plugin : [
+		{ name : 'sizeInfo', obj: new RG_Uploader.plugins.SizeInfo() }
+	]
+});</code></pre>
+      </div>
+    </section>
+
+    <section>
+      <h1>Change queue style</h1>
+      <p>
+        스위치 버튼을 눌러 queue 스타일을 바꿀 수 있습니다.<br/>
+        컴포넌트 헤더에 버튼이 위치해 있지만 css와 플러그인 js를 수정하여 고칠 수 있습니다.
+      </p>
+      <div class="example">
+        <article class="rg-uploader" id="comp_change_queue_style">
+          <header class="rg-uploader-header">
+            <h1>File upload</h1>
+            <p>아래 업로드 버튼을 눌러서 파일을 추가하거나 이 영역에 파일을 드래그하여 추가합니다.</p>
+          </header>
+          <div class="rg-uploader-body" data-comp="queue">
+            <div class="col queue" data-element="queue"><ul></ul></div>
+          </div>
+          <footer class="rg-uploader-footer">
+            <nav>
+              <label class="add-file">
+                <input type="file" data-element="addFiles" multiple>
+                <i class="material-icons">add_circle_outline</i>
+                <span>Add files</span>
+              </label>
+              <a href="#" data-element="startUpload" class="start-upload">
+                <i class="material-icons">play_circle_outline</i>
+                <span>Start upload</span>
+              </a>
+            </nav>
+            <div class="size-info"></div>
+          </footer>
+        </article>
+      </div>
+      <div class="code">
+<pre><code class="language-js">var plug_changeQueueStyle = new RG_Uploader.core(document.getElementById('element_id'), {
+	queue : {
+		style : 'web',
+		datas : 'data.json'
+	},
+	plugin: [
+		{
+			name: 'changeQueueStyle',
+			obj: new RG_Uploader.plugins.ChangeQueueStyle({
+				endChangeItem: function(app) {
+					console.log('USER::endChangeItem', app.queue.items);
+				}
+			})
+		}
+	]
+});</code></pre>
+      </div>
+      <p>
+        `ChangeQueueStyle` 플러그인은 <a href="https://github.com/RubaXa/Sortable" target="_blank">Sortable</a> 라이브러리를 사용하고 있습니다.<br/>
+        모듈형 환경에서 만든다면 Sortable 클래스 객체를 직접 불러올 수 있습니다.
+      </p>
+      <div class="code">
+<pre><code class="language-shell">// install package
+npm install sortablejs --save</code></pre>
+      </div>
+      <div class="code">
+<pre><code class="language-js">import Sortable from 'sortablejs';
+
+// skip option
+new RG_Uploader.plugins.ChangeQueueStyle({
+	class_sortable: Sortable
+})</code></pre>
+      </div>
+    </section>
+
+    <section>
+      <h1>Make thumbnail image</h1>
+      <p>
+        첨부되어있는 사진 한장에서 이미지를 잘라내어 작은 이미지를 만들 수 있습니다.<br/>
+        기능을 적용한 이미지로 업로드할 수 있지만 다른 액션을 원하면 변경할 수 있습니다.
+      </p>
+      <div class="example">
+        <article class="rg-uploader" id="comp_thumbnail">
+          <header class="rg-uploader-header">
+            <h1>File upload</h1>
+            <p>아래 업로드 버튼을 눌러서 파일을 추가하거나 이 영역에 파일을 드래그하여 추가합니다.</p>
+          </header>
+          <div class="rg-uploader-body" data-comp="queue">
+            <div class="col queue" data-element="queue"><ul></ul></div>
+          </div>
+          <footer class="rg-uploader-footer">
+            <nav>
+              <label class="add-file">
+                <input type="file" data-element="addFiles" multiple>
+                <i class="material-icons">add_circle_outline</i>
+                <span>Add files</span>
+              </label>
+              <a href="#" data-element="startUpload" class="start-upload">
+                <i class="material-icons">play_circle_outline</i>
+                <span>Start upload</span>
+              </a>
+            </nav>
+            <div class="size-info"></div>
+          </footer>
+        </article>
+      </div>
+      <div class="code">
+<pre><code class="language-js">var plug_thumbnail = new RG_Uploader.core(document.getElementById('element_id'), {
+	queue : {
+		style : 'album',
+		height : 240,
+		datas : 'data.json',
+		buttons : [
+			{
+				name : 'make thumbnail image',
+				iconName : 'apps',
+				className : 'btn-make-thumbnail',
+				show : function(file) {
+					return (file.type.split('/')[0] == 'image');
+				},
+				action : function(app, file) {
+					if (!app.plugin.child.thumbnail) return false;
+					var plug = app.plugin.child.thumbnail;
+
+					plug.assignOption({ uploadScript : '' });
+					plug.open(file);
+				}
+			},
+			{
+				name : 'remove queue',
+				iconName : 'close',
+				className : 'btn-remove-queue',
+				action : function(app, file) {
+					app.queue.removeQueue(file.id, false, true);
+				}
+			}
+		]
+	},
+	plugin : [
+		{ name : 'thumbnail', obj: new RG_Uploader.plugins.Thumbnail() }
+	]
+});</code></pre>
+      </div>
+      <p>
+        `Thumbnail` 플러그인은 <a href="https://foliotek.github.io/Croppie" target="_blank">Croppie</a> 라이브러리를 사용하고 있습니다.
+        모듈형 환경에서 만든다면 Croppie 클래스 객체를 직접 불러올 수 있습니다.
+      </p>
+      <div class="code">
+<pre><code class="language-shell">// install package
+npm install croppie --save</code></pre>
+      </div>
+      <div class="code">
+<pre><code class="language-js">import croppie from 'croppie';
+import 'croppie/croppie.css';
+
+// skip option
+new RG_Uploader.plugins.ChangeQueueStyle({
+	class_croppie: croppie.Croppie
+})</code></pre>
+      </div>
+    </section>
+
+    <section>
+      <h1>change queue</h1>
+      <p>업로드한 이미지 큐의 순서를 변경합니다.</p>
+      <div class="example">
+        <article class="rg-uploader" id="comp_changeQueue">
+          <div class="rg-uploader-body" data-comp="queue">
+            <div class="col queue" data-element="queue"><ul></ul></div>
+          </div>
+          <footer class="rg-uploader-footer">
+            <nav>
+              <label class="add-file">
+                <input type="file" data-element="addFiles" multiple>
+                <i class="material-icons">add_circle_outline</i>
+                <span>Add files</span>
+              </label>
+              <a href="#" data-element="startUpload" class="start-upload">
+                <i class="material-icons">play_circle_outline</i>
+                <span>Start upload</span>
+              </a>
+            </nav>
+          </footer>
+        </article>
+      </div>
+      <div class="code">
+<pre><code class="language-js">var plug_changeQueue = new RG_Uploader.core(document.getElementById('element_id'), {
+	queue : {
+		height: null,
+		datas : 'data.json'
+	},
+	plugin : [
+		{
+			name: 'changeQueue',
+			obj: new RG_Uploader.plugins.ChangeQueue({
+				endChangeItem : function(app) {
+					console.log(app.queue.items);
+				}
+			})
+		}
+	]
+});</code></pre>
+      </div>
+    </section>
+  </div>
+</main>
+
+<a href="https://github.com/RedgooseDev/rg-uploader" class="github-corner"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#222222; color:#fff; position: absolute; top: 0; border: 0; right: 0;"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+
+<script src="./dist/jquery.min.js"></script>
+<script src="./dist/rg-uploader.js"></script>
+<script src="./dist/rg-uploader.plugins.js"></script>
+<script src="./assets/prism.js"></script>
+<script>
+  // preview
+  var plug_preview = new RG_Uploader.core(document.getElementById('comp_preview'), {
+    queue: {
+      datas: './assets/data.json'
+    },
+    plugin: [
+      { name: 'preview', obj: new RG_Uploader.plugins.Preview() }
+    ]
+  });
+
+  // drag & drop upload
+  var plug_dnd = new RG_Uploader.core(document.getElementById('comp_dnd'), {
+    plugin: [
+      { name: 'dnd', obj: new RG_Uploader.plugins.DragAndDrop() }
+    ]
+  });
+
+  // size info
+  var plug_sizeInfo = new RG_Uploader.core(document.getElementById('comp_sizeInfo'), {
+    queue: {
+      datas: './assets/data.json'
+    },
+    plugin: [
+      { name: 'sizeInfo', obj: new RG_Uploader.plugins.SizeInfo() }
+    ]
+  });
+
+  // change style
+  var plug_changeQueueStyle = new RG_Uploader.core(document.getElementById('comp_change_queue_style'), {
+    queue: {
+      style: 'web',
+      datas: './assets/data.json'
+    },
+    plugin: [
+      { name: 'changeQueueStyle', obj: new RG_Uploader.plugins.ChangeQueueStyle() }
+    ]
+  });
+
+  // make thumbnail
+  var plug_thumbnail = new RG_Uploader.core(document.getElementById('comp_thumbnail'), {
+    name: 'thumbnail1',
+    queue: {
+      style: 'album',
+      height: 240,
+      datas: './assets/data.json',
+      buttons: [
+        {
+          name: 'make thumbnail image',
+          iconName: 'apps',
+          className: 'btn-make-thumbnail',
+          show: function(file) {
+            return (file.type.split('/')[0] === 'image');
+          },
+          action: function(app, file) {
+            if (!app.plugin.child.thumbnail) return false;
+            var plug = app.plugin.child.thumbnail;
+
+            plug.assignOption({
+              doneCallback : function(res) {
+                app.queue.import([res]);
+              }
+            });
+            plug.open(file);
+          }
+        },
+        {
+          name: 'remove queue',
+          iconName: 'close',
+          className: 'btn-remove-queue',
+          action: function(app, file) {
+            app.queue.removeQueue(file.id, false, true);
+          }
+        }
+      ]
+    },
+    plugin: [
+      {
+        name: 'thumbnail',
+        obj: new RG_Uploader.plugins.Thumbnail()
+      }
+    ]
+  });
+
+  // change queue
+  var plug_changeQueue = new RG_Uploader.core(document.getElementById('comp_changeQueue'), {
+    queue: {
+      height: null,
+      datas: './assets/data.json'
+    },
+    plugin: [
+      {
+        name: 'changeQueue',
+        obj: new RG_Uploader.plugins.ChangeQueue({
+          endChangeItem : function(app) {
+            console.log(app.queue.items);
+          }
+        })
+      }
+    ]
+  });
+</script>
+</body>
+</html>

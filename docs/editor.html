@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <title>redgoose upload component</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="user-scalable=yes, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta name="author" content="redgoose.me">
+  <meta name="description" content="redgoose web browser upload component">
+  <link rel="stylesheet" href="./dist/rg-uploader.css">
+  <link rel="stylesheet" href="./assets/demo.css">
+  <link rel="stylesheet" href="./assets/prism.css">
+</head>
+<body>
+<main>
+  <header class="demo-header">
+    <figure><img src="./assets/ico-symbol.png" alt="redgoose file uploader"/></figure>
+    <h1>redgoose file uploader</h1>
+    <nav>
+      <a href="index.html">basic</a>
+      <a href="style.html">style</a>
+      <a href="plugins.html">plugins</a>
+      <a href="editor.html" class="active">to editor</a>
+    </nav>
+  </header>
+
+  <div class="demo-container">
+    <section>
+      <h1>textarea &amp; image elements</h1>
+      <p>
+        textarea나 다른 영역이나 에디터에다 파일 정보를 삽입할 수 있습니다.<br/>
+        이 예제는 파일 목록의 `본문삽입`버튼을 누르면 textarea에는 파일이름, 이미지 영역에는 이미지태그가 들어갑니다. (이미지영역의 이미지는 css로 사이즈를 작게 조절하도록 하겠습니다.)
+      </p>
+      <div class="example">
+        <div class="to-editor">
+          <h2>textarea</h2>
+          <textarea id="target_textarea"></textarea>
+          <h2>image area</h2>
+          <figure id="target_image"></figure>
+        </div>
+      </div>
+      <div class="example">
+        <article class="rg-uploader" id="comp_editor">
+          <header class="rg-uploader-header">
+            <h1>File upload</h1>
+            <p>아래 업로드 버튼을 눌러서 파일을 추가하거나 이 영역에 파일을 드래그하여 추가합니다.</p>
+          </header>
+          <div class="rg-uploader-body" data-comp="queue">
+            <div class="col queue" data-element="queue"><ul></ul></div>
+          </div>
+          <footer class="rg-uploader-footer">
+            <nav>
+              <label class="add-file">
+                <input type="file" data-element="addfiles" multiple>
+                <i class="material-icons">add_circle_outline</i>
+                <span>Add files</span>
+              </label>
+              <a href="#" data-element="startUpload" class="start-upload">
+                <i class="material-icons">play_circle_outline</i>
+                <span>Start upload</span>
+              </a>
+            </nav>
+            <div class="size-info"></div>
+          </footer>
+        </article>
+      </div>
+      <div class="code">
+<pre><code class="language-js">var plug_editor = new RG_Uploader.core(document.getElementById('comp_editor'), {
+	queue : {
+		datas : 'data.json',
+		buttons : [
+			{
+				name : 'open file',
+				iconName : 'open_in_new',
+				className : 'btn-open-file',
+				action : function(app, file) {
+					console.log('action : open file');
+					window.open(file.src);
+				}
+			},
+			{
+				name : 'insert editor',
+				iconName : 'center_focus_strong',
+				className : 'btn-insert-editor',
+				action : function(app, file) {
+					var $textarea = $('#target_textarea');
+					var $figure = $('#target_image');
+					var src = ((/^data:/g).test(file.src)) ? file.name : file.src;
+					$textarea.val($textarea.val() + ' [' + src + ']');
+					$figure.append('&lt;img src="' + file.src + '" alt="' + file.name + '">');
+				}
+			},
+			{
+				name : 'remove queue',
+				iconName : 'close',
+				className : 'btn-remove-queue',
+				action : function(app, file) {
+					app.queue.removeQueue(file.id, false, true);
+				}
+			}
+		]
+	},
+	plugin : [
+		{ name : 'preview', obj : new RG_Uploader.plugins.Preview() },
+		{ name : 'dnd', obj : new RG_Uploader.plugins.DragAndDrop() },
+		{ name : 'sizeInfo', obj : new RG_Uploader.plugins.SizeInfo() },
+		{ name : 'changeQueueStyle', obj : new RG_Uploader.plugins.ChangeQueueStyle() }
+	]
+});</code></pre>
+      </div>
+    </section>
+  </div>
+</main>
+
+<a href="https://github.com/redgoose-dev/rg-uploader" class="github-corner"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#222222; color:#fff; position: absolute; top: 0; border: 0; right: 0;"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+
+<script src="./dist/jquery.min.js"></script>
+<script src="./dist/rg-uploader.js"></script>
+<script src="./dist/rg-uploader.plugins.js"></script>
+<script src="./assets/prism.js"></script>
+<script>
+  var plug_editor = new RG_Uploader.core($('#comp_editor'), {
+    queue : {
+      datas : './assets/data.json',
+      buttons : [
+        {
+          name : 'open file',
+          iconName : 'open_in_new',
+          className : 'btn-open-file',
+          action : function(app, file) {
+            console.log('action : open file');
+            window.open(file.src);
+          }
+        },
+        {
+          name : 'insert editor',
+          iconName : 'center_focus_strong',
+          className : 'btn-insert-editor',
+          action : function(app, file) {
+            var $textarea = $('#target_textarea');
+            var $figure = $('#target_image');
+            var src = ((/^data:/g).test(file.src)) ? file.name : file.src;
+            $textarea.val($textarea.val() + ' [' + src + ']');
+            $figure.append('<img src="' + file.src + '" alt="' + file.name + '">');
+          }
+        },
+        {
+          name : 'remove queue',
+          iconName : 'close',
+          className : 'btn-remove-queue',
+          action : function(app, file) {
+            app.queue.removeQueue(file.id, false, true);
+          }
+        }
+      ]
+    },
+    plugin : [
+      { name : 'preview', obj : new RG_Uploader.plugins.Preview() },
+      { name : 'dnd', obj : new RG_Uploader.plugins.DragAndDrop() },
+      { name : 'sizeInfo', obj : new RG_Uploader.plugins.SizeInfo() },
+      { name : 'changeQueueStyle', obj : new RG_Uploader.plugins.ChangeQueueStyle() }
+    ]
+  });
+</script>
+</body>
+</html>

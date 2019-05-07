@@ -2,23 +2,39 @@
 
 
 // plugin - preview
-.rg-uploader {
-	.body > .preview {-webkit-flex: inherit; flex: inherit;}
+#{$self} {
+  #{$self}-body > .preview {
+    flex: none;
+  }
 	.preview {
-		width: $preview-width; height: 100%; overflow: hidden;
-		&.hide {display: none;}
+    flex: none;
+		width: $preview-width;
+    height: 100%;
+    overflow: hidden;
+		&.hide {
+      display: none;
+    }
 		figure {
 			height: 100%; margin: 0;
-			background: no-repeat 50% 50%; background-size: cover;
+			background: no-repeat 50% 50%;
+      background-size: cover;
 			text-indent: -9999px;
 		}
 		.not-image {
-			position: relative; background: #7E7F80 !important;
+			position: relative;
+      background: #7E7F80 !important;
 			&:after {
-				content: 'not image'; position: absolute;
-				top: 50%; left: 0; right: 0; margin-top: -7px;
+				content: 'not image';
+        position: absolute;
+				top: 50%;
+        left: 0;
+        right: 0;
+        margin-top: -7px;
 				text-indent: 0;
-				font-family: $font-eng-basic; color: #ccc; font-size: 11px; text-align: center;
+				font-family: $font-eng-basic;
+        color: #ccc;
+        font-size: 11px;
+        text-align: center;
 			}
 		}
 	}
@@ -29,7 +45,7 @@
 
 
 // plugin - sizeinfo
-.rg-uploader {
+#{$self} {
 	> footer {
 		> div {
 			width: 140px; padding: 0 10px 0 0;
@@ -45,7 +61,7 @@
 
 
 // plugin - changeQueueStyle
-.rg-uploader {
+#{$self} {
 	> header {
 		nav {
 			position: absolute; top: 50%; right: 10px;
@@ -80,7 +96,7 @@
 
 
 // plugin - drag and drop
-.rg-uploader {
+#{$self} {
 	.queue.drop-mode {
 		&:after {
 			content: ''; position: absolute; display: block;
