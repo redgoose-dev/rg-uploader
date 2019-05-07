@@ -1,6 +1,6 @@
 {
   "name": "rg-uploader",
-  "version": "1.3.0",
+  "version": "1.3.1",
   "main": "./src/rg-uploader.js",
   "scripts": {
     "dev": "./node_modules/.bin/webpack-dev-server --mode development --port 4000",
