@@ -1,13 +1,16 @@
-function RG_SizeInfo(selector) {
+function RG_SizeInfo(selector, jquery)
+{
   this.name = 'Size info';
   this.size = { current: 0, total: 0 };
 
+  var $ = jquery || $ || jQuery;
   var self = this;
   var app = null;
   var $body = null;
   var $current = null;
   var $total = null;
 
+  if (!$) return;
 
   /**
    * create element

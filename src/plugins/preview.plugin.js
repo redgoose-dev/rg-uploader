@@ -1,12 +1,15 @@
-function RG_Preview()
+function RG_Preview(jquery)
 {
   this.name = 'Preview';
   this.$preview = null;
 
+  var $ = jquery || $ || jQuery;
   var self = this;
   var app = null;
   var classNameNotImage = 'not-image';
   var width = 150;
+
+  if (!$) return;
 
   /**
    * create preview

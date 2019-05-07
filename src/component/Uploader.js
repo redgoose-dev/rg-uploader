@@ -219,14 +219,16 @@ export default class Uploader {
 		lib.util.findDOM($el, 'element', 'removeQueue').remove();
 
 		// act upload
-		let userParams = (options.uploadParamsFilter && typeof options.uploadParamsFilter === 'function') && options.uploadParamsFilter(this.readyItems[0]);
+		let userParams = (lib.util.checkFunction(options.uploadParamsFilter)) && options.uploadParamsFilter(this.readyItems[0], this.parent);
 
 		let upload = lib.fileUpload(
 			lib.util.getFunctionReturn(options.uploadScriptFunc, options.uploadScript),
 			this.readyItems[0],
 			userParams,
 			options.uploadHeaders,
-			options.uploadDataFilter
+      (src) => {
+        return (lib.util.checkFunction(options.uploadDataFilter)) ? options.uploadDataFilter(src, this.parent) : src;
+      },
 		);
 
 		// callback upload event
@@ -256,7 +258,7 @@ export default class Uploader {
 		});
 		if (this.parent.options.uploadProgress)
 		{
-			this.parent.options.uploadProgress(res, file);
+			this.parent.options.uploadProgress(res, file, this.parent);
 		}
 	};
 
@@ -279,7 +281,7 @@ export default class Uploader {
 				// callback
 				if (this.parent.options.uploadComplete)
 				{
-					this.parent.options.uploadComplete(file);
+					this.parent.options.uploadComplete(file, this.parent);
 				}
 				break;
 
@@ -289,9 +291,9 @@ export default class Uploader {
 				console.error('ERROR:', file.message);
 
 				// callback
-				if (this.parent.options.uploadFail)
+				if (lib.util.checkFunction(this.parent.options.uploadFail))
 				{
-					this.parent.options.uploadFail(file);
+					this.parent.options.uploadFail(file, this.parent);
 				}
 				break;
 		}

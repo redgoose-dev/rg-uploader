@@ -1,4 +1,5 @@
 const fs = require('fs');
+const express = require('express');
 const multer = require('multer');
 const detect = require('detect-file-type');
 const queryString = require('query-string');
@@ -6,6 +7,7 @@ const move = require('./move');
 
 const dir_tmp = './upload/tmp';
 const dir_dest = './upload/attachments';
+const url_dest = '/attachments';
 
 module.exports = function(app)
 {
@@ -42,6 +44,9 @@ module.exports = function(app)
 		}
 	});
 
+	// attachment files
+	app.use('/attachments', express.static('upload/attachments'));
+
 	// upload file
 	app.post('/upload', multer({ dest: dir_tmp }).single('file'), function(req, res) {
 		// make dir
@@ -58,7 +63,7 @@ module.exports = function(app)
 			return res.json({
 				state: 'success',
 				response: {
-					src: `./${dir_dest}/${req.file.originalname}`,
+					src: `${url_dest}/${req.file.originalname}`,
 					name: req.file.originalname,
 				}
 			});
@@ -109,7 +114,7 @@ function getFileList(files)
 						id: getRandomNumber(11111, 99999) + k,
 						name: file,
 						size: fileState.size,
-						src: `${dir_dest}/${file}`,
+						src: `${url_dest}/${file}`,
 						type: type.mime,
 					});
 

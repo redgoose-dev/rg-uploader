@@ -1,10 +1,13 @@
-function RG_DragAndDrop(el)
+function RG_DragAndDrop(el, jquery)
 {
   this.name = 'Drag And Drop';
   this.areaElements = [];
 
+  var $ = jquery || $ || jQuery;
   var self = this;
   var app = null;
+
+  if (!$) return;
 
   /**
    * init file drag and drop event

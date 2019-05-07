@@ -1,12 +1,15 @@
-function RG_Thumbnail(options) {
-
+function RG_Thumbnail(options, jquery)
+{
   this.name = 'Make thumbnail';
 
+  var $ = jquery || $ || jQuery;
   var self = this;
   var app = null;
   var RESIZE_EVENT = 'resize.rgUploader';
   var isMobile = false;
   var resizeInterval = null;
+
+  if (!$) return;
 
   this.file = null;
   this.croppie = null;

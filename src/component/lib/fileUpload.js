@@ -126,7 +126,7 @@ export default function(action, file, params, headers, filter)
 				let src = uploadSuccess(e.target);
 
 				// filtering response
-				src = util.getFunctionReturn(filter, src);
+				src = filter(src);
 
 				switch(src.state) {
 					case 'success':

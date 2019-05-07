@@ -1,7 +1,10 @@
-function RG_ChangeQueueStyle(selector) {
-
+function RG_ChangeQueueStyle(selector, jquery)
+{
+  var $ = jquery || $ || jQuery;
   var self = this;
   var app = null;
+
+  if (!$) return;
 
   this.name = 'Change Queue Style';
   this.buttonsParams = [

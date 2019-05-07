@@ -119,3 +119,14 @@ export function getFunctionReturn(func, src, params)
 	if (!func || !(typeof func === 'function')) return src;
 	return func(src, params) || src;
 }
+
+/**
+ * check function
+ *
+ * @param {Function} func
+ * @return {Boolean}
+ */
+export function checkFunction(func)
+{
+  return func && (typeof func === 'function');
+}

@@ -22,6 +22,7 @@
   border: 1px solid #ccc;
   border-radius: $border-radius;
   overflow: hidden;
+  box-sizing: border-box;
 
   * {
     box-sizing: border-box;
@@ -35,19 +36,33 @@
     position: relative; height: 100%;
     overflow-x: hidden; overflow-y: auto;
     -webkit-overflow-scrolling: touch;
-    ul {margin: 0; padding: 0; list-style: none;}
+    ul {
+      margin: 0;
+      padding: 0;
+      list-style: none;}
     nav {
       font-size: 0;
       button {
-        margin: 0; padding: 4px;
-        border: none; font-size: 0; background: none; cursor: pointer;
-        &.on i {color: $color-key;}
+        margin: 0;
+        padding: 4px;
+        border: none;
+        font-size: 0;
+        background: none;
+        cursor: pointer;
+        &.on i {
+          color: $color-key;
+        }
         &.disabled {
           cursor: not-allowed;
-          i {color: #b2b5b9;}
+          i {
+            color: #b2b5b9;
+          }
         }
       }
-      i {font-size: 16px; color: #57595B;}
+      i {
+        font-size: 16px;
+        color: #57595B;
+      }
     }
 
     @media (max-width: $mobile-max-width) {
@@ -55,8 +70,14 @@
     }
 
     %selected {
-      content: ''; display: block; position: absolute;
-      left: 0; right: 0; top: 0; bottom: 0; z-index: 2;
+      content: '';
+      display: block;
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      z-index: 2;
       border: 3px solid $color-key;
       pointer-events: none;
     }
@@ -132,7 +153,9 @@
 #{$self}-body {
   min-height: $queue-height;
   display: -webkit-flex; display: flex;
-  > .col {-webkit-flex: 1; flex: 1;}
+  > .col {
+    flex: 1;
+  }
 
   @media (max-width: $mobile-max-width) {
     height: auto !important;

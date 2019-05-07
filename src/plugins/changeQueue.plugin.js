@@ -1,10 +1,13 @@
-function RG_ChangeQueue(options)
+function RG_ChangeQueue(options, jquery)
 {
   this.name = 'Change Queue';
   this.sortable = null;
 
+  var $ = jquery || $ || jQuery;
   var self = this;
   var app = null;
+
+  if (!$) return;
 
   /**
    * load vendor Sortable
@@ -139,7 +142,7 @@ function RG_ChangeQueue(options)
    */
   this.assignOption = function(obj)
   {
-    return $.extend(true, this.options, obj);
+    return Object.assign({}, this.options, obj);
   }
 }
 

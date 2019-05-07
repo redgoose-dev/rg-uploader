@@ -1,7 +1,6 @@
 import $ from 'jquery';
 import * as lib from './lib';
 
-
 export default class Queue {
 
 	constructor(parent)
@@ -92,7 +91,8 @@ export default class Queue {
 	 */
 	findItem(id)
 	{
-		return this.items.ids.indexOf(Number(id));
+	  let n = this.items.ids.indexOf(Number(id));
+		return typeof n === 'number' ? n : undefined;
 	}
 
 	/**
@@ -330,7 +330,7 @@ export default class Queue {
 
 		// create queue navigation buttons
 		let $buttons = this.createNavigationButtons(this.options.buttons, file);
-		if ($buttons.length)
+		if ($buttons && $buttons.length)
 		{
 			$customButtons.append($buttons);
 		}
@@ -403,7 +403,8 @@ export default class Queue {
 	removeQueue(id, isLoadingQueue, useScript=false)
 	{
 		const self = this;
-		const { options } = this.parent;
+		const parent = this.parent;
+		const { options } = parent;
 
 		function removeElement(id)
 		{
@@ -434,7 +435,10 @@ export default class Queue {
 			if (useScript && options.removeScript && !file.isLocalFile)
 			{
 				// remove parameters filter
-				file = lib.util.getFunctionReturn(options.removeParamsFilter, file);
+        if (lib.util.checkFunction(options.removeParamsFilter))
+        {
+          file = options.removeParamsFilter(file, this.parent);
+        }
 
 				// play remove file script
 				$.ajax({
@@ -453,7 +457,10 @@ export default class Queue {
 						}
 
 						// filtering response
-						res = lib.util.getFunctionReturn(options.removeDataFilter, res);
+            if (lib.util.checkFunction(options.removeDataFilter))
+            {
+              res = options.removeDataFilter(res, parent);
+            }
 
 						// act
 						if (res && res.state && res.state === 'success')
@@ -535,5 +542,28 @@ export default class Queue {
 		});
 		return size;
 	};
+
+	/**
+   * change id
+   * 특정 id가 있는 큐를 찾아서 새로운 id로 바꿉니다.
+   *
+   * @param {number} id
+   * @param {number} newId
+   */
+	changeId(id, newId)
+  {
+    if (newId === undefined) return;
+    const { files, ids } = this.items;
+    let index = this.findItem(id);
+    if (index !== undefined)
+    {
+      let queue = this.selectQueueElement(id)[0];
+      // edit id from queue element
+      if (queue) queue.setAttribute('data-id', newId);
+      // edit id from uploader object
+      ids[index] = newId;
+      files[index].id = newId;
+    }
+  };
 
 }
