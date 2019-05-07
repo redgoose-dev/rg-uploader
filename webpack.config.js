@@ -4,7 +4,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const TerserJSPlugin = require('terser-webpack-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 
-module.exports = (env, options) => {
+const coreConfig = (env, options) => {
   const isDev = options.mode === 'development';
   let config = {
     mode: isDev ? options.mode : 'production',
@@ -93,13 +93,13 @@ module.exports = (env, options) => {
      * production
      */
     config.entry = {
-      'rg-uploader': ['./src/rg-uploader.js'],
+      core: './src/rg-uploader.js',
     };
     config.output = {
-      filename: '[name].js',
+      filename: 'rg-uploader.js',
       path: path.resolve(__dirname, 'dist'),
       publicPath: './',
-      library: 'RG_Uploader',
+      library: ['RG_Uploader', 'core'],
       libraryTarget: 'umd',
       libraryExport: 'default',
     };
@@ -116,3 +116,23 @@ module.exports = (env, options) => {
 
   return config;
 };
+
+const pluginsConfig = () => ({
+  mode: 'production',
+  entry: './src/plugins/index.js',
+  output: {
+    filename: 'rg-uploader.plugins.js',
+    path: path.resolve(__dirname, 'dist'),
+    publicPath: './',
+    library: ['RG_Uploader', 'plugins'],
+    libraryTarget: 'umd',
+  },
+  externals: {
+    jquery: 'jQuery',
+  },
+  optimization: {
+    minimizer: [new TerserJSPlugin({}), new OptimizeCSSAssetsPlugin({})],
+  },
+});
+
+module.exports = [coreConfig, pluginsConfig];

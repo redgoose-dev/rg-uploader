@@ -3,10 +3,10 @@
   "version": "1.3.0",
   "main": "./src/rg-uploader.js",
   "scripts": {
-    "dev": "./node_modules/.bin/webpack-dev-server --mode development --port 4000 --content-base ./dist",
-    "prebuild": "rm -rf dist",
+    "dev": "./node_modules/.bin/webpack-dev-server --mode development --port 4000",
+    "prebuild": "rm -rf dist && rm -rf docs/dist",
     "build": "./node_modules/.bin/webpack",
-    "postbuild": "cp ./node_modules/jquery/dist/jquery.min.js ./dist",
+    "postbuild": "cp ./node_modules/jquery/dist/jquery.min.js ./dist && cp -r dist ./docs",
     "version-patch": "npm version patch"
   },
   "description": "File upload component",

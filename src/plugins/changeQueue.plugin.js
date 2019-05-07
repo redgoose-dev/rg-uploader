@@ -132,6 +132,8 @@ function RG_ChangeQueue(options, jquery)
       case 'queue.uploadCompleteAll':
         change();
         break;
+      default:
+        break;
     }
   };
 
@@ -142,7 +144,10 @@ function RG_ChangeQueue(options, jquery)
    */
   this.assignOption = function(obj)
   {
-    return Object.assign({}, this.options, obj);
+    return {
+      ...this.options,
+      ...obj,
+    };
   }
 }
 

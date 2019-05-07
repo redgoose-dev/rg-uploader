@@ -3,7 +3,6 @@ import Uploader from './Uploader';
 import Queue from './Queue';
 import Plugin from './Plugin';
 import * as lib from './lib';
-import * as plugins from '../plugins';
 
 export default class RG_Uploader {
 
@@ -24,9 +23,6 @@ export default class RG_Uploader {
 		{
 			this.options.queue = { ...lib.defaultOptions.queue, ...options.queue };
 		}
-
-		// set plugins
-		this.plugins = plugins;
 
 		// set container element
 		this.$container = $(el);
