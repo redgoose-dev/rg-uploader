@@ -50,11 +50,10 @@ yarn add rg-uploader
 ```
 
 ```
-import rgUploader from 'rg-uploader';
-import 'rg-uploader/resource/icons/material-icons.css';
-import 'rg-uploader/resource/style.css';
+import RG_Uploader from 'rg-uploader';
+import 'rg-uploader/dist/rg-uploader.css';
 
-const rgUploader = new RG_Uploader(document.getElementById('id'), {});
+const rgUploader = new RG_Uploader.core(document.getElementById('id'), {});
 ```
 
 
@@ -84,7 +83,6 @@ https://github.com/redgoose-dev/rg-uploader/wiki
 
 다름과 같은 브라우저 버전에서 원활한 작동이 가능합니다. 좀더 낮은 버전에서도 작동할 수 있습니다.
 
-* ie11+
 * edge 25+
 * safari 9+
 * chrome 52+
