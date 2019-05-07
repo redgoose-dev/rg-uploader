@@ -2,7 +2,7 @@
 
 
 // plugin - preview
-.rg-uploader {
+#{$self} {
 	.body > .preview {-webkit-flex: inherit; flex: inherit;}
 	.preview {
 		width: $preview-width; height: 100%; overflow: hidden;
@@ -29,7 +29,7 @@
 
 
 // plugin - sizeinfo
-.rg-uploader {
+#{$self} {
 	> footer {
 		> div {
 			width: 140px; padding: 0 10px 0 0;
@@ -45,7 +45,7 @@
 
 
 // plugin - changeQueueStyle
-.rg-uploader {
+#{$self} {
 	> header {
 		nav {
 			position: absolute; top: 50%; right: 10px;
@@ -80,7 +80,7 @@
 
 
 // plugin - drag and drop
-.rg-uploader {
+#{$self} {
 	.queue.drop-mode {
 		&:after {
 			content: ''; position: absolute; display: block;

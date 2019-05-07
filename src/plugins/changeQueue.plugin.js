@@ -1,168 +1,155 @@
-(function(root, factory) {
-	if (typeof define === 'function' && define.amd) {
-		define(['jquery'], factory);
-	} else if (typeof exports === 'object') {
-		module.exports = factory(require('jquery'));
-	} else {
-		root.RG_ChangeQueue = factory(jQuery);
-	}
-}(this, function($) {
+function RG_ChangeQueue(options)
+{
+  this.name = 'Change Queue';
+  this.sortable = null;
 
-	function RG_ChangeQueue(options) {
+  var self = this;
+  var app = null;
 
-		this.name = 'Change Queue';
-		this.sortable = null;
+  /**
+   * load vendor Sortable
+   *
+   * @return {Object|Boolean}
+   */
+  function loadVendorSortable()
+  {
+    var defer = $.Deferred();
 
-		var self = this;
-		var app = null;
+    if (self.options.class_sortable && self.options.class_sortable.name === 'Sortable')
+    {
+      window.loadedVendorSortable = true;
+      window.Sortable = self.options.class_sortable;
+      // 약간의 딜레이가 필요함.
+      setTimeout(defer.resolve, 100);
+      return defer.promise();
+    }
 
+    // check loaded vendor
+    if (window.loadedVendorSortable)
+    {
+      defer.resolve();
+    }
+    else
+    {
+      var head = document.getElementsByTagName('head')[0];
+      var scriptElement = document.createElement('script');
 
-		/**
-		 * load vendor Sortable
-		 *
-		 * @return {Object|Boolean}
-		 */
-		function loadVendorSortable()
-		{
-			var defer = $.Deferred();
+      scriptElement.src = self.options.url_sortable;
 
-			if (self.options.class_sortable && self.options.class_sortable.name === 'Sortable')
-			{
-				window.loadedVendorSortable = true;
-				window.Sortable = self.options.class_sortable;
-				// 약간의 딜레이가 필요함.
-				setTimeout(defer.resolve, 100);
-				return defer.promise();
-			}
+      head.appendChild(scriptElement);
 
-			// check loaded vendor
-			if (window.loadedVendorSortable)
-			{
-				defer.resolve();
-			}
-			else
-			{
-				var head = document.getElementsByTagName('head')[0];
-				var scriptElement = document.createElement('script');
+      var n = 0;
+      var interval = setInterval(function(){
+        n++;
+        try {
+          if (Sortable)
+          {
+            clearInterval(interval);
+            window.loadedVendorSortable = true;
+            defer.resolve();
+          }
+        }
+        catch(e) {}
+      }, 50);
+    }
 
-				scriptElement.src = self.options.url_sortable;
+    return defer.promise();
+  }
 
-				head.appendChild(scriptElement);
+  /**
+   * end change item event
+   */
+  function change()
+  {
+    var newIds = [];
+    var newFiles = [];
+    var index = app.queue.$queue.children('li').map(function(){
+      return app.queue.findItem($(this).data('id'));
+    });
 
-				var n = 0;
-				var interval = setInterval(function(){
-					n++;
-					try {
-						if (Sortable)
-						{
-							clearInterval(interval);
-							window.loadedVendorSortable = true;
-							defer.resolve();
-						}
-					}
-					catch(e) {}
-				}, 50);
-			}
+    for (var i=0; i<index.length; i++)
+    {
+      newIds.push(app.queue.items.ids[index[i]]);
+      newFiles.push(app.queue.items.files[index[i]]);
+    }
 
-			return defer.promise();
-		}
+    app.queue.items.ids = newIds;
+    app.queue.items.files = newFiles;
 
-		/**
-		 * end change item event
-		 */
-		function change()
-		{
-			var newIds = [];
-			var newFiles = [];
-			var index = app.queue.$queue.children('li').map(function(){
-				return app.queue.findItem($(this).data('id'));
-			});
+    // callback
+    if (self.options.endChangeItem && typeof self.options.endChangeItem === 'function')
+    {
+      self.options.endChangeItem(app);
+    }
+  }
 
-			for (var i=0; i<index.length; i++)
-			{
-				newIds.push(app.queue.items.ids[index[i]]);
-				newFiles.push(app.queue.items.files[index[i]]);
-			}
+  /**
+   * init event
+   */
+  function initEvent()
+  {
+    self.options.vendorOptions.onEnd = change;
 
-			app.queue.items.ids = newIds;
-			app.queue.items.files = newFiles;
+    self.sortable = new Sortable(app.queue.$queue.get(0), self.options.vendorOptions);
+  }
 
-			// callback
-			if (self.options.endChangeItem && typeof self.options.endChangeItem === 'function')
-			{
-				self.options.endChangeItem(app);
-			}
-		}
+  /**
+   * init
+   *
+   * @Param {Object} parent
+   */
+  this.init = function(parent)
+  {
+    app = parent;
 
-		/**
-		 * init event
-		 */
-		function initEvent()
-		{
-			self.options.vendorOptions.onEnd = change;
+    // merge options
+    this.options = this.assignOption(options);
 
-			self.sortable = new Sortable(app.queue.$queue.get(0), self.options.vendorOptions);
-		}
+    // load vendor
+    var vendor = loadVendorSortable();
 
-		/**
-		 * init
-		 *
-		 * @Param {Object} parent
-		 */
-		this.init = function(parent)
-		{
-			app = parent;
+    vendor.done(function(){
+      // add class
+      app.queue.$queue.addClass('rg-plugin-changeQueue');
 
-			// merge options
-			this.options = this.assignOption(options);
+      // init event
+      initEvent();
+    });
+  };
 
-			// load vendor
-			var vendor = loadVendorSortable();
+  /**
+   * event listener
+   *
+   * @Param {String} type
+   * @Param {*} value
+   */
+  this.eventListener = function(type, value)
+  {
+    switch(type) {
+      case 'queue.uploadCompleteAll':
+        change();
+        break;
+    }
+  };
 
-			vendor.done(function(){
-				// add class
-				app.queue.$queue.addClass('rg-plugin-changeQueue');
+  /**
+   * assignOption
+   *
+   * @Param {Object} obj
+   */
+  this.assignOption = function(obj)
+  {
+    return $.extend(true, this.options, obj);
+  }
+}
 
-				// init event
-				initEvent();
-			});
-		};
+RG_ChangeQueue.prototype.options = {
+  class_sortable: null,
+  url_sortable: 'https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js',
+  vendorOptions: {
+    animation: 150,
+  },
+  endChangeItem: null, // function(app) {}
+};
 
-		/**
-		 * event listener
-		 *
-		 * @Param {String} type
-		 * @Param {*} value
-		 */
-		this.eventListener = function(type, value)
-		{
-			switch(type) {
-				case 'queue.uploadCompleteAll':
-					change();
-					break;
-			}
-		};
-
-		/**
-		 * assignOption
-		 *
-		 * @Param {Object} obj
-		 */
-		this.assignOption = function(obj)
-		{
-			return $.extend(true, this.options, obj);
-		}
-	}
-
-	RG_ChangeQueue.prototype.options = {
-		class_sortable: null,
-		url_sortable: 'https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js',
-		vendorOptions: {
-			animation: 150,
-		},
-		endChangeItem: null, // function(app) {}
-	};
-
-	return RG_ChangeQueue;
-
-}));
+export default RG_ChangeQueue;

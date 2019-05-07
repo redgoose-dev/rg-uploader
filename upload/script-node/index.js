@@ -2,12 +2,10 @@ const fs = require('fs');
 const multer = require('multer');
 const detect = require('detect-file-type');
 const queryString = require('query-string');
-
 const move = require('./move');
 
 const dir_tmp = './upload/tmp';
 const dir_dest = './upload/attachments';
-
 
 module.exports = function(app)
 {
@@ -91,7 +89,6 @@ module.exports = function(app)
 	});
 };
 
-
 /**
  * get file list
  *
@@ -129,7 +126,6 @@ function getFileList(files)
 		}
 	});
 }
-
 
 /**
  * get random number
