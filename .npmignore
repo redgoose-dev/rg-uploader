@@ -1,11 +1,9 @@
-vendor/
 upload/
 .idea/
-dist/
+docs/
+node_modules/
 
-.babelrc
+.editorconfig
 yarn.lock
 yarn-error.log
-webpack.dev.config.js
-webpack.pro.config.js
-gulpfile.js
+webpack.config.js
