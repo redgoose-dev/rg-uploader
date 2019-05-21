@@ -1,6 +1,8 @@
 import $ from 'jquery';
 import * as lib from './lib';
 
+const selectedClassName = 'selected';
+
 export default class Queue {
 
 	constructor(parent)
@@ -10,7 +12,8 @@ export default class Queue {
 		this.options = parent.options.queue;
 		this.items = { ids: [], files: [] };
 		this.style = 'list';
-		this.$queue = lib.util.findDOM(parent.$container, 'element', 'queue').children('ul');
+		this.$wrap = lib.util.findDOM(parent.$container, 'element', 'queue');
+		this.$queue = this.$wrap.children('ul');
 		this.keyboardEvent = new lib.keyboardEvent(
 			parent.options.eventPrefixName,
 			[
@@ -34,6 +37,10 @@ export default class Queue {
 		// set style
 		this.changeStyle(this.options.style);
 
+		// set events
+    // 빈 영역을 누르면 큐 선택이 해제됩니다.
+    this.$wrap.on('click', () => this.toggleSelectAllQueues(false));
+
 		// import queue datas
 		if (this.options.datas)
 		{
@@ -49,7 +56,10 @@ export default class Queue {
 	initSelectQueueEvent($el)
 	{
 		// select queue event
-		$el.on('click', (e) => this.selectQueue($(e.currentTarget).data('id')));
+		$el.on('click', (e) => {
+      this.selectQueue($(e.currentTarget).data('id'));
+		  return false;
+    });
 	}
 
 	/**
@@ -166,18 +176,17 @@ export default class Queue {
 
 	/**
 	 * select queue
+   * `id`값이 없으면 선택된 큐를 확인하고 선택을 토글링 합니다.
 	 *
 	 * @param {number} id
 	 */
 	selectQueue(id)
 	{
-		const selectedClassName = 'selected';
 		const $queues = this.$queue.children();
 
 		if (id)
 		{
 			let $el = this.selectQueueElement(id);
-
 			if (this.keyboardEvent.isPressKeyCode)
 			{
 				$el.toggleClass(selectedClassName);
@@ -194,25 +203,50 @@ export default class Queue {
 					$el.addClass(selectedClassName);
 				}
 			}
+      // send event to plugin
+      this.parent.eventReceiver('queue.selectQueue', {
+        $selectElements: this.$queue.children(`.${selectedClassName}`),
+        $selectElement: this.selectQueueElement(id),
+      });
 		}
 		else
 		{
-			if ($queues.filter(`.${selectedClassName}`).length > 0)
-			{
-				$queues.removeClass(selectedClassName);
-			}
-			else
-			{
-				$queues.addClass(selectedClassName);
-			}
+      this.toggleSelectAllQueues(!($queues.filter(`.${selectedClassName}`).length > 0));
 		}
-
-		// send event to plugin
-		this.parent.eventReceiver('queue.selectQueue', {
-			$selectElements : this.$queue.children(`.${selectedClassName}`),
-			$selectElement : id ? this.selectQueueElement(id) : $queues.eq(0),
-		});
 	}
+
+	/**
+   * Toggle select all queues
+   * 모든 큐들을 선택하거나 해제합니다.
+   *
+   * @param {Boolean} sw
+   */
+  toggleSelectAllQueues(sw=undefined)
+  {
+    const $queues = this.$queue.children();
+
+    if (sw === undefined)
+    {
+      this.toggleSelectAllQueues(!($queues.filter(`.${selectedClassName}`).length > 0));
+    }
+    else
+    {
+      if (sw)
+      {
+        $queues.addClass(selectedClassName);
+      }
+      else
+      {
+        $queues.removeClass(selectedClassName);
+      }
+    }
+
+    // send event to plugin
+    this.parent.eventReceiver('queue.selectQueue', {
+      $selectElements: this.$queue.children(`.${selectedClassName}`),
+      $selectElement: $queues.eq(0),
+    });
+  }
 
 	/**
 	 * select queue element
@@ -313,14 +347,14 @@ export default class Queue {
 		$el.attr('data-id', id);
 
 		// insert queue data
-		$fileType.text(file.type);
+		$fileType.text(file.type ? file.type : `application/${file.name.split('.').pop()}`);
 		$fileName.text(file.name);
 		$state.text('uploaded');
 		$fileSize.text((file.size) ? lib.util.bytesToSize(file.size) : 'none');
 		$customButtons.html('');
 
 		// check image and assign preview background
-		if (file.type.split('/')[0] === 'image')
+		if (file.type && file.type.split('/')[0] === 'image')
 		{
 			$previewImages.css('background-image', `url(${file.fullSrc})`);
 		}

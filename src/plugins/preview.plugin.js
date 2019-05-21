@@ -100,7 +100,7 @@ function RG_Preview(jquery)
         var id = value.$selectElement.data('id');
         var n = app.queue.findItem(id);
         var file = app.queue.items.files[n];
-        var src = (value.$selectElement.hasClass('selected') && (file.type.split('/')[0] === 'image')) ? file.fullSrc : null;
+        var src = (value.$selectElement.hasClass('selected') && (file.type && file.type.split('/')[0] === 'image')) ? file.fullSrc : null;
         updatePreview(src);
         break;
 

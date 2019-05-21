@@ -21,7 +21,7 @@ window.rgUploader = new RGUploader(document.getElementById('dev'), {
         iconName: 'apps',
         className: 'btn-make-thumbnail',
         show : function(file) {
-          return (file.type.split('/')[0] === 'image');
+          return !!(file.type && file.type.split('/')[0] === 'image');
         },
         action : function(app, file) {
           if (!app.plugin.child.thumbnail) return false;
@@ -109,4 +109,8 @@ window.rgUploader = new RGUploader(document.getElementById('dev'), {
       ...src,
     };
   },
+  init(app)
+  {
+    app.$container.find('.toggle-select-all').on('click', () => app.queue.toggleSelectAllQueues());
+  }
 });

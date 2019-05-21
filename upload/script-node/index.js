@@ -115,7 +115,7 @@ function getFileList(files)
 						name: file,
 						size: fileState.size,
 						src: `${url_dest}/${file}`,
-						type: type.mime,
+						type: type ? type.mime : null,
 					});
 
 					if (k === files.length - 1)
