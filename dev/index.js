@@ -8,6 +8,7 @@ window.rgUploader = new RGUploader(document.getElementById('dev'), {
   autoUpload: true,
   uploadScript: '/upload',
   removeScript: '/remove',
+  allowFileTypes : ['jpeg', 'jpg', 'png', 'gif', 'zip', 'pdf', 'txt', 'swf', 'c4d'],
   uploadHeaders: { 'UPLOAD_AUTH': '1' },
   removeHeaders: { 'REMOVE_AUTH': '1' },
   externalFileForm : document.querySelector('#external'),

@@ -1,7 +1,7 @@
 export default {
 	autoUpload : false,
 	externalFileForm : null,
-	allowFileTypes : ['jpeg', 'png', 'gif', 'jpg'],
+	allowFileTypes : ['jpeg', 'jpg', 'png', 'gif', 'jpg'],
 	limitSize : 10000000,
 	limitSizeTotal : 30000000,
 	uploadScript : null,

@@ -122,14 +122,8 @@ export default class Uploader {
 		// check items and add items ready for upload
 		for (let i=0; i<files.length; i++)
 		{
-			if (!files[i].type)
-			{
-				actError('type', lib.language('error_file_type'));
-				continue;
-			}
-
 			// check file extension
-			if (options.allowFileTypes.indexOf(files[i].type.split('/')[1]) < 0)
+			if (options.allowFileTypes.indexOf(files[i].name.split('.').pop()) < 0)
 			{
 				actError('extension', lib.language('error_check_file'));
 				continue;
