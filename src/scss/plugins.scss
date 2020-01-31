@@ -2,8 +2,8 @@
 
 
 // plugin - preview
-#{$self} {
-  #{$self}-body > .preview {
+.rg-uploader {
+  .rg-uploader-body > .preview {
     flex: none;
   }
 	.preview {
@@ -39,13 +39,15 @@
 		}
 	}
 	@media (max-width: $mobile-max-width) {
-		.preview {display: none;}
+		.preview {
+      display: none;
+    }
 	}
 }
 
 
 // plugin - sizeinfo
-#{$self} {
+.rg-uploader {
 	> footer {
 		> div {
 			width: 140px; padding: 0 10px 0 0;
@@ -61,7 +63,7 @@
 
 
 // plugin - changeQueueStyle
-#{$self} {
+.rg-uploader {
 	> header {
 		nav {
 			position: absolute; top: 50%; right: 10px;
@@ -96,8 +98,8 @@
 
 
 // plugin - drag and drop
-#{$self} {
-	.queue.drop-mode {
+.rg-uploader {
+	.queues.drop-mode {
 		&:after {
 			content: ''; position: absolute; display: block;
 			left: 0; right: 0; top: 0; bottom: 0;

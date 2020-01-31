@@ -131,8 +131,15 @@ const pluginsConfig = () => ({
     jquery: 'jQuery',
   },
   optimization: {
-    minimizer: [new TerserJSPlugin({}), new OptimizeCSSAssetsPlugin({})],
+    minimizer: [
+      new TerserJSPlugin({}),
+      new OptimizeCSSAssetsPlugin({}),
+    ],
   },
 });
 
-module.exports = [coreConfig, pluginsConfig];
+
+module.exports = [
+  coreConfig,
+  pluginsConfig,
+];

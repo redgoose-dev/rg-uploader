@@ -361,7 +361,7 @@ function RG_Thumbnail(options, jquery)
 
     // show window
     this.$el.con.addClass('show');
-    $('html').addClass('rg-popup');
+    $('html').addClass('rg-uploader-popup');
 
     // set file value
     this.file = file;
@@ -405,7 +405,7 @@ function RG_Thumbnail(options, jquery)
     destroyCroppie();
     this.file = null;
     this.$el.con.removeClass('show');
-    $('html').removeClass('rg-popup');
+    $('html').removeClass('rg-uploader-popup');
 
     // callback close window
     if (this.options.closeCallback)

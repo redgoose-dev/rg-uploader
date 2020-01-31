@@ -1,6 +1,6 @@
 export const loading = '' +
 	'<li class="loading ready">' +
-		'<div class="wrap">' +
+		'<div>' +
 			'<figure class="col not-image">' +
 				'<p data-element="progress" style="width: 40%;">' +
 					'<span><em>40</em>%</span>' +
@@ -24,7 +24,7 @@ export const loading = '' +
 
 export const error = '' +
 	'<li class="error">' +
-		'<div class="wrap">' +
+		'<div>' +
 			'<figure class="col not-image"></figure>' +
 			'<div class="col bd">' +
 				'<span class="filetype bracket large" data-text="filetype">image/jpg</span>' +
@@ -37,7 +37,7 @@ export const error = '' +
 
 export const complete = '' +
 	'<li class="complete">' +
-		'<div class="wrap">' +
+		'<div>' +
 			'<figure class="col" data-element="previewImage" data-text="filename">filename.jpg</figure>' +
 			'<div class="col bd">' +
 				'<span class="filetype bracket large" data-text="filetype">image/jpg</span>' +

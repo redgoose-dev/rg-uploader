@@ -123,7 +123,7 @@ export default class Uploader {
 		for (let i=0; i<files.length; i++)
 		{
 			// check file extension
-			if (options.allowFileTypes.indexOf(files[i].name.split('.').pop()) < 0)
+			if (options.allowFileTypes.indexOf(files[i].name.split('.').pop().toLowerCase()) < 0)
 			{
 				actError('extension', lib.language('error_check_file'));
 				continue;

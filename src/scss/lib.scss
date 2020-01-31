@@ -1,6 +1,3 @@
-// base
-$self: '.rg-uploader';
-
 // color
 $color-key: #4A90E2;
 $color-error: #CE3E3E;
@@ -20,13 +17,28 @@ $mobile-max-width: 640px;
 
 // flex
 @mixin d-flex($middle) {
-	display: -webkit-flex; display: flex;
+	display: -webkit-flex;
+  display: flex;
 	@if ($middle) {
-		-webkit-align-items: center; align-items: center;
+		-webkit-align-items: center;
+    align-items: center;
 	}
 }
 
 @mixin flex($val:inherit) {
 	-webkit-flex: $val;
 	flex: $val;
+}
+
+@mixin drop-area() {
+  content: '';
+  display: block;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 2;
+  border: 3px solid $color-key;
+  pointer-events: none;
 }

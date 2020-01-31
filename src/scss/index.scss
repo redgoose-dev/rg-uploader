@@ -3,7 +3,7 @@
 @import "plugins";
 
 // bracket
-#{$self} .bracket {
+.rg-uploader .bracket {
   &:before {content: '(';}
   &:after {content: ')';}
   &.large {
@@ -13,35 +13,38 @@
 }
 
 // rg-popup
-.rg-popup {
+.rg-uploader-popup {
   &, body {overflow: hidden;}
 }
 
 // rg-uploader component
-#{$self} {
+.rg-uploader {
   border: 1px solid #ccc;
   border-radius: $border-radius;
   overflow: hidden;
   box-sizing: border-box;
-
-  * {
-    box-sizing: border-box;
-  }
   em {
     font-style: normal;
   }
 
-  // queue
-  .queue {
-    position: relative; height: 100%;
-    overflow-x: hidden; overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-    ul {
+  // queues
+  .queues {
+    position: relative;
+    height: 100%;
+    box-sizing: border-box;
+    > ul {
       margin: 0;
       padding: 0;
-      list-style: none;}
+      height: 100%;
+      list-style: none;
+      overflow-x: hidden;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      box-sizing: border-box;
+    }
     nav {
       font-size: 0;
+      box-sizing: border-box;
       button {
         margin: 0;
         padding: 4px;
@@ -68,24 +71,11 @@
     @media (max-width: $mobile-max-width) {
       overflow: auto;
     }
-
-    %selected {
-      content: '';
-      display: block;
-      position: absolute;
-      left: 0;
-      right: 0;
-      top: 0;
-      bottom: 0;
-      z-index: 2;
-      border: 3px solid $color-key;
-      pointer-events: none;
-    }
   }
 }
 
 // header
-#{$self}-header {
+.rg-uploader-header {
   position: relative;
   padding: 10px 130px 10px 10px;
   border-bottom: 2px solid #ccc;
@@ -107,7 +97,7 @@
 }
 
 // footer
-#{$self}-footer {
+.rg-uploader-footer {
   display: flex;
   display: -webkit-flex;
   align-items: center;
@@ -150,10 +140,10 @@
 }
 
 // body
-#{$self}-body {
+.rg-uploader-body {
+  display: flex;
   min-height: $queue-height;
-  display: -webkit-flex; display: flex;
-  > .col {
+  > .queues {
     flex: 1;
   }
 

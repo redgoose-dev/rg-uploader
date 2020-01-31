@@ -37,7 +37,10 @@ function RG_DragAndDrop(el, jquery)
       {
         if (over) return false;
         over = true;
-        $(e.currentTarget).addClass('drop-mode');
+        if (e.dataTransfer.effectAllowed === 'all')
+        {
+          $(e.currentTarget).addClass('drop-mode');
+        }
         e.dataTransfer.dropEffect = 'copy';
       }
       else

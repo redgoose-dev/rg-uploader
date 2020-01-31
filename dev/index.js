@@ -8,46 +8,49 @@ window.rgUploader = new RGUploader(document.getElementById('dev'), {
   autoUpload: true,
   uploadScript: '/upload',
   removeScript: '/remove',
-  allowFileTypes : ['jpeg', 'jpg', 'png', 'gif', 'zip', 'pdf', 'txt', 'swf', 'c4d'],
+  allowFileTypes : ['jpeg', 'jpg', 'png', 'gif', 'zip', 'pdf', 'txt', 'swf'],
   uploadHeaders: { 'UPLOAD_AUTH': '1' },
   removeHeaders: { 'REMOVE_AUTH': '1' },
   externalFileForm : document.querySelector('#external'),
   queue: {
-    height: 240,
+    height: 180,
     datas: '/data',
     buttons: [
       {
         name: 'make thumbnail image',
         iconName: 'apps',
         className: 'btn-make-thumbnail',
-        show : function(file) {
+        show(file)
+        {
           return !!(file.type && file.type.split('/')[0] === 'image');
         },
-        action : function(app, file) {
+        action(app, file)
+        {
           if (!app.plugin.child.thumbnail) return false;
           const plugin = app.plugin.child.thumbnail;
-
           plugin.assignOption({
-            doneCallback : function(res) {
+            doneCallback(res) {
               app.queue.import([res]);
             }
           });
           plugin.open(file);
-        }
+        },
       },
       {
-        name : 'remove queue',
-        iconName : 'close',
-        className : 'btn-remove-queue',
-        action : function(app, file) {
+        name: 'remove queue',
+        iconName: 'close',
+        className: 'btn-remove-queue',
+        action(app, file)
+        {
           app.queue.removeQueue(file.id, false, true);
-        }
+        },
       },
       {
         name: 'foo',
         iconName: 'extension',
         className: 'btn-foooooo',
-        action: (app, file) => {
+        action(app, file)
+        {
           app.queue.changeId(file.id, 111111);
         },
       }
@@ -58,7 +61,7 @@ window.rgUploader = new RGUploader(document.getElementById('dev'), {
       name: 'changeQueue',
       obj: new plugins.ChangeQueue({
         class_sortable: Sortable,
-        endChangeItem: function(app)
+        endChangeItem(app)
         {
           console.log('USER::endChangeItem', app.queue.items);
         }
@@ -87,11 +90,11 @@ window.rgUploader = new RGUploader(document.getElementById('dev'), {
       }, $),
     },
   ],
-  uploadComplete: function(file, app)
+  uploadComplete(file, app)
   {
     console.log('USER::uploadComplete', file);
   },
-  removeDataFilter: function(res)
+  removeDataFilter(res)
   {
     console.log('USER::removeDataFilter', res);
     return {
