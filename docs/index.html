@@ -34,7 +34,9 @@
             <p>아래 업로드 버튼을 눌러서 파일을 추가합니다.</p>
           </header>
           <div class="rg-uploader-body" data-comp="queue">
-            <div class="col queue" data-element="queue"><ul></ul></div>
+            <div class="queues" data-element="queue">
+              <ul></ul>
+            </div>
           </div>
           <footer class="rg-uploader-footer">
             <nav>
@@ -62,7 +64,9 @@
       <div class="example">
         <article class="rg-uploader" id="comp_ext_form">
           <div class="body" data-comp="queue">
-            <div class="col queue" data-element="queue"><ul></ul></div>
+            <div class="queues" data-element="queue">
+              <ul></ul>
+            </div>
           </div>
         </article>
         <p>
@@ -91,14 +95,14 @@
 <script src="./dist/rg-uploader.plugins.js"></script>
 <script src="./assets/prism.js"></script>
 <script>
-  // basic
-  var basic = new RG_Uploader.core(document.getElementById('comp_basic'));
+// basic
+var basic = new RG_Uploader.core(document.getElementById('comp_basic'));
 
-  // external input form
-  var extInputForm = new RG_Uploader.core(document.getElementById('comp_ext_form'), {
-    autoUpload: true,
-    externalFileForm: document.getElementById('ext_input')
-  });
+// external input form
+var extInputForm = new RG_Uploader.core(document.getElementById('comp_ext_form'), {
+  autoUpload: true,
+  externalFileForm: document.getElementById('ext_input')
+});
 </script>
 </body>
 </html>

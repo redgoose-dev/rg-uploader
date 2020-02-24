@@ -43,8 +43,9 @@ main {
 .demo-header h1 {
   margin: 0;
   font-size: 36px;
-  color: #4A90E2;
+  color: #406ce2;
   font-weight: 200;
+  letter-spacing: -.5px;
 }
 .demo-header nav {
   margin: 8px 0 0;
